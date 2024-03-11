@@ -1,0 +1,16 @@
+table {
+    margin: 50px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th, td {
+    width: 110px;
+    border: 1px solid black;
+}
+
+td:nth-child(1) {
+    width: 150px;
+}
+
+
