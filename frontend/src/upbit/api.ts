@@ -8,3 +8,18 @@ export const tickers = (markets: string[]) => {
         }
     })
 }
+
+export const webSocketRequest = (type: string, codes: string[]) => `
+[
+    {
+        "ticket": "user"
+    },
+    {
+        "type": ${type},
+        "codes": [${codes}]
+    },
+    {
+        "format": "DEFAULT"
+    }
+]   
+`
