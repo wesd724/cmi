@@ -1,0 +1,55 @@
+package com.jkb.cmi.entity;
+
+import com.jkb.cmi.entity.type.Orders;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+
+@Entity
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@Table(name = "trade_history")
+public class TradeHistory extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "Currency_id")
+    private Currency currency;
+
+    @Enumerated(EnumType.STRING)
+    private Orders orders;
+
+    @Column(nullable = false)
+    private Double amount;
+
+    @Column(nullable = false)
+    private Double price;
+
+    @ColumnDefault("0")
+    private boolean complete;
+
+    @Builder
+    public TradeHistory(
+            User user,
+            Currency currency,
+            Orders orders,
+            Double amount,
+            Double price,
+            boolean complete
+    ) {
+        this.user = user;
+        this.currency = currency;
+        this.orders = orders;
+        this.amount = amount;
+        this.price = price;
+        this.complete = complete;
+    }
+
+}
