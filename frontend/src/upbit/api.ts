@@ -16,7 +16,8 @@ export const webSocketRequest = (type: string, codes: string[]) => `
     },
     {
         "type": ${type},
-        "codes": [${codes}]
+        "codes": [${codes}],
+        "isOnlyRealtime": true
     },
     {
         "format": "DEFAULT"

@@ -76,7 +76,7 @@ const Main = () => {
                             <td>{`${(v.signed_change_rate * 100).toFixed(2)}%`}</td>
                             <td>{`${Math.round(v.acc_trade_price_24h / 1000000).toLocaleString('ko-KR')}백만`}</td>
                             <td><button onClick={
-                                () => navigate(`/exchange?market=${v.market}`, { state: v.trade_price })
+                                () => navigate(`/exchange/${i + 1}`, { state: v.trade_price })
                             } style={{ width: "100%" }}>구매</button></td>
 
                         </tr>
