@@ -15,11 +15,20 @@ public class CashAsset {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(nullable = false)
     private Long balance;
 
     @Builder
-    public CashAsset(Long balance) {
+    public CashAsset(User user, Long balance) {
+        this.user = user;
         this.balance = balance;
+    }
+
+    public void changeBalance(Long balance) {
+        this.balance -= balance;
     }
 }

@@ -21,14 +21,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToOne
-    @JoinColumn(name = "cash_asset_id")
-    private CashAsset cashAsset;
-
     @Builder
-    public User(String username, String password, CashAsset cashAsset) {
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.cashAsset = cashAsset;
     }
 }

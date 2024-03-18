@@ -30,7 +30,7 @@ public class CurrencyAsset {
     private Double averageCurrencyBuyPrice;
 
     @Column(nullable = false)
-    private Double buyPrice;
+    private Long buyPrice;
 
     @Builder
     public CurrencyAsset(
@@ -38,12 +38,24 @@ public class CurrencyAsset {
             Currency currency,
             Double amount,
             Double averageCurrencyBuyPrice,
-            Double buyPrice
+            Long buyPrice
     ) {
         this.user = user;
         this.currency = currency;
         this.amount = amount;
         this.averageCurrencyBuyPrice = averageCurrencyBuyPrice;
         this.buyPrice = buyPrice;
+    }
+
+    public void changeAmount(Double amount) {
+        this.amount += amount;
+    }
+
+    public void setAverageCurrencyBuyPrice() {
+        this.averageCurrencyBuyPrice = this.buyPrice / this.amount;
+    }
+
+    public void changeBuyPrice(Long price) {
+        this.buyPrice += price;
     }
 }

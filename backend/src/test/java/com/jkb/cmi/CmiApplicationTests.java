@@ -8,7 +8,6 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 
@@ -30,13 +29,12 @@ class CmiApplicationTests {
 
 	@Test
 	@Transactional
-	@Rollback(false)
 	void Test1() {
-		CashAsset cashAsset = CashAsset.builder().balance(100000L).build();
-		cashAssetRepository.save(cashAsset);
-
-		User user = User.builder().username("test").password("123").cashAsset(cashAsset).build();
+		User user = User.builder().username("test").password("123").build();
 		userRepository.save(user);
+
+		CashAsset cashAsset = CashAsset.builder().balance(100000L).user(user).build();
+		cashAssetRepository.save(cashAsset);
 
 		Currency currency = Currency.builder().market("BTC").name("비트코인").build();
 		currencyRepository.save(currency);
@@ -60,7 +58,7 @@ class CmiApplicationTests {
 
 		CurrencyAsset currencyAsset = CurrencyAsset.builder()
 				.user(user).currency(currency)
-				.amount(5000d).averageCurrencyBuyPrice(270.19d).buyPrice(350002d)
+				.amount(5000d).averageCurrencyBuyPrice(270.19d).buyPrice(350002L)
 				.build();
 		currencyAssetRepository.save(currencyAsset);
 	}
