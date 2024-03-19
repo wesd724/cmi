@@ -27,7 +27,6 @@ public class CurrencyAssetService {
         for(TradeHistory tradeHistory: tradeHistories) {
             Long userId = tradeHistory.getUser().getId();
             Long currencyId = tradeHistory.getCurrency().getId();
-            String a = tradeHistory.getCurrency().getName();
             Double amount = tradeHistory.getAmount();
             Double price = tradeHistory.getPrice();
             long buyPrice = Math.round(price * amount);
