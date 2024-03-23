@@ -3,6 +3,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { webSocketRequest } from "../upbit/api";
 import { MARKET } from "../data/constant";
 import { Button } from "@mui/material";
+import Chart from "./chart";
 
 const Exchange = () => {
     const location = useLocation();
@@ -44,7 +45,6 @@ const Exchange = () => {
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(1);
     }
 
     const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -60,7 +60,7 @@ const Exchange = () => {
                 <Button size="small" type="submit" variant="contained">매수</Button>
                 <Button size="small" onClick={onClick} variant="outlined">+1</Button>
             </form>
-            
+            <Chart marketName={market}/>
         </div>
     )
 }

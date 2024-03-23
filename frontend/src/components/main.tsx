@@ -2,17 +2,17 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MARKET, MARKET_NAME } from "../data/constant";
 import { response, tickerType } from "../type/interface";
-import { tickers, webSocketRequest } from "../upbit/api";
+import { getTickers, webSocketRequest } from "../upbit/api";
 import "./css/main.css";
 
 const Main = () => {
-    const [info, setInfo] = useState<tickerType[]>([])
+    const [tickers, setTickers] = useState<tickerType[]>([])
     const webSocket = useRef<WebSocket | null>(null);
     const navigate = useNavigate();
 
     const ticker = useCallback(async (markets: string[]) => {
-        const response = await tickers(markets);
-        const data = response.data.map((v: response) => (
+        const res = await getTickers(markets);
+        const data = res.data.map((v: response) => (
             {
                 market: v.market,
                 trade_price: v.trade_price,
@@ -20,12 +20,12 @@ const Main = () => {
                 acc_trade_price_24h: v.acc_trade_price_24h
             }
         ))
-        setInfo(data)
+        setTickers(data)
     }, []);
 
     useEffect(() => {
         ticker(MARKET);
-        webSocket.current = new WebSocket('wss://api.upbit.com/websocket/v1');
+        webSocket.current = new WebSocket(process.env.REACT_APP_WS_UPBIT_URL as string);
         webSocket.current.onopen = () => {
             console.log('WebSocket 연결');
             webSocket.current?.send(webSocketRequest("ticker", MARKET));
@@ -39,7 +39,7 @@ const Main = () => {
         webSocket.current.onmessage = async (event: MessageEvent) => {
             const text = await event.data.text();
             const data = JSON.parse(text);
-            setInfo(info => info.map(v =>
+            setTickers(ticker => ticker.map(v =>
                 (v.market === data.code) ? {
                     market: data.code,
                     trade_price: data.trade_price,
@@ -69,7 +69,7 @@ const Main = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {info.map((v, i) =>
+                    {tickers.map((v, i) =>
                         <tr key={v.signed_change_rate * v.trade_price}>
                             <td onClick={onClick}>{`${MARKET_NAME[i]}(${v.market})`}</td>
                             <td>{v.trade_price.toLocaleString('ko-KR')}</td>

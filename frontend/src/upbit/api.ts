@@ -1,10 +1,18 @@
 import axios from "axios"
 
-export const tickers = (markets: string[]) => {
+export const getTickers = (markets: string[]) => {
     const str = markets.join(",")
     return axios.get(process.env.REACT_APP_UPBIT_URL + "/ticker", {
         params: {
             markets : str
+        }
+    })
+}
+
+export const getCandles = (market: string, time: string, count: number) => {
+    return axios.get(process.env.REACT_APP_UPBIT_URL + `/candles/${time}`, {
+        params: {
+            market, count
         }
     })
 }
