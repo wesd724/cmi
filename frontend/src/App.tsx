@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Main from './components/main';
 import "./App.css";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -9,6 +9,34 @@ import Asset from './components/asset';
 import Login from './components/login';
 
 function App() {
+
+  useEffect(() => {
+    const eventSource = new EventSource("http://localhost:8080/connect")
+
+    eventSource.addEventListener('connect', e => {
+      const data = e.data;
+      console.log(data)
+    });
+
+    eventSource.addEventListener('msg', e => {
+      const data = e.data;
+      console.log(JSON.parse(data))
+    });
+
+    eventSource.addEventListener('error', e => {
+      console.log(e)
+    });
+
+    window.addEventListener("beforeunload", e => {
+		e.preventDefault();
+	})
+
+    return () => {
+      eventSource.close();
+    }
+
+  }, [])
+
   return (
     <BrowserRouter>
       <Nav />
