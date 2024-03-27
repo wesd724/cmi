@@ -29,13 +29,13 @@ public class UserService {
         cashAssetRepository.save(cashAsset);
     }
 
-    public String login(UserDto userDto) {
+    public Boolean login(UserDto userDto) {
         try {
             userRepository.findByUsernameAndPassword(userDto.getUsername(), userDto.getPassword())
                     .orElseThrow(IllegalArgumentException::new);
-            return "성공";
+            return true;
         } catch(IllegalArgumentException e) {
-            return "실패";
+            return false;
         }
 
     }
