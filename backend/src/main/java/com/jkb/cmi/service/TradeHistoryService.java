@@ -24,15 +24,13 @@ public class TradeHistoryService {
     private final TradeHistoryRepository tradeHistoryRepository;
 
     @Transactional(readOnly = true)
-    public List<TradeHistoryDto> getTradeHistory(Long userId) {
-        List<TradeHistory> tradeHistories = tradeHistoryRepository.findByUser_id(userId);
+    public List<TradeHistoryDto> getTradeHistory(String username) {
+        List<TradeHistory> tradeHistories = tradeHistoryRepository.findByUsername(username);
         return TradeHistoryDto.tolist(tradeHistories);
     }
     public void buyOrder(OrderDto orderDto) {
-        User user = userRepository.getReferenceById(orderDto.getUserId());
+        User user = userRepository.getByUsername(orderDto.getUsername());
         Currency currency = currencyRepository.getReferenceById(orderDto.getCurrencyId());
-
-        long tradePrice = Math.round(orderDto.getAmount() * orderDto.getPrice());
 
         TradeHistory tradeHistory = TradeHistory.builder()
                 .user(user).currency(currency).orders(Orders.BUY)
@@ -43,7 +41,7 @@ public class TradeHistoryService {
     }
 
     public void sellOrder(OrderDto orderDto) {
-        User user = userRepository.getReferenceById(orderDto.getUserId());
+        User user = userRepository.getReferenceById(1L);
         Currency currency = currencyRepository.getReferenceById(orderDto.getCurrencyId());
 
         long tradePrice = Math.round(orderDto.getAmount() * orderDto.getPrice());

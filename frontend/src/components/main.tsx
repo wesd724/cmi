@@ -1,3 +1,5 @@
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import Button from "@mui/material/Button";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MARKET, MARKET_NAME } from "../data/constant";
@@ -9,6 +11,7 @@ const Main = () => {
     const [tickers, setTickers] = useState<tickerType[]>([])
     const webSocket = useRef<WebSocket | null>(null);
     const navigate = useNavigate();
+    const username = localStorage.getItem("username");
 
     const ticker = useCallback(async (markets: string[]) => {
         const res = await getTickers(markets);
@@ -56,37 +59,38 @@ const Main = () => {
 
     const onClick = useCallback(() => console.log(1), []);
 
+    const exchange = (i: number, price: number) => {
+        if (username)
+            navigate(`/exchange/${i + 1}`, { state: price })
+        else
+            alert("로그인이 필요합니다.");
+    }
+
     return (
-        <div>
-            <table className="ts">
-                <thead>
-                    <tr>
-                        <th>한글명</th>
-                        <th>현재가</th>
-                        <th>전일대비</th>
-                        <th>거래대금</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {tickers.map((v, i) =>
-                        <tr key={v.signed_change_rate * v.trade_price}>
-                            <td onClick={onClick}>{`${MARKET_NAME[i]}(${v.market})`}</td>
-                            <td>{v.trade_price.toLocaleString('ko-KR')}</td>
-                            <td>{`${(v.signed_change_rate * 100).toFixed(2)}%`}</td>
-                            <td>{`${Math.round(v.acc_trade_price_24h / 1000000).toLocaleString('ko-KR')}백만`}</td>
-                            <td><button onClick={
-                                () => navigate(`/exchange/${i + 1}`, { state: v.trade_price })
-                            } style={{ width: "100%" }}>구매</button></td>
-
-                        </tr>
-                    )}
-                </tbody>
-
-            </table>
-            <button onClick={() => ticker(MARKET)}>get ticker</button>
-
-        </div>
+        <TableContainer sx={{ height: 800 }}>
+            <Table className="ticker">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>한글명</TableCell>
+                        <TableCell>현재가</TableCell>
+                        <TableCell>전일대비</TableCell>
+                        <TableCell>거래대금</TableCell>
+                        <TableCell></TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {tickers.map((v, i) => (
+                        <TableRow key={v.signed_change_rate * v.trade_price}>
+                            <TableCell onClick={onClick}>{`${MARKET_NAME[i]}(${v.market})`}</TableCell>
+                            <TableCell>{v.trade_price.toLocaleString('ko-KR')}</TableCell>
+                            <TableCell>{`${(v.signed_change_rate * 100).toFixed(2)}%`}</TableCell>
+                            <TableCell>{`${Math.round(v.acc_trade_price_24h / 1000000).toLocaleString('ko-KR')}백만`}</TableCell>
+                            <TableCell><Button variant="outlined" onClick={() => exchange(i, v.trade_price)} style={{ width: "100%" }}>구매</Button></TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
     )
 }
 

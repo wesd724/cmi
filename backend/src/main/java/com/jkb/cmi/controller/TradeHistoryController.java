@@ -16,8 +16,8 @@ public class TradeHistoryController {
     private final TradeHistoryService tradeHistoryService;
 
     @GetMapping
-    public ResponseEntity<List<TradeHistoryDto>> getTradeHistory(Long userId) {
-        List<TradeHistoryDto> tradeHistoryDtos = tradeHistoryService.getTradeHistory(userId);
+    public ResponseEntity<List<TradeHistoryDto>> getTradeHistory(String username) {
+        List<TradeHistoryDto> tradeHistoryDtos = tradeHistoryService.getTradeHistory(username);
         return ResponseEntity.ok(tradeHistoryDtos);
     }
     @PostMapping

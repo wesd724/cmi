@@ -25,4 +25,9 @@ public class TradeHistoryTest {
 
         tradeHistories2.forEach(System.out::println);
     }
+
+    @Test
+    void test2() {
+        tradeHistoryRepository.findByUsername("test");
+    }
 }

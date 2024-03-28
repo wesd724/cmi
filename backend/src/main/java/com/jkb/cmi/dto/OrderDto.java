@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderDto {
-    private Long userId;
+    private String username;
     private Long currencyId;
     private double amount;
     private double price;

@@ -1,16 +1,20 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { Navigate, useLocation, useParams } from "react-router-dom";
 import { webSocketRequest } from "../upbit/api";
 import { MARKET } from "../data/constant";
 import { Button } from "@mui/material";
 import Chart from "./chart";
+import { buy } from "../api/exchange";
 
 const Exchange = () => {
+    const username = localStorage.getItem("username") as string;
     const location = useLocation();
     //const [qs] = useSearchParams();
     const { id } = useParams() as { id: string };
     const [price, setPrice] = useState<number>(location.state);
     const [trade, setTrade] = useState(location.state);
+    const [amount, setAmount] = useState<number>(0);
+
     const webSocket = useRef<WebSocket | null>(null);
     const market = MARKET[Number(id) - 1];
     //const market = qs.get('market') as string;
@@ -38,13 +42,25 @@ const Exchange = () => {
         }
     }, [market])
 
-    
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setTrade(Number(e.target.value));
+
+    const ChangeTrade = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTrade(e.target.value ? parseInt(e.target.value) : 0);
+    }
+
+    const ChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setAmount(e.target.value ? parseFloat(e.target.value) : 0);
+    }
+
+    const ChangeTotal = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value ? parseInt(e.target.value) : 0;
+        setAmount(parseFloat((value / trade).toFixed(8)));
     }
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (window.confirm("매수하겠습니까?")) {
+            buy({ username, currencyId: Number(id), amount, price: trade })
+        }
     }
 
     const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -52,15 +68,25 @@ const Exchange = () => {
     }
     return (
         <div>
-            <div>
-                {market} 현재가: {price}
-            </div>
-            <form onSubmit={onSubmit}>
-                구매 가격: <input value={trade} onChange={onChange} />
-                <Button size="small" type="submit" variant="contained">매수</Button>
-                <Button size="small" onClick={onClick} variant="outlined">+1</Button>
-            </form>
-            <Chart marketName={market}/>
+            {
+                username
+                    ? (
+                        <>
+                            <div>
+                                {market} 현재가: {price}
+                            </div>
+                            <form onSubmit={onSubmit}>
+                                매수 가격: <input value={trade} onChange={ChangeTrade} /><br />
+                                주문 수량: <input value={amount} onChange={ChangeAmount} /><br />
+                                주문 총액: <input value={Math.round(trade * amount)} onChange={ChangeTotal} /><br />
+                                <Button sx={{ left:70, margin: "5px" }} size="small" type="submit" variant="contained">매수</Button>
+                                <Button sx={{ left: 70, margin: "5px" }} size="small" variant="contained">매도</Button>
+                                <Button sx={{ left: 70, margin: "5px" }} size="small" onClick={onClick} variant="outlined">+1</Button>
+                            </form>
+                            <Chart marketName={market} />
+                        </>
+                    ) : <Navigate to="/" replace />
+            }
         </div>
     )
 }

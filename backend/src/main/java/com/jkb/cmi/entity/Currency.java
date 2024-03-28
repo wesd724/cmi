@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
@@ -20,6 +22,9 @@ public class Currency {
 
     @Column(nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "currency")
+    private List<Comment> comments;
 
     @Builder
     public Currency(String market, String name) {
