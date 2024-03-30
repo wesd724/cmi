@@ -28,29 +28,21 @@ public class TradeHistoryService {
         List<TradeHistory> tradeHistories = tradeHistoryRepository.findByUsername(username);
         return TradeHistoryDto.tolist(tradeHistories);
     }
-    public void buyOrder(OrderDto orderDto) {
+
+    public void order(OrderDto orderDto, Orders orders) {
         User user = userRepository.getByUsername(orderDto.getUsername());
         Currency currency = currencyRepository.getReferenceById(orderDto.getCurrencyId());
 
         TradeHistory tradeHistory = TradeHistory.builder()
-                .user(user).currency(currency).orders(Orders.BUY)
+                .user(user).currency(currency).orders(orders)
                 .amount(orderDto.getAmount()).price(orderDto.getPrice())
                 .complete(false).build();
 
         tradeHistoryRepository.save(tradeHistory);
     }
 
-    public void sellOrder(OrderDto orderDto) {
-        User user = userRepository.getReferenceById(1L);
-        Currency currency = currencyRepository.getReferenceById(orderDto.getCurrencyId());
-
-        long tradePrice = Math.round(orderDto.getAmount() * orderDto.getPrice());
-
-        TradeHistory tradeHistory = TradeHistory.builder()
-                .user(user).currency(currency).orders(Orders.SELL)
-                .amount(orderDto.getAmount()).price(orderDto.getPrice())
-                .complete(false).build();
-
-        tradeHistoryRepository.save(tradeHistory);
+    public void tradeCompleteProcessing(Long currencyId, Double currentPrice) {
+        tradeHistoryRepository.buyTradeCompleteProcessing(currencyId, currentPrice);
+        tradeHistoryRepository.sellTradeCompleteProcessing(currencyId, currentPrice);
     }
 }

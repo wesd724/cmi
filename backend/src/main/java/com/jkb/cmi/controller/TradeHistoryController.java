@@ -2,6 +2,7 @@ package com.jkb.cmi.controller;
 
 import com.jkb.cmi.dto.OrderDto;
 import com.jkb.cmi.dto.TradeHistoryDto;
+import com.jkb.cmi.entity.type.Orders;
 import com.jkb.cmi.service.TradeHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +23,11 @@ public class TradeHistoryController {
     }
     @PostMapping
     public void buy(@RequestBody OrderDto orderDto) {
-        tradeHistoryService.buyOrder(orderDto);
+        tradeHistoryService.order(orderDto, Orders.BUY);
     }
     @DeleteMapping
     public void sell(@RequestBody OrderDto orderDto) {
-        tradeHistoryService.sellOrder(orderDto);
+        tradeHistoryService.order(orderDto, Orders.SELL);
     }
 
     @DeleteMapping("/cancel")

@@ -1,6 +1,7 @@
 package com.jkb.cmi.service;
 
 import com.jkb.cmi.entity.*;
+import com.jkb.cmi.entity.type.Orders;
 import com.jkb.cmi.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,9 @@ public class CurrencyAssetService {
             Long currencyId = tradeHistory.getCurrency().getId();
             Double amount = tradeHistory.getAmount();
             Double price = tradeHistory.getPrice();
-            long buyPrice = Math.round(price * amount);
+            long tradePrice = Math.round(price * amount);
+            Orders order = tradeHistory.getOrders();
+            long buyPrice = order == Orders.BUY ? tradePrice : -tradePrice;
 
             User user = userRepository.getReferenceById(userId);
             Currency currency = currencyRepository.getReferenceById(currencyId);

@@ -65,3 +65,10 @@ url로 직접 접근시 localstorage 무시(해결중)
 
 7. Currency(N) : TradeHistory(1)에서, tradeHistory에서 user_id를 기준으로 조회시 해당 user와 관계되어 조회된 Currency(N)만큼
 추가 쿼리 발생 -> n + 1 문제 발생 -> fetch join 으로 해결
+
+8. 주문내역에서 매수, 매도 체결처리할 때(complete = true)
+-> 한 행, 한 행 업그레이드하지 않고 @Modifying, @Query 이용하여 update 벌크 연산
+
+9. 서버에서 10초마다 코인별로 현재 시세를 받아와서 매수, 매도 쿼리 실행함
+-> 코인이 5개인 경우, 5개마다 시세가 다르다 -> 5개 각각 매수, 매도 처리 쿼리를 날림 -> 이게 맞나?
+->

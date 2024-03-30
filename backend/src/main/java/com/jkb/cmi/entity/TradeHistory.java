@@ -3,7 +3,6 @@ package com.jkb.cmi.entity;
 import com.jkb.cmi.entity.type.Orders;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -35,7 +34,6 @@ public class TradeHistory extends BaseEntity {
 
     private LocalDateTime completeDate;
 
-    @ColumnDefault("0")
     private boolean complete;
 
     @Builder
