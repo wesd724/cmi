@@ -1,5 +1,6 @@
 package com.jkb.cmi.service;
 
+import com.jkb.cmi.dto.APIResponseDto;
 import com.jkb.cmi.dto.OrderDto;
 import com.jkb.cmi.dto.TradeHistoryDto;
 import com.jkb.cmi.entity.Currency;
@@ -41,8 +42,8 @@ public class TradeHistoryService {
         tradeHistoryRepository.save(tradeHistory);
     }
 
-    public void tradeCompleteProcessing(Long currencyId, Double currentPrice) {
-        tradeHistoryRepository.buyTradeCompleteProcessing(currencyId, currentPrice);
-        tradeHistoryRepository.sellTradeCompleteProcessing(currencyId, currentPrice);
+    public void completeProcess(List<APIResponseDto> apiResponseDtos) {
+        tradeHistoryRepository.tradeCompleteProcessing(apiResponseDtos, Orders.BUY);
+        tradeHistoryRepository.tradeCompleteProcessing(apiResponseDtos, Orders.SELL);
     }
 }

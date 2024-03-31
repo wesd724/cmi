@@ -31,21 +31,11 @@ public class TradeHistoryTest {
         tradeHistoryRepository.findByUsername("test");
     }
 
-    @Test
-    @Transactional
-    @Rollback(false)
-    void test3() {
-        tradeHistoryRepository.buyTradeCompleteProcessing(1L, 100000000d);
-        tradeHistoryRepository.sellTradeCompleteProcessing(1L, 100000000d);
-    }
 
     @Test
     @Transactional
     @Rollback(false)
-    void test5() {
-        List<Long> id = List.of(1L, 100L);
-        List<Double> price = List.of(100d, 200d);
-        tradeHistoryRepository.test(id, price);
+    void test3() {
 
     }
 
