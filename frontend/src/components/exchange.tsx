@@ -5,6 +5,7 @@ import { MARKET } from "../data/constant";
 import { Button } from "@mui/material";
 import Chart from "./chart";
 import { buy } from "../api/exchange";
+import "./css/exchange.css";
 
 const Exchange = () => {
     const username = localStorage.getItem("username") as string;
@@ -64,7 +65,7 @@ const Exchange = () => {
     }
 
     const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        setTrade((v: number) => v + 1);
+        setTrade((v: number) => v + 1000);
     }
     return (
         <div>
@@ -72,18 +73,18 @@ const Exchange = () => {
                 username
                     ? (
                         <>
-                            <div>
-                                {market} 현재가: {price}
+                            <div className="exchange">
+                                <p>{market} 현재가: {price}</p>
+                                <form onSubmit={onSubmit}>
+                                    매수 가격: <input value={trade} onChange={ChangeTrade} /><br />
+                                    주문 수량: <input value={amount} onChange={ChangeAmount} /><br />
+                                    주문 총액: <input value={Math.round(trade * amount)} onChange={ChangeTotal} /><br />
+                                    <Button sx={{ bottom: 90, left: 240, margin: "5px" }} size="small" type="submit" variant="contained">매수</Button>
+                                    <Button sx={{ bottom: 55, left: 166, margin: "5px", backgroundColor: "green" }} size="small" variant="contained">매도</Button>
+                                    <Button sx={{ left: -70, margin: "5px" }} size="small" onClick={onClick} variant="outlined">+1000</Button>
+                                </form>
                             </div>
-                            <form onSubmit={onSubmit}>
-                                매수 가격: <input value={trade} onChange={ChangeTrade} /><br />
-                                주문 수량: <input value={amount} onChange={ChangeAmount} /><br />
-                                주문 총액: <input value={Math.round(trade * amount)} onChange={ChangeTotal} /><br />
-                                <Button sx={{ left:70, margin: "5px" }} size="small" type="submit" variant="contained">매수</Button>
-                                <Button sx={{ left: 70, margin: "5px" }} size="small" variant="contained">매도</Button>
-                                <Button sx={{ left: 70, margin: "5px" }} size="small" onClick={onClick} variant="outlined">+1</Button>
-                            </form>
-                            <Chart marketName={market} />
+                            <Chart time="minutes/1" marketName={market} />
                         </>
                     ) : <Navigate to="/" replace />
             }

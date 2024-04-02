@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -25,7 +25,7 @@ const Nav = () => {
                                     <Button color="inherit" onClick={() => navigate("/asset")}>내 자산</Button>
                                     <Button color="inherit" onClick={() => {
                                         localStorage.clear();
-                                        navigate("/");
+                                        navigate("/", {replace: true});
                                     }}>로그아웃</Button>
                                 </>
                             )

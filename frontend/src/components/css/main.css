@@ -1,8 +1,3 @@
-.ticker td button {
-    width: 100%;
-    height: 100%;
-}
-
 .ticker td:nth-child(1) {
     width: 180px;
 }

@@ -11,10 +11,7 @@ export interface tickerType {
     acc_trade_price_24h: number;
 }
 
-export interface candleType {
-    timestamp: number;
-    opening_price: number;
-    high_price: number;
-    low_price: number;
-    trade_price: number;
+export type candleType =  {
+    time: string;
+    marketName: string;
 }

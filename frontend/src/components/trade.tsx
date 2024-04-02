@@ -1,9 +1,9 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useState, useEffect } from "react";
-import { getTradeHistory, tradeHistory } from "../api/asset";
-import "./css/asset.css";
+import { getTradeHistory, tradeHistory } from "../api/trade";
+import "./css/trade.css";
 
-const Asset = () => {
+const Trade = () => {
     const [trades, setTrades] = useState<tradeHistory[]>([]);
     useEffect(() => {
         const get = async () => {
@@ -45,4 +45,4 @@ const Asset = () => {
     )
 }
 
-export default Asset;
+export default Trade;

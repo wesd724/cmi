@@ -4,7 +4,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import Asset from './asset';
+import Trade from './trade';
 
 const Tabs = () => {
 	const [value, setValue] = useState<string>('1');
@@ -27,7 +27,7 @@ const Tabs = () => {
 				</TabList>
 			</Box>
 			<TabPanel value="1">3</TabPanel>
-			<TabPanel sx={{ padding: 0 }} value="2"><Asset /></TabPanel>
+			<TabPanel sx={{ padding: 0 }} value="2"><Trade /></TabPanel>
 			<TabPanel value="3">Item Three</TabPanel>
 		</TabContext>
 	);
