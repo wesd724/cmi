@@ -19,10 +19,6 @@ public class CurrencyAssetService {
     private final CurrencyAssetRepository currencyAssetRepository;
     private final TradeHistoryRepository tradeHistoryRepository;
 
-    public void getCurrencyAsset(Long userId) {
-
-    }
-
     public void updateCurrencyAsset() {
         List<TradeHistory> tradeHistories = tradeHistoryRepository.findByCompleteTrueAndCompleteDateNull();
         for(TradeHistory tradeHistory: tradeHistories) {

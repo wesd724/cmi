@@ -17,4 +17,9 @@ public class CurrencyAssetTest {
     void test1() {
         currencyAssetService.updateCurrencyAsset();
     }
+
+    @Test
+    void test2() {
+        currencyAssetRepository.getByUser_Username("test");
+    }
 }

@@ -1,4 +1,4 @@
-package com.jkb.cmi.dto;
+package com.jkb.cmi.dto.response;
 
 import com.jkb.cmi.entity.TradeHistory;
 import lombok.AccessLevel;
@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class TradeHistoryDto {
+public class TradeHistoryResponse {
     private String currencyName;
     private String order;
     private Double amount;
@@ -21,11 +21,11 @@ public class TradeHistoryDto {
     private LocalDateTime orderDate;
     private LocalDateTime completeDate;
 
-    public static TradeHistoryDto of(TradeHistory tradeHistory) {
+    public static TradeHistoryResponse from(TradeHistory tradeHistory) {
         Double amount = tradeHistory.getAmount();
         Double price = tradeHistory.getPrice();
         Long tradePrice = Math.round(amount * price);
-        return new TradeHistoryDto(
+        return new TradeHistoryResponse(
                 tradeHistory.getCurrency().getName(),
                 tradeHistory.getOrders().name(),
                 tradeHistory.getAmount(),
@@ -36,9 +36,9 @@ public class TradeHistoryDto {
         );
     }
 
-    public static List<TradeHistoryDto> tolist(List<TradeHistory> tradeHistories) {
+    public static List<TradeHistoryResponse> tolist(List<TradeHistory> tradeHistories) {
         return tradeHistories.stream()
-                .map(TradeHistoryDto::of)
+                .map(TradeHistoryResponse::from)
                 .toList();
     }
 }

@@ -1,4 +1,4 @@
-package com.jkb.cmi.dto;
+package com.jkb.cmi.dto.request;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserDto {
+public class OrderRequest {
     private String username;
-    private String password;
+    private Long currencyId;
+    private double amount;
+    private double price;
 }

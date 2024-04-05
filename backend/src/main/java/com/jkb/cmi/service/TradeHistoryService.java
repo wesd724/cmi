@@ -1,8 +1,8 @@
 package com.jkb.cmi.service;
 
-import com.jkb.cmi.dto.APIResponseDto;
-import com.jkb.cmi.dto.OrderDto;
-import com.jkb.cmi.dto.TradeHistoryDto;
+import com.jkb.cmi.dto.response.APIResponse;
+import com.jkb.cmi.dto.request.OrderRequest;
+import com.jkb.cmi.dto.response.TradeHistoryResponse;
 import com.jkb.cmi.entity.Currency;
 import com.jkb.cmi.entity.TradeHistory;
 import com.jkb.cmi.entity.User;
@@ -25,25 +25,25 @@ public class TradeHistoryService {
     private final TradeHistoryRepository tradeHistoryRepository;
 
     @Transactional(readOnly = true)
-    public List<TradeHistoryDto> getTradeHistory(String username) {
+    public List<TradeHistoryResponse> getTradeHistory(String username) {
         List<TradeHistory> tradeHistories = tradeHistoryRepository.findByUsername(username);
-        return TradeHistoryDto.tolist(tradeHistories);
+        return TradeHistoryResponse.tolist(tradeHistories);
     }
 
-    public void order(OrderDto orderDto, Orders orders) {
-        User user = userRepository.getByUsername(orderDto.getUsername());
-        Currency currency = currencyRepository.getReferenceById(orderDto.getCurrencyId());
+    public void order(OrderRequest orderRequest, Orders orders) {
+        User user = userRepository.getByUsername(orderRequest.getUsername());
+        Currency currency = currencyRepository.getReferenceById(orderRequest.getCurrencyId());
 
         TradeHistory tradeHistory = TradeHistory.builder()
                 .user(user).currency(currency).orders(orders)
-                .amount(orderDto.getAmount()).price(orderDto.getPrice())
+                .amount(orderRequest.getAmount()).price(orderRequest.getPrice())
                 .complete(false).build();
 
         tradeHistoryRepository.save(tradeHistory);
     }
 
-    public void completeProcess(List<APIResponseDto> apiResponseDtos) {
-        tradeHistoryRepository.tradeCompleteProcessing(apiResponseDtos, Orders.BUY);
-        tradeHistoryRepository.tradeCompleteProcessing(apiResponseDtos, Orders.SELL);
+    public void completeProcess(List<APIResponse> apiResponses) {
+        tradeHistoryRepository.tradeCompleteProcessing(apiResponses, Orders.BUY);
+        tradeHistoryRepository.tradeCompleteProcessing(apiResponses, Orders.SELL);
     }
 }
