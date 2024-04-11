@@ -6,7 +6,8 @@ import Nav from './components/nav';
 import Exchange from './components/exchange';
 import SignUp from './components/signUp';
 import Login from './components/login';
-import Tabs from './components/Tabs';
+import ActivityTabs from './components/activityTabs';
+import InvestmentTabs from './components/investmentTabs';
 
 function App() {
 
@@ -43,7 +44,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Main />}></Route>
         <Route path='/exchange/:id' element={<Exchange />}></Route>
-        <Route path='/asset' element={<Tabs />}></Route>
+        <Route path='/investment' element={<InvestmentTabs />}></Route>
+        <Route path='/activity' element={<ActivityTabs />}></Route>
         <Route path='/login' element={<Login />}></Route>
         <Route path='/signup' element={<SignUp />}></Route>
       </Routes>

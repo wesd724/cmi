@@ -6,7 +6,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Trade from './trade';
 
-const Tabs = () => {
+const InvestmentTabs = () => {
 	const [value, setValue] = useState<string>('1');
 
 	const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -16,11 +16,11 @@ const Tabs = () => {
 	return (
 		<TabContext value={value}>
 			<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-				<TabList TabIndicatorProps={{
+				<TabList textColor="inherit" TabIndicatorProps={{
 					style: {
-						backgroundColor: "rgb(21, 105, 90)"
+						backgroundColor: "rgb(13, 99, 28)"
 					  }
-				}} onChange={handleChange} centered>
+				}} onChange={handleChange}>
 					<Tab label="보유자산" value="1" />
 					<Tab label="거래내역" value="2" />
 					<Tab label="Item Three" value="3" />
@@ -33,4 +33,4 @@ const Tabs = () => {
 	);
 }
 
-export default Tabs;
+export default InvestmentTabs;

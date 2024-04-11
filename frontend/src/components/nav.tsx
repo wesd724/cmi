@@ -18,11 +18,12 @@ const Nav = () => {
                         CMI
                     </Typography>
                     <Button color="inherit" onClick={() => navigate("/")}>메인</Button>
+                    <Button color="inherit" onClick={() => navigate("/activity")}>활동</Button>
                     {
                         username
                             ? (
                                 <>
-                                    <Button color="inherit" onClick={() => navigate("/asset")}>내 자산</Button>
+                                    <Button color="inherit" onClick={() => navigate("/investment")}>내 투자</Button>
                                     <Button color="inherit" onClick={() => {
                                         localStorage.clear();
                                         navigate("/", {replace: true});
