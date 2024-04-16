@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -9,6 +9,41 @@ import { useNavigate } from 'react-router-dom';
 const Nav = () => {
     const navigate = useNavigate();
     const username = localStorage.getItem("username");
+    const eventSource = useRef<EventSource | null>(null);
+
+    useEffect(() => {
+        if (username) {
+            eventSource.current = new EventSource(process.env.REACT_APP_SSE_URL + username);
+
+            eventSource.current.addEventListener('connect', e => {
+                const data = e.data;
+                console.log(data)
+            });
+
+            eventSource.current.addEventListener('msg', e => {
+                const data = e.data;
+                console.log(JSON.parse(data))
+            });
+
+            eventSource.current.addEventListener('error', e => {
+                console.log(e)
+            });
+
+            window.addEventListener("beforeunload", e => {
+                e.preventDefault();
+            })
+        }
+
+        return () => {
+            eventSource.current?.close();
+        }
+    }, [username])
+
+    const logout = () => {
+        localStorage.clear();
+        navigate("/", { replace: true });
+        eventSource.current?.close();
+    }
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -24,10 +59,7 @@ const Nav = () => {
                             ? (
                                 <>
                                     <Button color="inherit" onClick={() => navigate("/investment")}>내 투자</Button>
-                                    <Button color="inherit" onClick={() => {
-                                        localStorage.clear();
-                                        navigate("/", {replace: true});
-                                    }}>로그아웃</Button>
+                                    <Button color="inherit" onClick={logout}>로그아웃</Button>
                                 </>
                             )
                             : <Button color="inherit" onClick={() => navigate("/login")}>로그인</Button>

@@ -15,8 +15,8 @@ public class SseController {
     private final SseService sseService;
 
     @GetMapping(value = "/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> connect() {
-        return ResponseEntity.ok(sseService.subscribe());
+    public ResponseEntity<SseEmitter> connect(String username) {
+        return ResponseEntity.ok(sseService.subscribe(username));
     }
 
     @GetMapping("/test")
