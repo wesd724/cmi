@@ -19,6 +19,10 @@ public class Notification {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
+
     @OneToOne
     @JoinColumn(name = "trade_history_id")
     private TradeHistory tradeHistory;
@@ -27,8 +31,9 @@ public class Notification {
     private boolean isRead;
 
     @Builder
-    public Notification(User user, TradeHistory tradeHistory, boolean isRead) {
+    public Notification(User user, Currency currency, TradeHistory tradeHistory, boolean isRead) {
         this.user = user;
+        this.currency = currency;
         this.tradeHistory = tradeHistory;
         this.isRead = isRead;
     }

@@ -18,6 +18,7 @@ public class CurrencyAssetService {
     private final CashAssetRepository cashAssetRepository;
     private final CurrencyAssetRepository currencyAssetRepository;
     private final TradeHistoryRepository tradeHistoryRepository;
+    private final NotificationRepository notificationRepository;
 
     public void updateCurrencyAsset() {
         List<TradeHistory> tradeHistories = tradeHistoryRepository.findByCompleteTrueAndCompleteDateNull();
@@ -53,5 +54,6 @@ public class CurrencyAssetService {
                 tradeHistory.complete();
             }
         }
+        notificationRepository.saveAllNotification(tradeHistories);
     }
 }

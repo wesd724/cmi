@@ -20,7 +20,7 @@ const Nav = () => {
                 console.log(data)
             });
 
-            eventSource.current.addEventListener('msg', e => {
+            eventSource.current.addEventListener('message', e => {
                 const data = e.data;
                 console.log(JSON.parse(data))
             });

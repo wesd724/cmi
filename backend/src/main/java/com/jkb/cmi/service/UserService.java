@@ -45,6 +45,7 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public UserAssetResponse getUserAsset(String username) {
         CashAsset cashAsset = cashAssetRepository.getByUser_Username(username);
         List<CurrencyAsset> currencyAssets = currencyAssetRepository.getByUser_Username(username);

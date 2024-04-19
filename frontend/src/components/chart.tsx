@@ -35,7 +35,7 @@ const Chart = ({ time, marketName }: candleType) => {
     useEffect(() => {
         candle(marketName, time, 200);
         interval.current = setInterval(() => {
-            console.log(1);
+            
         }, 10000)
 
         return () => {

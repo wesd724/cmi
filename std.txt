@@ -16,7 +16,7 @@
 매수/매도 (처리)
 주문 체결 알림
 각 코인별 댓글 기능
-실시간 랭킹(redis[])
+실시간 랭킹(redis[]) (먼저 mysql로 구현 -> redis)
 인증 게시판(s3)[]
 코인별 뉴스(네이버 뉴스 API)(프론트)[]
 
@@ -65,6 +65,20 @@ url로 직접 접근시 localstorage 무시(해결중)
 -> sse를 '클라이언트' 당 연결이 아니라, '유저' 당 연결을 하도록 구현중
 -> 새로 체결된 내용을 유저가 접속하지 않았을 때에도 잃어버리면 안되니까 저장해야됨
 -> 유저가 접속중일 때에는 실시간 체결 내용을 바로 전달하면 되나? -> 그럼 이 체결내용은 따로 저장할 필요가 없나?
+
+6-1. 거래 기록 테이블에서 체결시간까지 완료된(가장 최근에 체결이 완료된) 거래들을 알림 테이블에 insert해야 한다.
+-> 체결 완료된 거래들을 모두 insert 해줘야 한다
+-> 여러개의 단건 insert로 하면 db 속도 저하 & 부하 발생
+-> bulk insert로 처리해야함.
+-> jpa로 bulk insert를 처리하려면(batch size를 이용한), 테이블 id 생성 전략이 IDENTITY(기본 키 생성을 데이터베이스에 위임,  auto-increment로 PK 값을 자동으로 증분)면 안된다.
+-> 내 mysql의 모든 테이블 생성 전략이 IDENTITY이므로 bulk 연산이 안된다.
+-> 전략을 바꾸면 되긴 하는데... 단지 벌크 연산만을 위해서 테이블 구조를 바꿔야 하나..
+-> MySQL은 sequence 전략이 없고, table 전략을 쓰기에는 이 테이블도 관리해야 한다는 점이 부담
+-> JdbcTemplate으로 bulk연산(batchupdate) 처리
+
+6-2. 유저별 알림을 전송(조회)할 때, 알림 테이블에 있는(currency_id, trade_history_id)를 통하여 다시 연관 컬럼(주문, 가격 등)을 조회해야 한다.
+-> 이 과정에서 여러 trade_history의 행들과 currency의 행들을 조회하는데, 여기서 n + 1 문제 발생.
+-> queryDSL의 fetchJoin()으로 처리
 
 7. Currency(N) : TradeHistory(1)에서, tradeHistory에서 user_id를 기준으로 조회시 해당 user와 관계되어 조회된 Currency(N)만큼
 추가 쿼리 발생 -> n + 1 문제 발생 -> fetch join 으로 처리

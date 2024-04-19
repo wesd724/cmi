@@ -2,7 +2,7 @@ package com.jkb.cmi.common;
 
 import com.jkb.cmi.dto.response.APIResponse;
 import com.jkb.cmi.service.CurrencyAssetService;
-import com.jkb.cmi.service.SseService;
+import com.jkb.cmi.service.NotificationService;
 import com.jkb.cmi.service.TradeHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class Scheduler {
-    private final SseService sseService;
+    private final NotificationService notificationService;
     private final CurrencyAssetService currencyAssetService;
     private final TradeHistoryService tradeHistoryService;
     @Value("${upbit.url}")
@@ -30,7 +30,7 @@ public class Scheduler {
     public void run() {
         tradeHistoryService.completeProcess(getData());
         currencyAssetService.updateCurrencyAsset();
-        sseService.send(1);
+        notificationService.sendAll(1);
     }
 
     private List<APIResponse> getData() {
