@@ -21,13 +21,15 @@ public class TradeHistoryController {
         List<TradeHistoryResponse> tradeHistoryResponses = tradeHistoryService.getTradeHistory(username);
         return ResponseEntity.ok(tradeHistoryResponses);
     }
-    @PostMapping
-    public void buy(@RequestBody OrderRequest orderRequest) {
+    @PostMapping("/buy")
+    public ResponseEntity<Void> buy(@RequestBody OrderRequest orderRequest) {
         tradeHistoryService.order(orderRequest, Orders.BUY);
+        return ResponseEntity.ok().build();
     }
-    @DeleteMapping
-    public void sell(@RequestBody OrderRequest orderRequest) {
+    @PostMapping("/sell")
+    public ResponseEntity<Void> sell(@RequestBody OrderRequest orderRequest) {
         tradeHistoryService.order(orderRequest, Orders.SELL);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/cancel")

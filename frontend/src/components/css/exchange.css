@@ -1,12 +1,22 @@
 .exchange {
-    position: relative;
-    left: 35vw;
+    width: 425px;
+    margin: 0 auto;
+    margin-top: 15px;
+}
+
+.exchange form {
+    font-size: 19px;
 }
 
 .exchange input {
-    margin: 5px;
-    width: 150px;
-    height: 20px;
+    border: 1px solid gray;
+    margin: 5px 0px 5px 10px;
+    width: 330px;
+    height: 30px;
+}
+
+.exchange input:focus {
+    outline: 1px solid rgb(15, 99, 133);
 }
 
 .exchange > p {
@@ -19,6 +29,7 @@
     border-radius: 20px;
 }
 
-.exchange button:hover {
-    background-color: rgb(95, 127, 196);
+.price {
+    font-weight: bold;
+    margin-left: 20px;
 }

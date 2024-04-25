@@ -7,8 +7,24 @@ interface order {
     price: number;
 }
 
-const buy = async (data: order) => {
-    const res = await axios.post("/trade", data);
+interface info {
+    username: string,
+    market: string
 }
 
-export { buy };
+const getCashAndCurrency = async (data: info) => {
+    const res = await axios.get("/user/cash-currency", {
+        params: data
+    });
+    return res.data
+}
+
+const buy = async (data: order) => {
+    await axios.post("/trade/buy", data);
+}
+
+const sell = async (data: order) => {
+    await axios.post("/trade/sell", data);
+}
+
+export { buy, sell, getCashAndCurrency };

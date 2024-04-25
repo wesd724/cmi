@@ -1,6 +1,7 @@
 package com.jkb.cmi.controller;
 
 import com.jkb.cmi.dto.request.UserRequest;
+import com.jkb.cmi.dto.response.CashAndCurrencyResponse;
 import com.jkb.cmi.dto.response.UserAssetResponse;
 import com.jkb.cmi.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,17 @@ public class UserController {
         return ResponseEntity.ok(userService.login(userRequest));
     }
 
-    @GetMapping
+    @GetMapping("/asset")
     ResponseEntity<UserAssetResponse> getUserAsset(String username) {
         UserAssetResponse userAssetResponse = userService.getUserAsset(username);
         return ResponseEntity.ok(userAssetResponse);
+    }
+
+    @GetMapping("/cash-currency")
+    ResponseEntity<CashAndCurrencyResponse> getCashAndCurrencyByUser(
+            String username, String market) {
+        CashAndCurrencyResponse cashAndCurrencyResponse =
+                userService.getCashAndCurrencyByUser(username, market);
+        return ResponseEntity.ok(cashAndCurrencyResponse);
     }
 }

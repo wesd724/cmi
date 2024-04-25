@@ -1,5 +1,6 @@
 package com.jkb.cmi.service;
 
+import com.jkb.cmi.dto.response.CashAndCurrencyResponse;
 import com.jkb.cmi.dto.response.UserAssetResponse;
 import com.jkb.cmi.dto.request.UserRequest;
 import com.jkb.cmi.entity.CashAsset;
@@ -50,5 +51,19 @@ public class UserService {
         CashAsset cashAsset = cashAssetRepository.getByUser_Username(username);
         List<CurrencyAsset> currencyAssets = currencyAssetRepository.getByUser_Username(username);
         return UserAssetResponse.of(cashAsset, currencyAssets);
+    }
+
+    @Transactional(readOnly = true)
+    public CashAndCurrencyResponse getCashAndCurrencyByUser(String username, String market) {
+        CashAsset cashAsset = cashAssetRepository.getByUser_Username(username);
+        try {
+            CurrencyAsset currencyAsset =
+                    currencyAssetRepository.findByUser_UsernameAndCurrency_market(username, market)
+                            .orElseThrow(IllegalArgumentException::new);
+
+            return CashAndCurrencyResponse.of(cashAsset, currencyAsset);
+        } catch(IllegalArgumentException e) {
+            return new CashAndCurrencyResponse(cashAsset.getBalance(), 0d);
+        }
     }
 }

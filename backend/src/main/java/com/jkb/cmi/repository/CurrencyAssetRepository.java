@@ -12,4 +12,5 @@ public interface CurrencyAssetRepository extends JpaRepository<CurrencyAsset, Lo
     @Query("select c from CurrencyAsset c join fetch c.currency where c.user.username = :username")
     List<CurrencyAsset> getByUser_Username(@Param("username") String username);
     Optional<CurrencyAsset> getByUser_IdAndCurrency_Id(Long userId, Long currencyId);
+    Optional<CurrencyAsset> findByUser_UsernameAndCurrency_market(String username, String market);
 }

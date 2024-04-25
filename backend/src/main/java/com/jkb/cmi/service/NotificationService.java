@@ -40,6 +40,12 @@ public class NotificationService {
         return emitter;
     }
 
+    public void close(String username) {
+        List<SseEmitter> emitters = sseRepository.findByUsername(username);
+
+        emitters.forEach(emitter -> emitter.complete());
+    }
+
     private void sendEvent(SseEmitter emitter, String username, String eventName, Object data) {
         try {
             emitter.send(SseEmitter.event()

@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useState, useEffect } from "react";
 import { getTradeHistory, tradeHistory } from "../api/trade";
+import { toKR } from "../lib/api";
 import "./css/trade.css";
 
 const Trade = () => {
@@ -33,8 +34,8 @@ const Trade = () => {
                             <TableCell>{v.currencyName}</TableCell>
                             <TableCell>{v.order}</TableCell>
                             <TableCell>{v.amount}</TableCell>
-                            <TableCell>{v.price.toLocaleString('ko-KR') + " KRW"}</TableCell>
-                            <TableCell>{v.tradePrice.toLocaleString('ko-KR') + " KRW"}</TableCell>
+                            <TableCell>{toKR(v.price) + " KRW"}</TableCell>
+                            <TableCell>{toKR(v.tradePrice) + " KRW"}</TableCell>
                             <TableCell>{v.orderDate.replace(/T/, ' ')}</TableCell>
                             <TableCell>{v.completeDate?.replace(/T/, ' ')}</TableCell>
                         </TableRow>

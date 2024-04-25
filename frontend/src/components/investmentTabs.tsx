@@ -20,7 +20,7 @@ const InvestmentTabs = () => {
 					style: {
 						backgroundColor: "rgb(13, 99, 28)"
 					  }
-				}} onChange={handleChange}>
+				}} onChange={handleChange} centered>
 					<Tab label="보유자산" value="1" />
 					<Tab label="거래내역" value="2" />
 					<Tab label="Item Three" value="3" />

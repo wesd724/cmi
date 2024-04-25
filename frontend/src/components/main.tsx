@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MARKET, MARKET_NAME } from "../data/constant";
+import { toKR } from "../lib/api";
 import { response, tickerType } from "../type/interface";
 import { getTickers, webSocketRequest } from "../upbit/api";
 import Chart from "./chart";
@@ -85,10 +86,10 @@ const Main = () => {
                         {tickers.map((v, i) => (
                             <TableRow key={v.signed_change_rate * v.trade_price}>
                                 <TableCell onClick={() => onClick(v.market)}>{`${MARKET_NAME[i]}(${v.market})`}</TableCell>
-                                <TableCell>{v.trade_price.toLocaleString('ko-KR')}</TableCell>
+                                <TableCell>{toKR(v.trade_price)}</TableCell>
                                 <TableCell>{`${(v.signed_change_rate * 100).toFixed(2)}%`}</TableCell>
-                                <TableCell>{`${Math.round(v.acc_trade_price_24h / 1000000).toLocaleString('ko-KR')}백만`}</TableCell>
-                                <TableCell><Button variant="outlined" onClick={() => exchange(i, v.trade_price)} style={{ left: "2vw", width: "70%" }}>구매</Button></TableCell>
+                                <TableCell>{`${toKR(Math.round(v.acc_trade_price_24h / 1000000))}백만`}</TableCell>
+                                <TableCell><Button variant="outlined" onClick={() => exchange(i, v.trade_price)} style={{ left: "2vw", width: "70%" }}>주문</Button></TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

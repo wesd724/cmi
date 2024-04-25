@@ -4,8 +4,10 @@ import { webSocketRequest } from "../upbit/api";
 import { MARKET } from "../data/constant";
 import { Button } from "@mui/material";
 import Chart from "./chart";
-import { buy } from "../api/exchange";
+import { buy, getCashAndCurrency, sell } from "../api/exchange";
 import "./css/exchange.css";
+import { exchangeStatus } from "../type/interface";
+import { toKR } from "../lib/api";
 
 const Exchange = () => {
     const username = localStorage.getItem("username") as string;
@@ -15,9 +17,16 @@ const Exchange = () => {
     const [price, setPrice] = useState<number>(location.state);
     const [trade, setTrade] = useState(location.state);
     const [amount, setAmount] = useState<number>(0);
+    const [order, setOrder] = useState<string>("BUY");
+    const [status, setStatus] = useState<exchangeStatus>({
+        balance: 0, currencyAmount: 0
+    });
+
+    const delta = (price < 1000) ? 1 : (price < 10000) ? 10 : (price < 100000) ? 100: 1000
 
     const webSocket = useRef<WebSocket | null>(null);
     const market = MARKET[Number(id) - 1];
+
     //const market = qs.get('market') as string;
 
     useEffect(() => {
@@ -43,8 +52,21 @@ const Exchange = () => {
         }
     }, [market])
 
+    useEffect(() => {
+        (async () => {
+            const data = await getCashAndCurrency({ username, market });
+            setStatus(data);
+        })();
+    }, [username, market])
+    
+    const orders = (type: string) => {
+        if(type === "BUY") setOrder("BUY");
+        else setOrder("SELL");
+        setAmount(0);
+    }
 
     const ChangeTrade = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.target.value = e.target.value.replace(/,/g, '');
         setTrade(e.target.value ? parseInt(e.target.value) : 0);
     }
 
@@ -53,19 +75,26 @@ const Exchange = () => {
     }
 
     const ChangeTotal = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.target.value = e.target.value.replace(/,/g, '');
         const value = e.target.value ? parseInt(e.target.value) : 0;
         setAmount(parseFloat((value / trade).toFixed(8)));
     }
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (window.confirm("매수하겠습니까?")) {
-            buy({ username, currencyId: Number(id), amount, price: trade })
+        if(order === "BUY") {
+            if (window.confirm("매수하겠습니까?")) {
+                buy({ username, currencyId: Number(id), amount, price: trade });
+            }
+        } else {
+            if (window.confirm("매도하겠습니까?")) {
+                sell({ username, currencyId: Number(id), amount, price: trade });
+            }
         }
+        
     }
-
-    const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        setTrade((v: number) => v + 1000);
+    const onClick = (e: React.MouseEvent<HTMLButtonElement>, delta: number) => {
+        setTrade((v: number) => v + delta);
     }
     return (
         <div>
@@ -74,16 +103,26 @@ const Exchange = () => {
                     ? (
                         <>
                             <div className="exchange">
-                                <p>{market} 현재가: {price}</p>
+                                <Button sx={{ width: 210, marginBottom: 1 }} onClick={() => orders("BUY")} variant="outlined">매수</Button>
+                                <Button sx={{ width: 210, marginBottom: 1 }} onClick={() => orders("SELL")} variant="outlined">매도</Button>
                                 <form onSubmit={onSubmit}>
-                                    매수 가격: <input value={trade} onChange={ChangeTrade} /><br />
-                                    주문 수량: <input value={amount} onChange={ChangeAmount} /><br />
-                                    주문 총액: <input value={Math.round(trade * amount)} onChange={ChangeTotal} /><br />
-                                    <Button sx={{ bottom: 90, left: 240, margin: "5px" }} size="small" type="submit" variant="contained">매수</Button>
-                                    <Button sx={{ bottom: 55, left: 166, margin: "5px", backgroundColor: "green" }} size="small" variant="contained">매도</Button>
-                                    <Button sx={{ left: -70, margin: "5px" }} size="small" onClick={onClick} variant="outlined">+1000</Button>
+
+                                    주문가능 &nbsp;&nbsp;&nbsp; {order === "BUY" ? `${toKR(status.balance)} KRW` : `${status.currencyAmount} ${market.slice(4)}`} <br />
+                                    {order === "BUY" ? "매수" : "매도"} 가격 <input value={toKR(trade)} onChange={ChangeTrade} /><br />
+
+                                    <Button sx={{ left: 290, height: 25, color: "red", borderColor: "red" }} onClick={(e) => onClick(e, delta)}>+{delta}</Button>
+                                    <Button sx={{ left: 290, height: 25, }} onClick={(e) => onClick(e, -delta)}>-{delta}</Button><br />
+                                    주문 수량 <input value={amount} onChange={ChangeAmount} /><br />
+                                    주문 총액 <input value={toKR(Math.round(trade * amount))} onChange={ChangeTotal} /><br />
+                                    {
+                                        order === "BUY"
+                                            ? <Button sx={{ width: 430, right: 15, margin: 1, fontSize: 15 }} size="small" type="submit" variant="contained">매수</Button>
+                                            : <Button sx={{ width: 430, right: 15, margin: 1, fontSize: 15, backgroundColor: "green", "&:hover": { backgroundColor: "#5a8251" } }} size="small" type="submit" variant="contained">매도</Button>
+
+                                    }
                                 </form>
                             </div>
+                            <p className="price">{market} 현재가: {price}</p>
                             <Chart time="minutes/1" marketName={market} />
                         </>
                     ) : <Navigate to="/" replace />
