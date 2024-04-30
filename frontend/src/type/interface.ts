@@ -15,7 +15,9 @@ export interface exchangeStatus {
     currencyAmount: number;
 }
 
-export type candleType =  {
+export interface candleType {
     time: string;
     marketName: string;
+    width?: number;
+    height?: number;
 }

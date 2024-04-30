@@ -10,4 +10,9 @@ const login = async (data: user) => {
     return res.data
 }
 
-export { login }
+const signUp = async (data: user) => {
+    const res = await axios.post("/user/sign-up", data);
+    return res.data
+}
+
+export { login, signUp }

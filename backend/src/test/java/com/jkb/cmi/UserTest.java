@@ -22,4 +22,10 @@ public class UserTest {
             System.out.println(e.getMessage());
         }
     }
+
+    @Test
+    void test2() {
+        User user = userRepository.getByUsername("asd");
+        System.out.println(user);
+    }
 }

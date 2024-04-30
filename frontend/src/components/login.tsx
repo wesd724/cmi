@@ -19,14 +19,16 @@ const Login = () => {
         if(data) {
             localStorage.setItem("username", username);
             navigate("/");
+            return;
         }
+        alert("아이디와 비밀번호가 정확하지 않습니다.");
     }
     return (
         <div className="login">
             <form onSubmit={onSubmit}>
-                <input onChange={ChangeUsername} placeholder="username" required /><br />
-                <input onChange={ChangePassword} placeholder="password" type="password" required /><br />
-                <Button type="submit" color="success" size="small" variant="contained">hello</Button>
+                <input value={username} onChange={ChangeUsername} placeholder="username" required /><br />
+                <input value={password} onChange={ChangePassword} placeholder="password" type="password" required /><br />
+                <Button type="submit" color="success" size="small" variant="contained">로그인</Button>
             </form>
         </div>
     )

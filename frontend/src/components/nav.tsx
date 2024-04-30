@@ -64,7 +64,14 @@ const Nav = () => {
                                     <Button color="inherit" onClick={logout}>로그아웃</Button>
                                 </>
                             )
-                            : <Button color="inherit" onClick={() => navigate("/login")}>로그인</Button>
+                            : (
+                                <>
+                                    <Button color="inherit" onClick={() => navigate("/login")}>로그인</Button>
+                                    <Button color="inherit" onClick={() => navigate("/signup")}>회원가입</Button>
+                                </>
+                            )
+
+
                     }
                 </Toolbar>
             </AppBar>
