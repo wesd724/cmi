@@ -30,7 +30,7 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
                     ps.setLong(1, tradeHistory.getUser().getId());
                     ps.setLong(2, tradeHistory.getCurrency().getId());
                     ps.setLong(3, tradeHistory.getId());
-                    ps.setInt(3, 0);
+                    ps.setInt(4, 0);
                 }
         );
     }

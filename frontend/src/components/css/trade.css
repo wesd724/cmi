@@ -1,3 +1,7 @@
 .trade td:nth-child(6), .trade td:nth-child(7) {
     width: 150px;
 }
+
+.trade td:nth-child(8) {
+    width: 50px;
+}

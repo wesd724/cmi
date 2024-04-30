@@ -33,7 +33,7 @@ public class TradeHistoryController {
     }
 
     @DeleteMapping("/cancel")
-    public void cancel(@RequestBody OrderRequest orderRequest) {
-
+    public ResponseEntity<Boolean> cancel(Long id) {
+        return ResponseEntity.ok(tradeHistoryService.cancel(id));
     }
 }

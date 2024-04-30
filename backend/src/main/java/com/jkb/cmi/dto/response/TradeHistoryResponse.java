@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TradeHistoryResponse {
+    private Long id;
     private String currencyName;
     private String order;
     private Double amount;
@@ -20,19 +21,22 @@ public class TradeHistoryResponse {
     private Long tradePrice;
     private LocalDateTime orderDate;
     private LocalDateTime completeDate;
+    private boolean complete;
 
     public static TradeHistoryResponse from(TradeHistory tradeHistory) {
         Double amount = tradeHistory.getAmount();
         Double price = tradeHistory.getPrice();
         Long tradePrice = Math.round(amount * price);
         return new TradeHistoryResponse(
+                tradeHistory.getId(),
                 tradeHistory.getCurrency().getName(),
                 tradeHistory.getOrders().name(),
                 tradeHistory.getAmount(),
                 tradeHistory.getPrice(),
                 tradePrice,
                 tradeHistory.getCreatedDate(),
-                tradeHistory.getCompleteDate()
+                tradeHistory.getCompleteDate(),
+                tradeHistory.isComplete()
         );
     }
 

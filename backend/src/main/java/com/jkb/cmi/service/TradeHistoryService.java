@@ -46,4 +46,12 @@ public class TradeHistoryService {
         tradeHistoryRepository.tradeCompleteProcessing(apiResponses, Orders.BUY);
         tradeHistoryRepository.tradeCompleteProcessing(apiResponses, Orders.SELL);
     }
+
+    public Boolean cancel(Long id) {
+        TradeHistory tradeHistory = tradeHistoryRepository.getReferenceById(id);
+        if(tradeHistory.isComplete())
+            return false;
+        tradeHistoryRepository.deleteById(id);
+        return true;
+    }
 }
