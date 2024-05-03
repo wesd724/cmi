@@ -81,7 +81,6 @@ public class NotificationService {
     public void saveNotification(TradeHistory tradeHistory) {
         Notification notification = Notification.builder()
                 .user(tradeHistory.getUser())
-                .currency(tradeHistory.getCurrency())
                 .tradeHistory(tradeHistory)
                 .isRead(false)
                 .build();

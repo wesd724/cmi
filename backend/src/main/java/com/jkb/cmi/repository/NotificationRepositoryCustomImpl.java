@@ -38,9 +38,9 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
     @Override
     public List<Notification> findNotificationByUsername(String username) {
         return queryFactory.selectFrom(notification)
-                .join(notification.currency, currency)
-                .fetchJoin()
                 .join(notification.tradeHistory, tradeHistory)
+                .fetchJoin()
+                .join(tradeHistory.currency, currency)
                 .fetchJoin()
                 .where(notification.user.username.eq(username),
                         notification.isRead.eq(false))
