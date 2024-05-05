@@ -18,6 +18,24 @@ export interface exchangeStatus {
 export interface candleType {
     time: string;
     marketName: string;
-    width?: number;
-    height?: number;
+    width: string;
+    height: string;
+}
+
+export interface currencyAssetType {
+    market: String;
+    currencyName: string;
+    amount: number;
+    averageCurrencyBuyPrice: number;
+    buyPrice: number;
+}
+
+export interface userAssetType {
+    balance: number;
+    currencyAssetResponseList: currencyAssetType[];
+}
+
+export interface currencyTicker {
+    market: string;
+    trade_price: number;
 }

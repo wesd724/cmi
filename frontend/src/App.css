@@ -21,9 +21,12 @@
 
 body {
     background-color: azure;
-    font-family: 'Pretendard-Regular';
 }
 
-button, input, td {
+body, div {
+    font-family: 'Pretendard-Regular' !important;
+}
+
+button, input {
     font-family: 'GmarketSansMedium' !important;
 }

@@ -23,18 +23,4 @@ public class UserController {
     ResponseEntity<Boolean> login(@RequestBody UserRequest userRequest) {
         return ResponseEntity.ok(userService.login(userRequest));
     }
-
-    @GetMapping("/asset")
-    ResponseEntity<UserAssetResponse> getUserAsset(String username) {
-        UserAssetResponse userAssetResponse = userService.getUserAsset(username);
-        return ResponseEntity.ok(userAssetResponse);
-    }
-
-    @GetMapping("/cash-currency")
-    ResponseEntity<CashAndCurrencyResponse> getCashAndCurrencyByUser(
-            String username, String market) {
-        CashAndCurrencyResponse cashAndCurrencyResponse =
-                userService.getCashAndCurrencyByUser(username, market);
-        return ResponseEntity.ok(cashAndCurrencyResponse);
-    }
 }

@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { response, candleType } from '../type/interface';
 import { getCandles } from '../upbit/api';
 
+const intervalTime = (time: string) => time === "days" ? 1000 * 60 * 60 : 1000 * 10;
+
 const formatBytime = (time: string, timestamp: string) => {
     const d = new Date(timestamp);
     if(time === "days") {
@@ -14,7 +16,7 @@ const formatBytime = (time: string, timestamp: string) => {
     return `${d.getHours()}:${m < 10 ? "0" + m : m}`;
 }
 
-const Chart = ({ time, marketName }: candleType) => {
+const Chart = ({ width, height, time, marketName }: candleType) => {
     const [candles, setCandles] = useState<number[][]>([]);
     const interval = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -35,8 +37,8 @@ const Chart = ({ time, marketName }: candleType) => {
     useEffect(() => {
         candle(marketName, time, 200);
         interval.current = setInterval(() => {
-            
-        }, 10000)
+            candle(marketName, time, 200);
+        }, intervalTime(time))
 
         return () => {
             if (interval.current) {
@@ -46,19 +48,20 @@ const Chart = ({ time, marketName }: candleType) => {
         }
     }, [candle, marketName, time]);
 
-    const endInterval = () => {
-        if (interval.current) {
-            console.log("END!", interval.current);
-            clearInterval(interval.current);
-            interval.current = null;
-        }
-    }
+    // const endInterval = () => {
+    //     if (interval.current) {
+    //         console.log("END!", interval.current);
+    //         clearInterval(interval.current);
+    //         interval.current = null;
+    //     }
+    // }
 
     return (
         <div>
             <ApexChart
                 type="candlestick"
-                height="450px"
+                height={height}
+                width={width}
                 series={[{
                     data: candles.reverse()
                 }]}

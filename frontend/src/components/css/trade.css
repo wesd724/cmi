@@ -5,3 +5,8 @@
 .trade td:nth-child(8) {
     width: 50px;
 }
+
+.trade th {
+    background-color: #f3f3f3;
+    font-weight: bold;
+}

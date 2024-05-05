@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -71,7 +71,7 @@ const Main = () => {
 
     return (
         <>
-            <TableContainer sx={{ height: "43vh" }}>
+            <TableContainer sx={{ height: "40vh", border: "1px solid #b5a0cb" }}>
                 <Table className="ticker">
                     <TableHead>
                         <TableRow>
@@ -95,7 +95,23 @@ const Main = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Chart time="days" marketName={market} />
+            <Chart width="68%" height="450px" time="days" marketName={market} />
+            <TableContainer className="ai-container" sx={{ width: "25vw" }} component={Paper}>
+                <Table className="ai">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="center">추천 순위</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {Array.from({length: 5}).map((v, i) => (
+                            <TableRow key={i}>
+                                <TableCell align="center">{`${MARKET_NAME[i]}`}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </>
 
     )

@@ -28,7 +28,7 @@ const Trade = () => {
         <TableContainer sx={{ height: 800 }}>
             <Table className="trade" size="small">
                 <TableHead>
-                    <TableRow sx={{ backgroundColor: "#f3f3f3" }}>
+                    <TableRow>
                         <TableCell>코인</TableCell>
                         <TableCell>주문</TableCell>
                         <TableCell>거래수량</TableCell>

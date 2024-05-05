@@ -28,15 +28,11 @@ public class CurrencyAssetService {
             Double amount = tradeHistory.getAmount();
             Double price = tradeHistory.getPrice();
             long tradePrice = Math.round(price * amount);
-            Orders order = tradeHistory.getOrders();
-            long buyPrice = order == Orders.BUY ? tradePrice : -tradePrice;
 
-            User user = userRepository.getReferenceById(userId);
-            Currency currency = currencyRepository.getReferenceById(currencyId);
+            long buyPrice = tradeHistory.getOrders() == Orders.BUY ? tradePrice : -tradePrice;
 
             CashAsset cashAsset = cashAssetRepository.getByUser_Id(userId);
             cashAsset.changeBalance(buyPrice);
-
             try {
                 CurrencyAsset currencyAsset = currencyAssetRepository
                         .getByUser_IdAndCurrency_Id(userId, currencyId).orElseThrow(IllegalArgumentException::new);
@@ -46,6 +42,9 @@ public class CurrencyAssetService {
                 currencyAsset.setAverageCurrencyBuyPrice();
 
             } catch(IllegalArgumentException e) {
+                User user = userRepository.getReferenceById(userId);
+                Currency currency = currencyRepository.getReferenceById(currencyId);
+
                 CurrencyAsset currencyAsset = CurrencyAsset.builder()
                         .user(user).currency(currency)
                         .buyPrice(buyPrice).averageCurrencyBuyPrice(price).amount(amount).build();

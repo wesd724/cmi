@@ -52,7 +52,7 @@ const Nav = () => {
             <AppBar position="static" color="info">
                 <Toolbar>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        CMI
+                        모의 투자
                     </Typography>
                     <Button color="inherit" onClick={() => navigate("/")}>메인</Button>
                     <Button color="inherit" onClick={() => navigate("/activity")}>활동</Button>

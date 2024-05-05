@@ -10,3 +10,32 @@
     background-color: rgb(228, 228, 227);
     font-weight: bold;
 }
+
+.ticker td {
+    font-size: 15px;
+}
+
+.ai-container {
+    position: absolute;
+    border: 1px solid #b3b3b3;
+    left: 70vw;
+    top: 53vh;
+}
+
+.ai {
+    background-color: rgb(253, 252, 252);
+}
+
+.ai * {
+    font-family: 'Pretendard-Regular' !important;
+}
+
+.ai th {
+    background-color: #cddde4;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.ai td {
+    font-size: 15px;
+}

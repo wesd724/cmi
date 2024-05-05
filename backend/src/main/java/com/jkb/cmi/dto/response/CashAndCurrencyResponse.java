@@ -13,11 +13,4 @@ import lombok.NoArgsConstructor;
 public class CashAndCurrencyResponse {
     private Long balance;
     private Double CurrencyAmount;
-
-    public static CashAndCurrencyResponse of(CashAsset cashAsset, CurrencyAsset currencyAsset) {
-        return new CashAndCurrencyResponse(
-                cashAsset.getBalance(),
-                currencyAsset.getAmount()
-        );
-    }
 }

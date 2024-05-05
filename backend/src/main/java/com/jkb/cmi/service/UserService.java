@@ -5,6 +5,7 @@ import com.jkb.cmi.dto.response.CashAndCurrencyResponse;
 import com.jkb.cmi.dto.response.UserAssetResponse;
 import com.jkb.cmi.entity.CashAsset;
 import com.jkb.cmi.entity.CurrencyAsset;
+import com.jkb.cmi.entity.TradeHistory;
 import com.jkb.cmi.entity.User;
 import com.jkb.cmi.repository.CashAssetRepository;
 import com.jkb.cmi.repository.CurrencyAssetRepository;
@@ -47,27 +48,6 @@ public class UserService {
             return true;
         } catch(IllegalArgumentException e) {
             return false;
-        }
-    }
-
-    @Transactional(readOnly = true)
-    public UserAssetResponse getUserAsset(String username) {
-        CashAsset cashAsset = cashAssetRepository.getByUser_Username(username);
-        List<CurrencyAsset> currencyAssets = currencyAssetRepository.getByUser_Username(username);
-        return UserAssetResponse.of(cashAsset, currencyAssets);
-    }
-
-    @Transactional(readOnly = true)
-    public CashAndCurrencyResponse getCashAndCurrencyByUser(String username, String market) {
-        CashAsset cashAsset = cashAssetRepository.getByUser_Username(username);
-        try {
-            CurrencyAsset currencyAsset =
-                    currencyAssetRepository.findByUser_UsernameAndCurrency_market(username, market)
-                            .orElseThrow(IllegalArgumentException::new);
-
-            return CashAndCurrencyResponse.of(cashAsset, currencyAsset);
-        } catch(IllegalArgumentException e) {
-            return new CashAndCurrencyResponse(cashAsset.getBalance(), 0d);
         }
     }
 }

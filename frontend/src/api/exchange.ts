@@ -13,7 +13,7 @@ interface info {
 }
 
 const getCashAndCurrency = async (data: info) => {
-    const res = await axios.get("/user/cash-currency", {
+    const res = await axios.get("/asset/cash-currency", {
         params: data
     });
     return res.data

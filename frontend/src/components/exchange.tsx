@@ -80,17 +80,20 @@ const Exchange = () => {
         setAmount(parseFloat((value / trade).toFixed(8)));
     }
 
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if(order === "BUY") {
             if (window.confirm("매수하겠습니까?")) {
-                buy({ username, currencyId: Number(id), amount, price: trade });
+                await buy({ username, currencyId: Number(id), amount, price: trade });
             }
         } else {
             if (window.confirm("매도하겠습니까?")) {
-                sell({ username, currencyId: Number(id), amount, price: trade });
+                await sell({ username, currencyId: Number(id), amount, price: trade });
             }
         }
+        const data = await getCashAndCurrency({ username, market });
+        setStatus(data);
+        alert("주문 완료");
         
     }
     const onClick = (e: React.MouseEvent<HTMLButtonElement>, delta: number) => {
@@ -107,7 +110,7 @@ const Exchange = () => {
                                 <Button sx={{ width: 210, marginBottom: 1 }} onClick={() => orders("SELL")} variant="outlined">매도</Button>
                                 <form onSubmit={onSubmit}>
 
-                                    주문가능 &nbsp;&nbsp;&nbsp; {order === "BUY" ? `${toKR(status.balance)} KRW` : `${status.currencyAmount} ${market.slice(4)}`} <br />
+                                    주문가능 &nbsp;&nbsp;&nbsp; {order === "BUY" ? `${toKR(status.balance)} KRW` : `${toKR(status.currencyAmount)} ${market.slice(4)}`} <br />
                                     {order === "BUY" ? "매수" : "매도"} 가격 <input value={toKR(trade)} onChange={ChangeTrade} /><br />
 
                                     <Button sx={{ left: 290, height: 25, color: "red", borderColor: "red" }} onClick={(e) => onClick(e, delta)}>+{delta}</Button>
@@ -123,7 +126,7 @@ const Exchange = () => {
                                 </form>
                             </div>
                             <p className="price">{market} 현재가: {price}</p>
-                            <Chart time="minutes/1" marketName={market} />
+                            <Chart width="100%" height="450px" time="minutes/1" marketName={market} />
                         </>
                     ) : <Navigate to="/" replace />
             }

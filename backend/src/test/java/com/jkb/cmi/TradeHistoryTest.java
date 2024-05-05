@@ -1,8 +1,10 @@
 package com.jkb.cmi;
 
 import com.jkb.cmi.entity.TradeHistory;
+import com.jkb.cmi.entity.type.Orders;
 import com.jkb.cmi.repository.TradeHistoryRepository;
 import com.jkb.cmi.service.TradeHistoryService;
+import com.querydsl.core.Tuple;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +30,18 @@ public class TradeHistoryTest {
 
     @Test
     void test2() {
-        tradeHistoryRepository.findByUsername("test");
+        List<TradeHistory> tradeHistories = tradeHistoryRepository.findByUsername("asd");
+        System.out.println(tradeHistories);
     }
 
 
     @Test
-    @Transactional
-    @Rollback(false)
     void test3() {
-
+        List<TradeHistory> tradeHistories =
+                tradeHistoryRepository.findByUsernameAndCompleteFalse("test");
+    }
+    @Test
+    void test5() {
     }
 
 }
