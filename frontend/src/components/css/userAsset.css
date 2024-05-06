@@ -1,4 +1,65 @@
-.userAsset th {
+.userAsset {
+    width: 1100px;
+    margin: 0 auto;
+}
+
+.tradeState {
+    float: left;
+    width: 550px;
+    padding: 40px 45px;
+}
+
+.tradeState dl {
+    display: table;
+    float: left;
+    width: 226px;
+}
+
+.tradeState dl:nth-child(-n + 2) {
+    margin-top: 0;
+    padding-bottom: 25px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgb(145, 137, 137);
+}
+
+.tradeState dl:nth-child(-n + 2) > dd {
+    font-size: 20px;
+}
+
+.tradeState dl:nth-child(even) {
+    padding-left: 50px;
+}
+
+.tradeState dl:nth-child(n + 3) {
+    margin-top: 10px;
+}
+
+.tradeState dl:nth-child(n + 4) > dd {
+    color: #0152b7; 
+}
+
+.tradeState dt {
+    display: table-cell;
+}
+
+.tradeState dd {
+    display: table-cell;
+    text-align: right;
+}
+
+.chart {
+    float: right;
+    padding-top: 20px;
+    padding-right: 50px;
+    padding-bottom: 25px;
+    border-left: 1px solid rgb(187, 180, 180);
+}
+
+.currencyAsset th {
     background-color: #d5d5d5;
     font-weight: bold;
+}
+
+.currencyAsset td {
+    height: 50px;
 }

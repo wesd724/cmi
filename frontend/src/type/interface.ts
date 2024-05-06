@@ -23,7 +23,7 @@ export interface candleType {
 }
 
 export interface currencyAssetType {
-    market: String;
+    market: string;
     currencyName: string;
     amount: number;
     averageCurrencyBuyPrice: number;
@@ -35,7 +35,13 @@ export interface userAssetType {
     currencyAssetResponseList: currencyAssetType[];
 }
 
-export interface currencyTicker {
+export interface valuationType {
     market: string;
-    trade_price: number;
+    price: number;
+}
+
+export interface pieChartType {
+    id: number;
+    value: number;
+    label: string;
 }

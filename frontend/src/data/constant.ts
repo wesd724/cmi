@@ -22,3 +22,5 @@ export const MARKET_NAME = [
     "스텔라루멘",
     "스택스",
 ]
+
+export const ASSET_UPDATE_COLOR = "#0152b7";

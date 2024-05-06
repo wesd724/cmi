@@ -26,7 +26,7 @@ const InvestmentTabs = () => {
 					<Tab label="거래내역" value="2" />
 				</TabList>
 			</Box>
-			<TabPanel value="1"><UserAsset /></TabPanel>
+			<TabPanel sx={{ padding: 0 }}value="1"><UserAsset /></TabPanel>
 			<TabPanel sx={{ padding: 0 }} value="2"><Trade /></TabPanel>
 		</TabContext>
 	);
