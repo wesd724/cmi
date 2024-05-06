@@ -2,6 +2,7 @@ package com.jkb.cmi.repository;
 
 import com.jkb.cmi.entity.CurrencyAsset;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -13,4 +14,7 @@ public interface CurrencyAssetRepository extends JpaRepository<CurrencyAsset, Lo
     List<CurrencyAsset> getByUser_Username(@Param("username") String username);
     Optional<CurrencyAsset> getByUser_IdAndCurrency_Id(Long userId, Long currencyId);
     Optional<CurrencyAsset> findByUser_UsernameAndCurrency_market(String username, String market);
+    @Modifying(clearAutomatically = true)
+    @Query("delete from CurrencyAsset c where c.user.id = :userId and c.currency.id = :currencyId")
+    void deleteByCurrency(@Param("userId") Long userId, @Param("currencyId") Long currencyId);
 }

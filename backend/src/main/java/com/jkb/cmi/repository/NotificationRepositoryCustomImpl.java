@@ -21,16 +21,15 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
 
     @Override
     public void saveAllNotification(List<TradeHistory> tradeHistories) {
-        String sql = "INSERT INTO notification (user_id, currency_id, trade_history_id, is_read) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO notification (user_id, trade_history_id, is_read) VALUES (?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql,
                 tradeHistories,
                 tradeHistories.size(),
                 (ps, tradeHistory) -> {
                     ps.setLong(1, tradeHistory.getUser().getId());
-                    ps.setLong(2, tradeHistory.getCurrency().getId());
-                    ps.setLong(3, tradeHistory.getId());
-                    ps.setInt(4, 0);
+                    ps.setLong(2, tradeHistory.getId());
+                    ps.setInt(3, 0);
                 }
         );
     }
