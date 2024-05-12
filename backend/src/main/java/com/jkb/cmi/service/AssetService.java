@@ -51,13 +51,14 @@ public class AssetService {
 
     private Double totalAmountByNotComplete(List<TradeHistory> tradeHistories, String username, String market) {
         return tradeHistories.stream()
-                .filter(tradeHistory -> tradeHistory.getCurrency().getMarket().equals(market))
+                .filter(tradeHistory -> tradeHistory.getOrders() == Orders.SELL && tradeHistory.getCurrency().getMarket().equals(market))
                 .map(tradeHistory -> tradeHistory.getAmount())
                 .reduce(0D, Double::sum);
     }
 
     private Long totalPriceByNotComplete(List<TradeHistory> tradeHistories, String username) {
         return tradeHistories.stream()
+                .filter(tradeHistory -> tradeHistory.getOrders() == Orders.BUY)
                 .map(tradeHistory -> Math.round(tradeHistory.getAmount() * tradeHistory.getPrice()))
                 .reduce(0L, Long::sum);
     }

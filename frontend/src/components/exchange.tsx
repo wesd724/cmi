@@ -22,7 +22,7 @@ const Exchange = () => {
         balance: 0, currencyAmount: 0
     });
 
-    const delta = (price < 1000) ? 1 : (price < 10000) ? 10 : (price < 100000) ? 100: 1000
+    const delta = (price < 1000) ? 1 : (price < 10000) ? 10 : (price < 100000) ? 100 : 1000
 
     const webSocket = useRef<WebSocket | null>(null);
     const market = MARKET[Number(id) - 1];
@@ -58,9 +58,9 @@ const Exchange = () => {
             setStatus(data);
         })();
     }, [username, market])
-    
+
     const orders = (type: string) => {
-        if(type === "BUY") setOrder("BUY");
+        if (type === "BUY") setOrder("BUY");
         else setOrder("SELL");
         setAmount(0);
     }
@@ -82,20 +82,27 @@ const Exchange = () => {
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if(order === "BUY") {
+        let isOrder = false;
+        if (order === "BUY") {
             if (window.confirm("매수하겠습니까?")) {
                 await buy({ username, currencyId: Number(id), amount, price: trade });
+                alert("주문 완료");
+                isOrder = true;
             }
         } else {
             if (window.confirm("매도하겠습니까?")) {
                 await sell({ username, currencyId: Number(id), amount, price: trade });
+                alert("주문 완료");
+                isOrder = true;
             }
         }
-        const data = await getCashAndCurrency({ username, market });
-        setStatus(data);
-        alert("주문 완료");
-        
+
+        if (isOrder) {
+            const data = await getCashAndCurrency({ username, market });
+            setStatus(data);
+        }
     }
+
     const onClick = (e: React.MouseEvent<HTMLButtonElement>, delta: number) => {
         setTrade((v: number) => v + delta);
     }

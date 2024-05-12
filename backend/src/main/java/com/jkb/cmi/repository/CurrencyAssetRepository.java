@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CurrencyAssetRepository extends JpaRepository<CurrencyAsset, Long> {
-    @Query("select c from CurrencyAsset c join fetch c.currency where c.user.username = :username")
+    @Query("select c from CurrencyAsset c join fetch c.currency where c.user.username = :username order by c.amount desc")
     List<CurrencyAsset> getByUser_Username(@Param("username") String username);
     Optional<CurrencyAsset> getByUser_IdAndCurrency_Id(Long userId, Long currencyId);
     Optional<CurrencyAsset> findByUser_UsernameAndCurrency_market(String username, String market);
