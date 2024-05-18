@@ -3,8 +3,10 @@ package com.jkb.cmi.service;
 import com.jkb.cmi.dto.response.NotificationResponse;
 import com.jkb.cmi.entity.Notification;
 import com.jkb.cmi.entity.TradeHistory;
+import com.jkb.cmi.entity.User;
 import com.jkb.cmi.repository.NotificationRepository;
 import com.jkb.cmi.repository.SseRepository;
+import com.jkb.cmi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class NotificationService {
@@ -23,6 +26,7 @@ public class NotificationService {
 
     private final SseRepository sseRepository;
     private final NotificationRepository notificationRepository;
+    private final UserRepository userRepository;
 
     public SseEmitter subscribe(String username) {
         SseEmitter emitter = sseRepository.save(username, new SseEmitter(timeout));
@@ -58,13 +62,14 @@ public class NotificationService {
         }
     }
 
-    public void sendAll(Object data) {
+    public void sendAll() {
         Map<String, List<SseEmitter>> emitters = sseRepository.findAll();
 
         emitters.forEach((username, emitterList) -> {
+            List<NotificationResponse> userData = findNotificationByUsername(username);
                     System.out.println(username + ": " + emitterList.size());
                     emitterList.forEach(emitter -> {
-                        sendEvent(emitter, username, "message", data);
+                        sendEvent(emitter, username, "message", userData);
                     });
                 }
         );
@@ -90,5 +95,10 @@ public class NotificationService {
     public List<NotificationResponse> findNotificationByUsername(String username) {
         List<Notification> notifications = notificationRepository.findNotificationByUsername(username);
         return NotificationResponse.tolist(notifications);
+    }
+
+    public void readNotification(String username) {
+        User user = userRepository.getByUsername(username);
+        notificationRepository.readNotification(user.getId());
     }
 }

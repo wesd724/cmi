@@ -22,4 +22,10 @@ public class NotificationTest {
         NotificationResponse.tolist(notifications).forEach(System.out::println);
     }
 
+    @Test
+    @Transactional
+    void test2() {
+        notificationRepository.readNotification(5L);
+    }
+
 }

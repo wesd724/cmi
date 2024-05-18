@@ -30,7 +30,7 @@ public class Scheduler {
     public void run() {
         tradeHistoryService.completeProcess(getData());
         currencyAssetService.updateCurrencyAsset();
-        notificationService.sendAll(1);
+        notificationService.sendAll();
     }
 
     private List<APIResponse> getData() {

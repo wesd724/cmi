@@ -1,16 +1,14 @@
 package com.jkb.cmi.controller;
 
-import com.jkb.cmi.dto.response.NotificationResponse;
 import com.jkb.cmi.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,9 +26,14 @@ public class NotificationController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/test")
-    public void test() {
-        List<NotificationResponse> notificationResponses = notificationService.findNotificationByUsername("test");
-        notificationService.sendAll(notificationResponses);
+    @PostMapping("/all")
+    public void sendAll() {
+        notificationService.sendAll();
+    }
+
+    @GetMapping("/read")
+    public ResponseEntity<Void> read(String username) {
+        notificationService.readNotification(username);
+        return ResponseEntity.ok().build();
     }
 }
