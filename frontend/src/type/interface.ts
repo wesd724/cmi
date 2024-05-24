@@ -1,3 +1,5 @@
+import { UseMenuButtonParameters } from "@mui/base";
+
 export interface response {
     market: string;
     [key: string]: string | number;
@@ -44,4 +46,13 @@ export interface pieChartType {
     id: number;
     value: number;
     label: string;
+}
+
+export interface notificationType {
+    id: number;
+    currencyName: string;
+    orders: string;
+    amount: number;
+    price: number;
+    completeDate: string
 }

@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -6,11 +6,18 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { closeSSE } from '../api/sse';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import { IconButton, Badge } from '@mui/material';
+import Notification from './notification';
+import { notificationType } from '../type/interface';
 
 const Nav = () => {
     const navigate = useNavigate();
     const username = localStorage.getItem("username");
     const eventSource = useRef<EventSource | null>(null);
+    
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const [notification, setNotification] = useState<notificationType[]>([]);
 
     useEffect(() => {
         if (username) {
@@ -22,8 +29,8 @@ const Nav = () => {
             });
 
             eventSource.current.addEventListener('message', e => {
-                const data = e.data;
-                console.log(JSON.parse(data))
+                const data: notificationType[] = JSON.parse(e.data);
+                setNotification(data);
             });
 
             eventSource.current.addEventListener('error', e => {
@@ -44,18 +51,36 @@ const Nav = () => {
         closeSSE(username as string);
         localStorage.clear();
         navigate("/", { replace: true });
+        setNotification([]);
         eventSource.current?.close();
     }
+    
+    const openNotification = (e: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(e.currentTarget);
+    }
+
+    const closeNotification = () => {
+        setAnchorEl(null);
+      };
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
 
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static" color="info">
                 <Toolbar>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        모의 투자
-                    </Typography>
                     <Button color="inherit" onClick={() => navigate("/")}>메인</Button>
                     <Button color="inherit" onClick={() => navigate("/activity")}>활동</Button>
+                    <IconButton color="inherit" onClick={openNotification}>
+                        <Badge badgeContent={notification.length} color="success">
+                            <NotificationsNoneIcon />
+                        </Badge>
+                    </IconButton>
+                    <Notification id={id} open={open} anchorEl={anchorEl} notification={notification} onClose={closeNotification} />
+                    <Typography variant="h6" component="div" sx={{ textAlign: "center", flexGrow: 1 }}>
+                        모의 투자
+                    </Typography>
                     {
                         username
                             ? (

@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class NotificationResponse {
+    private Long id;
     private String currencyName;
     private Orders orders;
     private Double amount;
@@ -22,6 +23,7 @@ public class NotificationResponse {
     public static NotificationResponse from(Notification notification) {
         TradeHistory tradeHistory = notification.getTradeHistory();
         return new NotificationResponse(
+                notification.getId(),
                 tradeHistory.getCurrency().getName(),
                 tradeHistory.getOrders(),
                 tradeHistory.getAmount(),
