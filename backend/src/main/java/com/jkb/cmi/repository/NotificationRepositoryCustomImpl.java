@@ -43,6 +43,7 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
                 .fetchJoin()
                 .where(notification.user.username.eq(username),
                         notification.isRead.eq(false))
+                .orderBy(notification.id.asc())
                 .fetch();
     }
 

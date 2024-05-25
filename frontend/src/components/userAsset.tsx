@@ -7,6 +7,7 @@ import { toKR } from '../lib/api';
 import { currencyAssetType, pieChartType, response, userAssetType, valuationType } from '../type/interface';
 import { getTickers, webSocketRequest } from "../upbit/api";
 import "./css/userAsset.css";
+import Loading from './loading';
 
 const UserAsset = () => {
     const [asset, setAsset] = useState<userAssetType>({ balance: 0, currencyAssetResponseList: [] });
@@ -14,6 +15,7 @@ const UserAsset = () => {
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [totalValuation, setTotalValuation] = useState<number>(0);
     const [pieChartData, setPieChartData] = useState<pieChartType[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const username = localStorage.getItem("username") as string;
     const webSocket = useRef<WebSocket | null>(null);
 
@@ -57,11 +59,11 @@ const UserAsset = () => {
     }
 
     useEffect(() => {
-        console.log(1)
         const market = asset.currencyAssetResponseList.map(v => v.market) as string[];
 
         if (market.length) {
             ticker(market, asset.currencyAssetResponseList);
+            setLoading(false);
             webSocket.current = new WebSocket(process.env.REACT_APP_WS_UPBIT_URL as string);
             webSocket.current.onopen = () => {
                 console.log('WebSocket 연결');
@@ -112,72 +114,80 @@ const UserAsset = () => {
 
     return (
         <>
-            <div className="userAsset">
-                <div className="tradeState">
-                    <dl>
-                        <dt>보유 KRW</dt>
-                        <dd>{toKR(asset.balance)}</dd>
-                    </dl>
-                    <dl>
-                        <dt >총 보유자산</dt>
-                        <dd>{toKR((asset.balance) + totalValuation)}</dd>
-                    </dl>
-                    <dl>
-                        <dt>총 매수</dt>
-                        <dd>{toKR(totalPrice)}</dd>
-                    </dl>
-                    <dl>
-                        <dt>총 평가손익</dt>
-                        <dd>{toKR(totalValuation - totalPrice)}</dd>
-                    </dl>
-                    <dl>
-                        <dt>총 평가</dt>
-                        <dd>{toKR(totalValuation)}</dd>
-                    </dl>
-                    <dl>
-                        <dt>총 평가수익률</dt>
-                        <dd>{((totalValuation - totalPrice) / totalPrice * 100).toFixed(2)}</dd>
-                    </dl>
-                </div>
-                <div className="chart">
-                    <div style={{ marginLeft: 20 }}>보유 비중(%)</div>
-                    <PieChart
-                        series={[
-                            {
-                                data: pieChartData,
-                            },
-                        ]}
-                        width={400}
-                        height={200}
-                    />
-                </div>
-            </div>
-            <TableContainer>
-                <Table className="currencyAsset" size="small">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>보유자산</TableCell>
-                            <TableCell>보유수량</TableCell>
-                            <TableCell>매수평균가</TableCell>
-                            <TableCell>매수금액</TableCell>
-                            <TableCell>평가금액</TableCell>
-                            <TableCell>평가손익(%)</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {asset.currencyAssetResponseList.map((v, i) => (
-                            <TableRow key={v.amount * v.averageCurrencyBuyPrice}>
-                                <TableCell>{v.market}</TableCell>
-                                <TableCell>{toKR(v.amount)}</TableCell>
-                                <TableCell>{toKR(v.averageCurrencyBuyPrice)}</TableCell>
-                                <TableCell>{toKR(v.buyPrice) + " KRW"}</TableCell>
-                                <TableCell sx={{ color: ASSET_UPDATE_COLOR }}>{toKR(valuation[i]?.price ?? 0) + " KRW"}</TableCell>
-                                <TableCell sx={{ color: ASSET_UPDATE_COLOR }}>{valuation[i]?.price ? ((valuation[i].price - v.buyPrice) / v.buyPrice * 100).toFixed(2) : 0 + " %"}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            {
+                loading ?
+                    <Loading /> :
+                    <div className="container">
+                        <div className="userAsset">
+                            <div className="tradeState">
+                                <dl>
+                                    <dt>보유 KRW</dt>
+                                    <dd>{toKR(asset.balance)}<span>KRW</span></dd>
+                                </dl>
+                                <dl>
+                                    <dt >총 보유자산</dt>
+                                    <dd>{toKR((asset.balance) + totalValuation)}<span>KRW</span></dd>
+                                </dl>
+                                <dl>
+                                    <dt>총 매수</dt>
+                                    <dd>{toKR(totalPrice)}<span>KRW</span></dd>
+                                </dl>
+                                <dl>
+                                    <dt>총 평가손익</dt>
+                                    <dd>{toKR(totalValuation - totalPrice)}<span>KRW</span></dd>
+                                </dl>
+                                <dl>
+                                    <dt>총 평가</dt>
+                                    <dd>{toKR(totalValuation)}<span>KRW</span></dd>
+                                </dl>
+                                <dl>
+                                    <dt>총 평가수익률(%)</dt>
+                                    <dd>{((totalValuation - totalPrice) / totalPrice * 100).toFixed(2)}<span>%</span></dd>
+                                </dl>
+                            </div>
+                            <div className="chart">
+                                <div style={{ marginLeft: 20 }}>보유 비중(%)</div>
+                                <PieChart
+                                    series={[
+                                        {
+                                            data: pieChartData,
+                                            innerRadius: 36,
+                                            cx: 170,
+                                        },
+                                    ]}
+                                    width={400}
+                                    height={200}
+                                />
+                            </div>
+                        </div>
+                        <TableContainer>
+                            <Table className="currencyAsset" size="small">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>보유자산</TableCell>
+                                        <TableCell>보유수량</TableCell>
+                                        <TableCell>매수평균가</TableCell>
+                                        <TableCell>매수금액</TableCell>
+                                        <TableCell>평가금액</TableCell>
+                                        <TableCell>평가손익(%)</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {asset.currencyAssetResponseList.map((v, i) => (
+                                        <TableRow key={v.amount * v.averageCurrencyBuyPrice}>
+                                            <TableCell>{v.currencyName}</TableCell>
+                                            <TableCell>{toKR(v.amount)}<span>{v.market.replace("KRW-", "")}</span></TableCell>
+                                            <TableCell>{toKR(v.averageCurrencyBuyPrice)}<span>KRW</span></TableCell>
+                                            <TableCell>{toKR(v.buyPrice)}<span>KRW</span></TableCell>
+                                            <TableCell sx={{ color: ASSET_UPDATE_COLOR }}>{toKR(valuation[i]?.price ?? 0)}<span>KRW</span></TableCell>
+                                            <TableCell sx={{ color: ASSET_UPDATE_COLOR }}>{valuation[i]?.price ? ((valuation[i].price - v.buyPrice) / v.buyPrice * 100).toFixed(2) : 0}<span>%</span></TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </div>
+            }
         </>
     )
 }

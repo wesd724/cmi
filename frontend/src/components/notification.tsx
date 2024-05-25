@@ -12,7 +12,7 @@ import Popover from '@mui/material/Popover';
 interface popperType {
     id: string | undefined;
     open: boolean;
-    anchorEl: null | HTMLElement;
+    anchorEl: HTMLButtonElement | null;
     notification: notificationType[]
     onClose: () => void;
 }
@@ -40,7 +40,7 @@ const Notification = ({ id, open, anchorEl, notification, onClose }: popperType)
                                     </ListItemIcon>
                                     <ListItemText
                                         primary={`${v.orders} | ${v.currencyName} ${v.amount}개`}
-                                        secondary={`${v.completeDate} 체결 완료`}
+                                        secondary={`${v.completeDate.replace(/T/, ' ')} 체결 완료`}
                                     />
                                 </ListItem>
                                 <Divider />

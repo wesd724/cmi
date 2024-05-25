@@ -63,7 +63,7 @@ const Nav = () => {
         setAnchorEl(null);
       };
 
-    const open = Boolean(anchorEl);
+    const open = Boolean(notification.length) && Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
     return (

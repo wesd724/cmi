@@ -1,3 +1,9 @@
+.container span {
+    color: #8f8d8d;
+    margin-left: 5px;
+    font-size: 12px;
+}
+
 .userAsset {
     width: 1100px;
     margin: 0 auto;
@@ -12,7 +18,7 @@
 .tradeState dl {
     display: table;
     float: left;
-    width: 226px;
+    width: 240px;
 }
 
 .tradeState dl:nth-child(-n + 2) {
@@ -20,6 +26,10 @@
     padding-bottom: 25px;
     margin-bottom: 20px;
     border-bottom: 1px solid rgb(145, 137, 137);
+}
+
+.tradeState dl:nth-child(-n + 2) > dt {
+    font-size: 15px;
 }
 
 .tradeState dl:nth-child(-n + 2) > dd {
