@@ -1,5 +1,21 @@
-INSERT IGNORE INTO currency (id, market, name) VALUES (1, 'BTC', '비트코인');
-INSERT IGNORE INTO currency (id, market, name) VALUES (2, 'ETH', '이더리움');
-INSERT IGNORE INTO currency (id, market, name) VALUES (3, 'SOL', '솔라나');
-INSERT IGNORE INTO currency (id, market, name) VALUES (4, 'XRP', '리플');
-INSERT IGNORE INTO currency (id, market, name) VALUES (5, 'BCH', '비트코인캐시');
+INSERT IGNORE INTO currency (id, market, name) VALUES (1, 'KRW-BTC', '비트코인');
+INSERT IGNORE INTO currency (id, market, name) VALUES (2, 'KRW-ETH', '이더리움');
+INSERT IGNORE INTO currency (id, market, name) VALUES (3, 'KRW-SOL', '솔라나');
+INSERT IGNORE INTO currency (id, market, name) VALUES (4, 'KRW-XRP', '리플');
+INSERT IGNORE INTO currency (id, market, name) VALUES (5, 'KRW-BCH', '에이브');
+INSERT IGNORE INTO currency (id, market, name) VALUES (6, 'KRW-AAVE', '비트코인캐시');
+INSERT IGNORE INTO currency (id, market, name) VALUES (7, 'KRW-ETC', '이더리움클래식');
+INSERT IGNORE INTO currency (id, market, name) VALUES (8, 'KRW-NEO', '네오');
+INSERT IGNORE INTO currency (id, market, name) VALUES (9, 'KRW-XLM', '스텔라루멘');
+INSERT IGNORE INTO currency (id, market, name) VALUES (10, 'KRW-STX', '스택스');
+
+INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (1, 'KRW-BTC', 0);
+INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (2, 'KRW-ETH', 0);
+INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (3, 'KRW-SOL', 0);
+INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (4, 'KRW-XRP', 0);
+INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (5, 'KRW-BCH', 0);
+INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (6, 'KRW-AAVE', 0);
+INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (7, 'KRW-ETC', 0);
+INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (8, 'KRW-NEO', 0);
+INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (9, 'KRW-XLM', 0);
+INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (10, 'KRW-STX', 0);

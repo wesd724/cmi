@@ -1,13 +1,15 @@
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useState, useEffect } from "react";
-import { cancelTrade, getTradeHistory, tradeHistory } from "../api/trade";
+import { cancelTrade, getTradeHistory } from "../api/trade";
 import { toKR } from "../lib/api";
+import { tradeHistoryType } from "../type/interface";
 import "./css/trade.css";
 import Loading from "./loading";
 
 const Trade = () => {
-    const [trades, setTrades] = useState<tradeHistory[]>([]);
+    const [trades, setTrades] = useState<tradeHistoryType[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    
     useEffect(() => {
         (async () => {
             const data = await getTradeHistory(localStorage.getItem("username") as string);

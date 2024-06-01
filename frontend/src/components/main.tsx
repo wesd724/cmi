@@ -2,16 +2,18 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 import Button from "@mui/material/Button";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MARKET, MARKET_NAME } from "../data/constant";
+import { getRecommendation } from "../api/main";
+import { MARKET, MARKET_MAPPER, MARKET_NAME } from "../data/constant";
 import { toKR } from "../lib/api";
-import { response, tickerType } from "../type/interface";
+import { recommendationType, response, tickerType } from "../type/interface";
 import { getTickers, webSocketRequest } from "../upbit/api";
 import Chart from "./chart";
 import "./css/main.css";
 
 const Main = () => {
     const [market, setMarket] = useState<string>("KRW-BTC");
-    const [tickers, setTickers] = useState<tickerType[]>([])
+    const [tickers, setTickers] = useState<tickerType[]>([]);
+    const [recommendation, setRecommendation] = useState<recommendationType[]>([]);
     const webSocket = useRef<WebSocket | null>(null);
     const navigate = useNavigate();
     const username = localStorage.getItem("username");
@@ -60,6 +62,13 @@ const Main = () => {
         }
     }, [ticker])
 
+    useEffect(() =>{
+        (async () =>{
+            const data = await getRecommendation();
+            setRecommendation(data);
+        })();
+    }, [])
+
     const onClick = (market: string) => setMarket(market);
 
     const exchange = (i: number, price: number) => {
@@ -71,7 +80,7 @@ const Main = () => {
 
     return (
         <>
-            <TableContainer sx={{ height: "40vh", border: "1px solid #b5a0cb" }}>
+            <TableContainer sx={{ height: "43vh", border: "1px solid #b5a0cb" }}>
                 <Table className="ticker">
                     <TableHead>
                         <TableRow>
@@ -95,25 +104,31 @@ const Main = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Chart width="68%" height="450px" time="days" marketName={market} />
+            <Chart width="68%" height="430px" time="days" marketName={market} />
             <TableContainer className="ai-container" sx={{ width: "25vw" }} component={Paper}>
                 <Table className="ai">
                     <TableHead>
                         <TableRow>
-                            <TableCell align="center">추천 순위</TableCell>
+                            <TableCell align="center" colSpan={2}>내일 가격 예상</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="center">코인</TableCell>
+                            <TableCell align="center">전일 대비</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {Array.from({length: 5}).map((v, i) => (
-                            <TableRow key={i}>
-                                <TableCell align="center">{`${MARKET_NAME[i]}`}</TableCell>
+                        {recommendation.map((v, i) => (
+                            <TableRow key={i + 1}>
+                                <TableCell align="center">{MARKET_MAPPER[v.market]}</TableCell>
+                                <TableCell align="center">{`${v.comparedPreviousDay}%`}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
         </>
-
     )
 }
 

@@ -16,6 +16,6 @@ public class AssetTest {
 
     @Test
     void test1() {
-        scheduler.run();
+        scheduler.notification();
     }
 }

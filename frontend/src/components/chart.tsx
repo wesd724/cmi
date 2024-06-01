@@ -1,7 +1,14 @@
 import ApexChart from 'react-apexcharts';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { response, candleType } from '../type/interface';
+import { response } from '../type/interface';
 import { getCandles } from '../upbit/api';
+
+export interface candleProps {
+    time: string;
+    marketName: string;
+    width: string;
+    height: string;
+}
 
 const intervalTime = (time: string) => time === "days" ? 1000 * 60 * 60 : 1000 * 10;
 
@@ -16,7 +23,7 @@ const formatBytime = (time: string, timestamp: string) => {
     return `${d.getHours()}:${m < 10 ? "0" + m : m}`;
 }
 
-const Chart = ({ width, height, time, marketName }: candleType) => {
+const Chart = ({ width, height, time, marketName }: candleProps) => {
     const [candles, setCandles] = useState<number[][]>([]);
     const interval = useRef<ReturnType<typeof setInterval> | null>(null);
 

@@ -9,7 +9,7 @@ import Divider from "@mui/material/Divider";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Popover from '@mui/material/Popover';
 
-interface popperType {
+interface popperProps {
     id: string | undefined;
     open: boolean;
     anchorEl: HTMLButtonElement | null;
@@ -17,7 +17,7 @@ interface popperType {
     onClose: () => void;
 }
 
-const Notification = ({ id, open, anchorEl, notification, onClose }: popperType) => {
+const Notification = ({ id, open, anchorEl, notification, onClose }: popperProps) => {
     return (
         <Popover
             id={id} 

@@ -17,11 +17,16 @@ export interface exchangeStatus {
     currencyAmount: number;
 }
 
-export interface candleType {
-    time: string;
-    marketName: string;
-    width: string;
-    height: string;
+export interface tradeHistoryType {
+    id: number;
+    currencyName: string;
+    order: string;
+    amount: number;
+    price: number;
+    tradePrice: number;
+    orderDate: string;
+    completeDate: string;
+    complete: boolean;
 }
 
 export interface currencyAssetType {
@@ -55,4 +60,9 @@ export interface notificationType {
     amount: number;
     price: number;
     completeDate: string
+}
+
+export interface recommendationType {
+    market: string;
+    comparedPreviousDay: number;
 }
