@@ -4,6 +4,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { MARKET, MARKET_NAME } from '../data/constant';
+import Comment from './comment';
 
 const CommentTabs = () => {
     const [value, setValue] = useState<string>('1');
@@ -30,7 +31,7 @@ const CommentTabs = () => {
             </TabList>
             {
                 MARKET.map((v, i) =>
-                    <TabPanel key={i + 1} value={String(i + 1)}>{MARKET[i]}</TabPanel>
+                    <TabPanel key={i + 1} sx={{ padding: 0 }} value={String(i + 1)}><Comment market={MARKET[i]} /></TabPanel>
                 )
             }
         </TabContext>

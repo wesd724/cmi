@@ -1,0 +1,11 @@
+.comment-container {
+    position: relative;
+    height: 70vh;
+    border-bottom: 1px solid rgb(145, 137, 137);
+}
+
+.comment-list {
+    height: 62vh;
+    overflow: auto;
+    overflow-x: hidden;
+}

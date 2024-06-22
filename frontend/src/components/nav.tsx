@@ -10,12 +10,13 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import { IconButton, Badge } from '@mui/material';
 import Notification from './notification';
 import { notificationType } from '../type/interface';
+import PersonIcon from '@mui/icons-material/Person';
 
 const Nav = () => {
     const navigate = useNavigate();
     const username = localStorage.getItem("username");
     const eventSource = useRef<EventSource | null>(null);
-    
+
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [notification, setNotification] = useState<notificationType[]>([]);
 
@@ -54,14 +55,14 @@ const Nav = () => {
         setNotification([]);
         eventSource.current?.close();
     }
-    
+
     const openNotification = (e: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(e.currentTarget);
     }
 
     const closeNotification = () => {
         setAnchorEl(null);
-      };
+    };
 
     const open = Boolean(notification.length) && Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
@@ -85,6 +86,15 @@ const Nav = () => {
                         username
                             ? (
                                 <>
+                                    <PersonIcon sx={{ marginBottom: "4px", color: "#130f86" }} />
+                                    <div style={{
+                                        fontSize: 18,
+                                        fontWeight: "bold",
+                                        paddingRight: 30,
+                                        paddingLeft: 3,
+                                        height: 26,
+                                    }}>{username}
+                                    </div>
                                     <Button color="inherit" onClick={() => navigate("/investment")}>내 투자</Button>
                                     <Button color="inherit" onClick={logout}>로그아웃</Button>
                                 </>
