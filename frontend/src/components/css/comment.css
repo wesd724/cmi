@@ -5,6 +5,7 @@
 }
 
 .comment-list {
+    position: relative;
     height: 62vh;
     overflow: auto;
     overflow-x: hidden;

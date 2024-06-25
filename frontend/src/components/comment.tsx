@@ -5,6 +5,9 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
+import { MARKET } from '../data/constant';
+import { getComments, saveComment } from '../api/comment';
+import Loading from "./loading";
 
 interface marketProps {
     market: string;
@@ -13,8 +16,7 @@ interface marketProps {
 interface commentProps {
     id: number;
     username: string;
-    comment: string;
-
+    content: string;
 }
 
 const RenderTextList = ({ commentList }: { commentList: commentProps[] | undefined }) => {
@@ -24,7 +26,7 @@ const RenderTextList = ({ commentList }: { commentList: commentProps[] | undefin
                 <Fragment key={v.id}>
                     <ListItem>
                         <ListItemText
-                            primary={`${v.comment}`}
+                            primary={`${v.content}`}
                             secondary={`${v.username}`}
                         />
                     </ListItem>
@@ -35,44 +37,57 @@ const RenderTextList = ({ commentList }: { commentList: commentProps[] | undefin
     )
 }
 
-const makeFakeData = (count: number)  => {
-    return Array.from({length: count}).map((_, i) => ({
+const makeFakeData = (count: number) => {
+    return Array.from({ length: count }).map((_, i) => ({
         id: i + 1,
         username: String.fromCharCode(i + 65),
-        comment: String.fromCharCode(...Array.from({ length: 3 }).map((_, k) => i + k + 65))
+        content: String.fromCharCode(...Array.from({ length: 3 }).map((_, k) => i + k + 65))
     }));
 }
 
 const Comment = ({ market }: marketProps) => {
-    const [text, setText] = useState<string>("");
+    const [content, setContent] = useState<string>("");
     const [commentsData, setCommentsData] = useState<commentProps[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const element = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        const data: commentProps[]  = makeFakeData(10);
-        setCommentsData(data);
-    }, [])
+    const username = localStorage.getItem("username")
+    const currencyId: number = MARKET.indexOf(market) + 1;
 
     useEffect(() => {
-        if(element.current)
+        (async () => {
+            const data = await getComments(market);
+            setLoading(false);
+            setCommentsData(data);
+        })();
+    }, [market])
+
+    useEffect(() => {
+        if (element.current)
             element.current.scrollTop = element.current.scrollHeight;
     }, [commentsData])
 
-    const changeText = (e: React.ChangeEvent<HTMLInputElement>) => setText(e.target.value);
+    const changeContent = (e: React.ChangeEvent<HTMLInputElement>) => setContent(e.target.value);
 
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setCommentsData(prev => [...prev, {id: prev.length + 1, username: "KB", comment: text }]);
-        setText("");
+        if (content) {
+            const id = await saveComment({ username: username as string, currencyId, content });
+            setCommentsData(prev => [...prev, { id, username: "test", content }]);
+            setContent("");
+        }
     }
 
     return (
         <div className="comment-container">
-            {market}
             <div className="comment-list" ref={element}>
-                <List>
-                    <RenderTextList commentList={commentsData} />
-                </List>
+                {
+                    loading ?
+                        <Loading /> :
+                        <List>
+                            <RenderTextList commentList={commentsData} />
+                        </List>
+                }
             </div>
             <form onSubmit={onSubmit} className="form">
                 <TextField
@@ -82,8 +97,9 @@ const Comment = ({ market }: marketProps) => {
                         bottom: "0px",
                         width: "70vw",
                     }}
-                    value={text}
-                    onChange={changeText}
+                    value={content}
+                    onChange={changeContent}
+                    disabled={username ? false: true}
                     label="의견" size="small" variant="filled" />
             </form>
 
