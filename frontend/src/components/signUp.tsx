@@ -2,6 +2,7 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../api/login";
+import userStore from "../store/userStore";
 import "./css/signup.css";
 
 const Signup = () => {
@@ -9,6 +10,8 @@ const Signup = () => {
     const [password, setPassword] = useState<string>("");
     const [checkPassword, setCheckPassword] = useState<string>("");
     const navigate = useNavigate();
+
+    const { setName } = userStore();
 
     const ChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value);
     const ChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
@@ -25,7 +28,7 @@ const Signup = () => {
         const data = await signUp({ username, password });
 
         if (data) {
-            localStorage.setItem("username", username);
+            setName(username);
             navigate("/");
             return;
         }

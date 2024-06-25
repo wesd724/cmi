@@ -8,9 +8,10 @@ import { buy, getCashAndCurrency, sell } from "../api/exchange";
 import "./css/exchange.css";
 import { exchangeStatus } from "../type/interface";
 import { toKR } from "../lib/api";
+import userStore from "../store/userStore";
 
 const Exchange = () => {
-    const username = localStorage.getItem("username") as string;
+    const { username } = userStore();
     const location = useLocation();
     //const [qs] = useSearchParams();
     const { id } = useParams() as { id: string };

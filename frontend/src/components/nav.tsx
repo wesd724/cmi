@@ -11,10 +11,11 @@ import { IconButton, Badge } from '@mui/material';
 import Notification from './notification';
 import { notificationType } from '../type/interface';
 import PersonIcon from '@mui/icons-material/Person';
+import userStore from '../store/userStore';
 
 const Nav = () => {
     const navigate = useNavigate();
-    const username = localStorage.getItem("username");
+    const { username, deleteName } = userStore();
     const eventSource = useRef<EventSource | null>(null);
 
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -26,7 +27,7 @@ const Nav = () => {
 
             eventSource.current.addEventListener('connect', e => {
                 const data = e.data;
-                console.log(data)
+                console.log(data);
             });
 
             eventSource.current.addEventListener('message', e => {
@@ -35,7 +36,7 @@ const Nav = () => {
             });
 
             eventSource.current.addEventListener('error', e => {
-                console.log(e)
+                console.log(e);
             });
 
             window.addEventListener("beforeunload", e => {
@@ -49,8 +50,8 @@ const Nav = () => {
     }, [username])
 
     const logout = () => {
-        closeSSE(username as string);
-        localStorage.clear();
+        closeSSE(username);
+        deleteName();
         navigate("/", { replace: true });
         setNotification([]);
         eventSource.current?.close();

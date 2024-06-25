@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { getRecommendation } from "../api/main";
 import { MARKET, MARKET_MAPPER, MARKET_NAME } from "../data/constant";
 import { toKR } from "../lib/api";
+import userStore from "../store/userStore";
 import { recommendationType, response, tickerType } from "../type/interface";
 import { getTickers, webSocketRequest } from "../upbit/api";
 import Chart from "./chart";
@@ -16,7 +17,7 @@ const Main = () => {
     const [recommendation, setRecommendation] = useState<recommendationType[]>([]);
     const webSocket = useRef<WebSocket | null>(null);
     const navigate = useNavigate();
-    const username = localStorage.getItem("username");
+    const { username } = userStore();
 
     const ticker = useCallback(async (markets: string[]) => {
         const res = await getTickers(markets);
@@ -62,8 +63,8 @@ const Main = () => {
         }
     }, [ticker])
 
-    useEffect(() =>{
-        (async () =>{
+    useEffect(() => {
+        (async () => {
             const data = await getRecommendation();
             setRecommendation(data);
         })();

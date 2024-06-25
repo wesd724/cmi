@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { getUserAsset } from '../api/userAsset';
 import { ASSET_UPDATE_COLOR } from '../data/constant';
 import { toKR } from '../lib/api';
+import userStore from '../store/userStore';
 import { currencyAssetType, pieChartType, response, userAssetType, valuationType } from '../type/interface';
 import { getTickers, webSocketRequest } from "../upbit/api";
 import "./css/userAsset.css";
@@ -16,7 +17,7 @@ const UserAsset = () => {
     const [totalValuation, setTotalValuation] = useState<number>(0);
     const [pieChartData, setPieChartData] = useState<pieChartType[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const username = localStorage.getItem("username") as string;
+    const { username } = userStore();
     const webSocket = useRef<WebSocket | null>(null);
 
     const ticker = useCallback(async (markets: string[], currencyAssets: currencyAssetType[]) => {

@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import { MARKET } from '../data/constant';
 import { getComments, saveComment } from '../api/comment';
 import Loading from "./loading";
+import userStore from '../store/userStore';
 
 interface marketProps {
     market: string;
@@ -37,13 +38,13 @@ const RenderTextList = ({ commentList }: { commentList: commentProps[] | undefin
     )
 }
 
-const makeFakeData = (count: number) => {
-    return Array.from({ length: count }).map((_, i) => ({
-        id: i + 1,
-        username: String.fromCharCode(i + 65),
-        content: String.fromCharCode(...Array.from({ length: 3 }).map((_, k) => i + k + 65))
-    }));
-}
+// const makeFakeData = (count: number) => {
+//     return Array.from({ length: count }).map((_, i) => ({
+//         id: i + 1,
+//         username: String.fromCharCode(i + 65),
+//         content: String.fromCharCode(...Array.from({ length: 3 }).map((_, k) => i + k + 65))
+//     }));
+// }
 
 const Comment = ({ market }: marketProps) => {
     const [content, setContent] = useState<string>("");
@@ -51,7 +52,7 @@ const Comment = ({ market }: marketProps) => {
     const [loading, setLoading] = useState<boolean>(true);
     const element = useRef<HTMLDivElement>(null);
 
-    const username = localStorage.getItem("username")
+    const { username } = userStore();
     const currencyId: number = MARKET.indexOf(market) + 1;
 
     useEffect(() => {
@@ -72,7 +73,7 @@ const Comment = ({ market }: marketProps) => {
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (content) {
-            const id = await saveComment({ username: username as string, currencyId, content });
+            const id = await saveComment({ username, currencyId, content });
             setCommentsData(prev => [...prev, { id, username: "test", content }]);
             setContent("");
         }

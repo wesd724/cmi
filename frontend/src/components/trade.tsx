@@ -2,6 +2,7 @@ import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRo
 import { useState, useEffect } from "react";
 import { cancelTrade, getTradeHistory } from "../api/trade";
 import { toKR } from "../lib/api";
+import userStore from "../store/userStore";
 import { tradeHistoryType } from "../type/interface";
 import "./css/trade.css";
 import Loading from "./loading";
@@ -12,7 +13,7 @@ const Trade = () => {
     
     useEffect(() => {
         (async () => {
-            const data = await getTradeHistory(localStorage.getItem("username") as string);
+            const data = await getTradeHistory(userStore(state => state.username));
             setLoading(false);
             setTrades(data);
         })();
