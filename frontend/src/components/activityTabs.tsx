@@ -17,7 +17,6 @@ const ActivityTabs = () => {
 		<TabContext value={value}>
 			<Box sx={{ width: "70vw", borderBottom: 1, borderColor: 'divider' }}>
 				<TabList
-					sx={{ width: "70vw" }}
 					textColor="inherit" TabIndicatorProps={{
 						style: {
 							backgroundColor: "rgb(86, 81, 92)"

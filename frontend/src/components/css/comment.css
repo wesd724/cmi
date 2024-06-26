@@ -10,3 +10,27 @@
     overflow: auto;
     overflow-x: hidden;
 }
+
+.item {
+    flex: auto;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.item :nth-child(n) {
+    line-height: 1.5;
+    letter-spacing: 0.02rem;
+}
+
+.item :nth-child(2) {
+    float: left;
+    font-size: 15px;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.item :nth-child(3) {
+    float: right;
+    font-size: 11px;
+    color: rgba(0, 0, 0, 0.5);
+    padding-top: 5px;
+}

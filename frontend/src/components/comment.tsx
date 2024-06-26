@@ -3,7 +3,6 @@ import TextField from '@mui/material/TextField';
 import "./css/comment.css";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { MARKET } from '../data/constant';
 import { getComments, saveComment } from '../api/comment';
@@ -18,6 +17,7 @@ interface commentProps {
     id: number;
     username: string;
     content: string;
+    createdDate: string;
 }
 
 const RenderTextList = ({ commentList }: { commentList: commentProps[] | undefined }) => {
@@ -26,10 +26,11 @@ const RenderTextList = ({ commentList }: { commentList: commentProps[] | undefin
             {commentList?.map((v) => (
                 <Fragment key={v.id}>
                     <ListItem>
-                        <ListItemText
-                            primary={`${v.content}`}
-                            secondary={`${v.username}`}
-                        />
+                        <div className="item">
+                            <div>{v.content}</div>
+                            <span>{v.username}</span>
+                            <span>{v.createdDate.replace(/T/, ' ')}</span>
+                        </div>
                     </ListItem>
                     <Divider />
                 </Fragment>
@@ -73,8 +74,8 @@ const Comment = ({ market }: marketProps) => {
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (content) {
-            const id = await saveComment({ username, currencyId, content });
-            setCommentsData(prev => [...prev, { id, username: "test", content }]);
+            const { id, createdDate } = await saveComment({ username, currencyId, content });
+            setCommentsData(prev => [...prev, { id, username, content, createdDate: createdDate.replace(/\..*/, "") }]);
             setContent("");
         }
     }
@@ -100,8 +101,8 @@ const Comment = ({ market }: marketProps) => {
                     }}
                     value={content}
                     onChange={changeContent}
-                    disabled={username ? false: true}
-                    label="의견" size="small" variant="filled" />
+                    disabled={username ? false : true}
+                    label={username ? "의견" : "로그인 하세요"} size="small" variant="filled" />
             </form>
 
         </div>

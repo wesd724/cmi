@@ -7,21 +7,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class CommentResponse {
+public class SaveCommentResponse {
     private Long id;
-    private String username;
-    private String content;
     private LocalDateTime createdDate;
 
-    public static List<CommentResponse> tolist(List<Comment> comments) {
-        return comments.stream()
-                .map(c ->
-                        new CommentResponse(c.getId(), c.getUser().getUsername(), c.getContent(), c.getCreatedDate()))
-                .toList();
+    public static SaveCommentResponse from(Comment comment) {
+        return new SaveCommentResponse(comment.getId(), comment.getCreatedDate());
     }
 }

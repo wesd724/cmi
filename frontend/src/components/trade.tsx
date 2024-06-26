@@ -10,14 +10,16 @@ import Loading from "./loading";
 const Trade = () => {
     const [trades, setTrades] = useState<tradeHistoryType[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+
+    const username = userStore(state => state.username);
     
     useEffect(() => {
         (async () => {
-            const data = await getTradeHistory(userStore(state => state.username));
+            const data = await getTradeHistory(username);
             setLoading(false);
             setTrades(data);
         })();
-    }, [])
+    }, [username])
 
     const cancel = async (id: number) => {
         if (window.confirm("주문 취소하시겠습니까?")) {

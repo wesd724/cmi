@@ -3,6 +3,7 @@ package com.jkb.cmi.controller;
 import com.jkb.cmi.dto.request.SaveCommentRequest;
 import com.jkb.cmi.dto.request.UpdateCommentRequest;
 import com.jkb.cmi.dto.response.CommentResponse;
+import com.jkb.cmi.dto.response.SaveCommentResponse;
 import com.jkb.cmi.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +19,9 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<Long> saveComment(@RequestBody SaveCommentRequest saveCommentRequest) {
-        Long id = commentService.saveComment(saveCommentRequest);
-        return ResponseEntity.ok(id);
+    public ResponseEntity<SaveCommentResponse> saveComment(@RequestBody SaveCommentRequest saveCommentRequest) {
+        SaveCommentResponse saveCommentResponse = commentService.saveComment(saveCommentRequest);
+        return ResponseEntity.ok(saveCommentResponse);
     }
 
     @GetMapping

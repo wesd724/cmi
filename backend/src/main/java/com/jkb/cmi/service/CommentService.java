@@ -3,6 +3,7 @@ package com.jkb.cmi.service;
 import com.jkb.cmi.dto.request.SaveCommentRequest;
 import com.jkb.cmi.dto.request.UpdateCommentRequest;
 import com.jkb.cmi.dto.response.CommentResponse;
+import com.jkb.cmi.dto.response.SaveCommentResponse;
 import com.jkb.cmi.entity.Comment;
 import com.jkb.cmi.entity.Currency;
 import com.jkb.cmi.entity.User;
@@ -23,7 +24,7 @@ public class CommentService {
     private final UserRepository userRepository;
     private final CurrencyRepository currencyRepository;
 
-    public Long saveComment(SaveCommentRequest saveCommentRequest) {
+    public SaveCommentResponse saveComment(SaveCommentRequest saveCommentRequest) {
         User user = userRepository.getByUsername(saveCommentRequest.getUsername());
         Currency currency = currencyRepository.getReferenceById(saveCommentRequest.getCurrencyId());
         Comment comment = Comment.builder()
@@ -32,7 +33,7 @@ public class CommentService {
                 .content(saveCommentRequest.getContent())
                 .build();
         Comment saveComment = commentRepository.save(comment);
-        return saveComment.getId();
+        return SaveCommentResponse.from(saveComment);
     }
 
     public List<CommentResponse> getComment(String market) {
