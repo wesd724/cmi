@@ -25,7 +25,7 @@ public class NotificationTest {
     @Test
     @Transactional
     void test2() {
-        notificationRepository.readNotification(5L);
+
     }
 
 }

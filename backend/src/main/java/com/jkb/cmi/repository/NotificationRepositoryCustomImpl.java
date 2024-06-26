@@ -21,7 +21,7 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
 
     @Override
     public void saveAllNotification(List<TradeHistory> tradeHistories) {
-        String sql = "INSERT INTO notification (user_id, trade_history_id, is_read) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO notification (user_id, trade_history_id) VALUES (?, ?)";
 
         jdbcTemplate.batchUpdate(sql,
                 tradeHistories,
@@ -29,7 +29,6 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
                 (ps, tradeHistory) -> {
                     ps.setLong(1, tradeHistory.getUser().getId());
                     ps.setLong(2, tradeHistory.getId());
-                    ps.setInt(3, 0);
                 }
         );
     }
@@ -41,8 +40,7 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
                 .fetchJoin()
                 .join(tradeHistory.currency, currency)
                 .fetchJoin()
-                .where(notification.user.username.eq(username),
-                        notification.isRead.eq(false))
+                .where(notification.user.username.eq(username))
                 .orderBy(notification.id.asc())
                 .fetch();
     }

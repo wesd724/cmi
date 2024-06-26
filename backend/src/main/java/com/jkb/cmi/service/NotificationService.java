@@ -87,7 +87,6 @@ public class NotificationService {
         Notification notification = Notification.builder()
                 .user(tradeHistory.getUser())
                 .tradeHistory(tradeHistory)
-                .isRead(false)
                 .build();
     }
 
@@ -97,8 +96,12 @@ public class NotificationService {
         return NotificationResponse.tolist(notifications);
     }
 
-    public void readNotification(String username) {
+    public void checkNotification(Long id) {
+        notificationRepository.deleteById(id);
+    }
+
+    public void checkAllNotification(String username) {
         User user = userRepository.getByUsername(username);
-        notificationRepository.readNotification(user.getId());
+        notificationRepository.checkAllNotification(user.getId());
     }
 }

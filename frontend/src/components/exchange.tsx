@@ -68,7 +68,7 @@ const Exchange = () => {
 
     const ChangeTrade = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.target.value = e.target.value.replace(/,/g, '');
-        setTrade(e.target.value ? parseInt(e.target.value) : 0);
+        setTrade(e.target.value ? parseFloat(e.target.value) : 0);
     }
 
     const ChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,12 +85,22 @@ const Exchange = () => {
         e.preventDefault();
         let isOrder = false;
         if (order === "BUY") {
+            if (status.balance < Math.round(trade * amount)) {
+                alert("주문 가능 금액 초과");
+                return;
+            }
+
             if (window.confirm("매수하겠습니까?")) {
                 await buy({ username, currencyId: Number(id), amount, price: trade });
                 alert("주문 완료");
                 isOrder = true;
             }
         } else {
+            if (status.currencyAmount < amount) {
+                alert("주문 가능 수량 초과");
+                return;
+            }
+
             if (window.confirm("매도하겠습니까?")) {
                 await sell({ username, currencyId: Number(id), amount, price: trade });
                 alert("주문 완료");

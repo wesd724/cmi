@@ -23,6 +23,7 @@ const Nav = () => {
 
     useEffect(() => {
         if (username) {
+            setAnchorEl(null);
             eventSource.current = new EventSource(process.env.REACT_APP_SSE_URL + username);
 
             eventSource.current.addEventListener('connect', e => {
@@ -32,14 +33,17 @@ const Nav = () => {
 
             eventSource.current.addEventListener('message', e => {
                 const data: notificationType[] = JSON.parse(e.data);
+                console.log(data);
                 setNotification(data);
             });
 
             eventSource.current.addEventListener('error', e => {
+                closeSSE(username);
                 console.log(e);
             });
 
             window.addEventListener("beforeunload", e => {
+                closeSSE(username);
                 e.preventDefault();
             })
         }
@@ -79,7 +83,7 @@ const Nav = () => {
                             <NotificationsNoneIcon />
                         </Badge>
                     </IconButton>
-                    <Notification id={id} open={open} anchorEl={anchorEl} notification={notification} onClose={closeNotification} />
+                    <Notification id={id} open={open} anchorEl={anchorEl} notification={notification} setNotification={setNotification} onClose={closeNotification} />
                     <Typography variant="h6" component="div" sx={{ textAlign: "center", flexGrow: 1 }}>
                         모의 투자
                     </Typography>

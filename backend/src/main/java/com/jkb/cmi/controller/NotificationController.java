@@ -31,9 +31,17 @@ public class NotificationController {
         notificationService.sendAll();
     }
 
-    @GetMapping("/read")
-    public ResponseEntity<Void> read(String username) {
-        notificationService.readNotification(username);
+    @DeleteMapping("/check")
+    public ResponseEntity<Void> check(Long id) {
+        notificationService.checkNotification(id);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/check-all")
+    public ResponseEntity<Void> checkAll(String username) {
+        notificationService.checkAllNotification(username);
+        return ResponseEntity.ok().build();
+    }
+
+
 }

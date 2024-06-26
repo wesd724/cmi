@@ -8,7 +8,6 @@ import com.jkb.cmi.entity.TradeHistory;
 import com.jkb.cmi.entity.type.Orders;
 import com.jkb.cmi.repository.CashAssetRepository;
 import com.jkb.cmi.repository.CurrencyAssetRepository;
-import com.jkb.cmi.repository.CurrencyRepository;
 import com.jkb.cmi.repository.TradeHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,8 +34,8 @@ public class AssetService {
     public CashAndCurrencyResponse getCashAndCurrencyByUser(String username, String market) {
         List<TradeHistory> tradeHistories =
                 tradeHistoryRepository.findByUsernameAndCompleteFalse(username);
-        Double amountByNotComplete = totalAmountByNotComplete(tradeHistories, username, market);
-        Long priceByNotComplete = totalPriceByNotComplete(tradeHistories, username);
+        Double amountByNotComplete = totalAmountByNotComplete(tradeHistories, market);
+        Long priceByNotComplete = totalPriceByNotComplete(tradeHistories);
 
         CashAsset cashAsset = cashAssetRepository.getByUser_Username(username);
 
@@ -49,14 +48,14 @@ public class AssetService {
         return cashAndCurrencyResponse;
     }
 
-    private Double totalAmountByNotComplete(List<TradeHistory> tradeHistories, String username, String market) {
+    private Double totalAmountByNotComplete(List<TradeHistory> tradeHistories, String market) {
         return tradeHistories.stream()
                 .filter(tradeHistory -> tradeHistory.getOrders() == Orders.SELL && tradeHistory.getCurrency().getMarket().equals(market))
                 .map(tradeHistory -> tradeHistory.getAmount())
                 .reduce(0D, Double::sum);
     }
 
-    private Long totalPriceByNotComplete(List<TradeHistory> tradeHistories, String username) {
+    private Long totalPriceByNotComplete(List<TradeHistory> tradeHistories) {
         return tradeHistories.stream()
                 .filter(tradeHistory -> tradeHistory.getOrders() == Orders.BUY)
                 .map(tradeHistory -> Math.round(tradeHistory.getAmount() * tradeHistory.getPrice()))

@@ -19,17 +19,13 @@ public class Notification {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trade_history_id")
     private TradeHistory tradeHistory;
 
-    @Column(nullable = false)
-    private boolean isRead;
-
     @Builder
-    public Notification(User user, TradeHistory tradeHistory, boolean isRead) {
+    public Notification(User user, TradeHistory tradeHistory) {
         this.user = user;
         this.tradeHistory = tradeHistory;
-        this.isRead = isRead;
     }
 }
