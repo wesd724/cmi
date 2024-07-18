@@ -1,5 +1,9 @@
 import { UseMenuButtonParameters } from "@mui/base";
 
+export interface errorResponse {
+    message: string;
+}
+
 export interface response {
     market: string;
     [key: string]: string | number;
