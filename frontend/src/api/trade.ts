@@ -1,12 +1,12 @@
-import axios from "axios";
+import client from "./axios";
 
 const getTradeHistory = async (username: string) => {
-    const res = await axios.get(`/trade?username=${username}`);
+    const res = await client.get(`/trade?username=${username}`);
     return res.data
 }
 
 const cancelTrade = async(id: number) => {
-    const res = await axios.delete(`/trade/cancel?id=${id}`);
+    const res = await client.delete(`/trade/cancel?id=${id}`);
     return res.data
 }
 

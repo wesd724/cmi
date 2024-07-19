@@ -1,7 +1,7 @@
-import axios from "axios";
+import client from "./axios";
 
 const getRecommendation = async () => {
-    const res = await axios.get("/recommendation");
+    const res = await client.get("/recommendation");
     return res.data;
 }
 

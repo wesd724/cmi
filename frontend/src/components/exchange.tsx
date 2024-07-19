@@ -33,7 +33,7 @@ const Exchange = () => {
     //const market = qs.get('market') as string;
 
     useEffect(() => {
-        webSocket.current = new WebSocket(process.env.REACT_APP_WS_UPBIT_URL as string);
+        webSocket.current = new WebSocket(import.meta.env.VITE_WS_UPBIT_URL as string);
         webSocket.current.onopen = () => {
             console.log('WebSocket 연결');
             webSocket.current?.send(webSocketRequest("ticker", [market]));

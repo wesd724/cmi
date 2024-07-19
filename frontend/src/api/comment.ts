@@ -1,4 +1,4 @@
-import axios from "axios"
+import client from "./axios";
 
 interface comment {
     username: string;
@@ -7,21 +7,21 @@ interface comment {
 }
 
 const saveComment = async (data: comment) => {
-    const res = await axios.post("/comment", data);
+    const res = await client.post("/comment", data);
     return res.data;
 }
 
 const getComments = async (market: string) => {
-    const res = await axios.get(`/comment?market=${market}`);
+    const res = await client.get(`/comment?market=${market}`);
     return res.data;
 }
 
 const updateComment = async (id: number, content: string) => {
-    await axios.put("/comment", { id, content });
+    await client.put("/comment", { id, content });
 }
 
 const deleteComment = async (id: number) => {
-    await axios.delete(`/comment?id=${id}`)
+    await client.delete(`/comment?id=${id}`)
 }
 
 export { saveComment, getComments, updateComment, deleteComment };

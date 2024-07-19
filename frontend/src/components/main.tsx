@@ -34,7 +34,7 @@ const Main = () => {
 
     useEffect(() => {
         ticker(MARKET);
-        webSocket.current = new WebSocket(process.env.REACT_APP_WS_UPBIT_URL as string);
+        webSocket.current = new WebSocket(import.meta.env.VITE_WS_UPBIT_URL as string);
         webSocket.current.onopen = () => {
             console.log('WebSocket 연결');
             webSocket.current?.send(webSocketRequest("ticker", MARKET));
@@ -94,7 +94,7 @@ const Main = () => {
                     </TableHead>
                     <TableBody>
                         {tickers.map((v, i) => (
-                            <TableRow key={v.signed_change_rate * v.trade_price}>
+                            <TableRow key={v.trade_price * v.acc_trade_price_24h}>
                                 <TableCell onClick={() => onClick(v.market)}>{`${MARKET_NAME[i]}(${v.market})`}</TableCell>
                                 <TableCell>{toKR(v.trade_price)}</TableCell>
                                 <TableCell>{`${(v.signed_change_rate * 100).toFixed(2)}%`}</TableCell>

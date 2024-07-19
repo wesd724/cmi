@@ -57,7 +57,7 @@ const Notification = ({ id, open, anchorEl, notification, setNotification, onClo
                                         </ListItemIcon>
                                         <ListItemText
                                             primary={`${v.orders} | ${v.currencyName} ${v.amount}개`}
-                                            secondary={<div>{v.completeDate.replace(/T/, ' ')}<br />체결 완료</div>}
+                                            secondary={<span>{v.completeDate.replace(/T/, ' ')}<br />체결 완료</span>}
                                         />
                                     </ListItemButton>
                                 </ListItem>

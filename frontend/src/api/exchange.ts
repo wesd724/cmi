@@ -1,4 +1,4 @@
-import axios from "axios";
+import client from "./axios";
 
 interface order {
     username: string;
@@ -13,18 +13,18 @@ interface info {
 }
 
 const getCashAndCurrency = async (data: info) => {
-    const res = await axios.get("/asset/cash-currency", {
+    const res = await client.get("/asset/cash-currency", {
         params: data
     });
     return res.data
 }
 
 const buy = async (data: order) => {
-    await axios.post("/trade/buy", data);
+    await client.post("/trade/buy", data);
 }
 
 const sell = async (data: order) => {
-    await axios.post("/trade/sell", data);
+    await client.post("/trade/sell", data);
 }
 
 export { buy, sell, getCashAndCurrency };

@@ -1,4 +1,4 @@
-import axios from "axios";
+import client from "./axios";
 
 interface user {
     username: string,
@@ -6,12 +6,12 @@ interface user {
 }
 
 const login = async (data: user) => {
-    const res = await axios.post("/user/login", data);
+    const res = await client.post("/user/login", data);
     return res.data
 }
 
 const signUp = async (data: user) => {
-    const res = await axios.post("/user/sign-up", data);
+    const res = await client.post("/user/sign-up", data);
     return res.data
 }
 

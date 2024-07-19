@@ -20,13 +20,13 @@ const InvestmentTabs = () => {
 				<TabList textColor="inherit" TabIndicatorProps={{
 					style: {
 						backgroundColor: "rgb(13, 99, 28)"
-					  }
+					}
 				}} onChange={handleChange} centered>
 					<Tab label="보유자산" value="1" />
 					<Tab label="거래내역" value="2" />
 				</TabList>
 			</Box>
-			<TabPanel sx={{ padding: 0 }}value="1"><UserAsset /></TabPanel>
+			<TabPanel sx={{ padding: 0 }} value="1"><UserAsset /></TabPanel>
 			<TabPanel sx={{ padding: 0 }} value="2"><Trade /></TabPanel>
 		</TabContext>
 	);
