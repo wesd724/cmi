@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UpdateCommentRequest {
     private Long id;
-    private String Content;
+    private String content;
 }

@@ -5,9 +5,12 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import { MARKET } from '../data/constant';
-import { getComments, saveComment } from '../api/comment';
+import { deleteComment, getComments, saveComment, updateComment } from '../api/comment';
 import Loading from "./loading";
 import userStore from '../store/userStore';
+import EditIcon from '@mui/icons-material/Edit';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import Button from '@mui/material/Button';
 
 interface marketProps {
     market: string;
@@ -20,17 +23,107 @@ interface commentProps {
     createdDate: string;
 }
 
-const RenderTextList = ({ commentList }: { commentList: commentProps[] | undefined }) => {
+interface textListProps {
+    commentList: commentProps[];
+    setCommentList: React.Dispatch<React.SetStateAction<commentProps[]>>;
+}
+
+interface buttonProps {
+    comment: commentProps;
+    editComment: (c: commentProps) => void;
+    removeComment: (id: number) => void;
+}
+
+const EditRemoveButton = ({ comment, editComment, removeComment }: buttonProps) => {
+    return (
+        <span style={{
+            paddingLeft: "20px"
+        }}>
+            <Button onClick={() => editComment(comment)}
+                sx={{
+                    p: "10px",
+                    minWidth: "10px"
+                }}
+            >
+
+                <EditIcon
+                    color='primary'
+                />
+            </Button>
+            <Button
+                sx={{
+                    p: "10px",
+                    minWidth: "10px"
+                }}
+            >
+
+                <RemoveCircleOutlineIcon onClick={() => removeComment(comment.id)}
+                    sx={{ color: "red" }}
+                />
+            </Button>
+        </span>
+    )
+}
+
+const RenderTextList = ({ commentList, setCommentList }: textListProps) => {
+    const [isEdit, setIsEdit] = useState<boolean>(false);
+    const [editId, setEditId] = useState<number>(0);
+    const [content, setContent] = useState<string>("");
+
+    const { username } = userStore();
+
+    const editComment = async (comment: commentProps) => {
+        if (!isEdit) {
+            setIsEdit(true);
+        } else if (editId === comment.id) {
+            if (content !== "" && content !== comment.content) {
+                await updateComment(comment.id, content);
+                setCommentList(commentList.map(v => {
+                    if (v.id === comment.id) v.content = content;
+                    return v
+                }))
+            }
+            setIsEdit(false);
+        }
+        
+        setEditId(comment.id);
+        setContent(comment.content);
+    }
+
+    const removeComment = async (id: number) => {
+        if (window.confirm("삭제하시겠습니까?")) {
+            await deleteComment(id);
+            setCommentList(commentList.filter(v => v.id !== id));
+        }
+    }
+
+    const ChangeComment = (e: React.ChangeEvent<HTMLInputElement>) => setContent(e.target.value);
+
     return (
         <>
-            {commentList?.map((v) => (
+            {commentList.map((v) => (
                 <Fragment key={v.id}>
                     <ListItem>
-                        <div className="item">
-                            <div>{v.content}</div>
-                            <span>{v.username}</span>
-                            <span>{v.createdDate.replace(/T/, ' ')}</span>
-                        </div>
+                        {
+                            v.id === editId && isEdit
+                                ? (
+                                    <TextField sx={{
+                                        flex: "auto",
+                                        width: "60vw",
+                                    }}
+                                        value={content}
+                                        onChange={ChangeComment}
+                                        variant="outlined" />
+                                )
+                                : (
+                                    <div className="item">
+                                        <div>{v.content}</div>
+                                        <span>{v.username}</span>
+                                        <span>{v.createdDate.replace(/T/, ' ')}</span>
+                                    </div>
+                                )
+                        }
+                        {username === v.username && <EditRemoveButton comment={v} editComment={editComment} removeComment={removeComment} />}
                     </ListItem>
                     <Divider />
                 </Fragment>
@@ -87,7 +180,7 @@ const Comment = ({ market }: marketProps) => {
                     loading ?
                         <Loading /> :
                         <List>
-                            <RenderTextList commentList={commentsData} />
+                            <RenderTextList commentList={commentsData} setCommentList={setCommentsData} />
                         </List>
                 }
             </div>
