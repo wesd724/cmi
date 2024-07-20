@@ -29,35 +29,44 @@ interface textListProps {
 }
 
 interface buttonProps {
+    check: boolean;
     comment: commentProps;
     editComment: (c: commentProps) => void;
     removeComment: (id: number) => void;
 }
 
-const EditRemoveButton = ({ comment, editComment, removeComment }: buttonProps) => {
+const EditRemoveButton = ({ check, comment, editComment, removeComment }: buttonProps) => {
     return (
         <span style={{
             paddingLeft: "20px"
         }}>
-            <Button onClick={() => editComment(comment)}
+            <Button
+                onClick={() => editComment(comment)}
+                variant='outlined'
                 sx={{
-                    p: "10px",
-                    minWidth: "10px"
+                    p: "3px",
+                    mr: "5px",
+                    minWidth: "10px",
                 }}
             >
 
                 <EditIcon
-                    color='primary'
+                    fontSize="small"
+                    color={check ? 'disabled' : 'primary'}
                 />
             </Button>
             <Button
+                onClick={() => removeComment(comment.id)}
+                variant='outlined'
+                color='error'
                 sx={{
-                    p: "10px",
-                    minWidth: "10px"
+                    p: "3px",
+                    minWidth: "10px",
                 }}
             >
 
-                <RemoveCircleOutlineIcon onClick={() => removeComment(comment.id)}
+                <RemoveCircleOutlineIcon
+                    fontSize="small"
                     sx={{ color: "red" }}
                 />
             </Button>
@@ -85,7 +94,7 @@ const RenderTextList = ({ commentList, setCommentList }: textListProps) => {
             }
             setIsEdit(false);
         }
-        
+
         setEditId(comment.id);
         setContent(comment.content);
     }
@@ -123,7 +132,7 @@ const RenderTextList = ({ commentList, setCommentList }: textListProps) => {
                                     </div>
                                 )
                         }
-                        {username === v.username && <EditRemoveButton comment={v} editComment={editComment} removeComment={removeComment} />}
+                        {username === v.username && <EditRemoveButton check={v.id === editId && isEdit} comment={v} editComment={editComment} removeComment={removeComment} />}
                     </ListItem>
                     <Divider />
                 </Fragment>
