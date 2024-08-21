@@ -1,4 +1,5 @@
 import { UseMenuButtonParameters } from "@mui/base";
+import { status, statusType } from "../data/constant";
 
 export interface errorResponse {
     message: string;
@@ -30,7 +31,7 @@ export interface tradeHistoryType {
     tradePrice: number;
     orderDate: string;
     completeDate: string;
-    complete: boolean;
+    status: statusType;
 }
 
 export interface currencyAssetType {

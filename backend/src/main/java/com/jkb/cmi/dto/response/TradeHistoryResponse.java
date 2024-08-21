@@ -1,6 +1,7 @@
 package com.jkb.cmi.dto.response;
 
 import com.jkb.cmi.entity.TradeHistory;
+import com.jkb.cmi.entity.type.Status;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class TradeHistoryResponse {
     private Long tradePrice;
     private LocalDateTime orderDate;
     private LocalDateTime completeDate;
-    private boolean complete;
+    private Status status;
 
     public static TradeHistoryResponse from(TradeHistory tradeHistory) {
         Double amount = tradeHistory.getAmount();
@@ -36,7 +37,7 @@ public class TradeHistoryResponse {
                 tradePrice,
                 tradeHistory.getCreatedDate(),
                 tradeHistory.getCompleteDate(),
-                tradeHistory.isComplete()
+                tradeHistory.getStatus()
         );
     }
 

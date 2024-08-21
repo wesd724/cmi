@@ -39,3 +39,12 @@ export const MARKET_MAPPER = Object.fromEntries(
 //     }, {})
 
 export const ASSET_UPDATE_COLOR = "#0152b7";
+
+export const status = {
+    ACTIVE: "미체결",
+    CANCEL: "취소",
+    COMPLETE: "체결 완료",
+    PARTIAL: "부분 체결"
+};
+
+export type statusType = keyof typeof status;

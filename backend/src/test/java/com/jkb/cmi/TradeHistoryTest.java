@@ -1,15 +1,12 @@
 package com.jkb.cmi;
 
 import com.jkb.cmi.entity.TradeHistory;
-import com.jkb.cmi.entity.type.Orders;
+import com.jkb.cmi.entity.type.Status;
 import com.jkb.cmi.repository.TradeHistoryRepository;
 import com.jkb.cmi.service.TradeHistoryService;
-import com.querydsl.core.Tuple;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 
@@ -23,7 +20,7 @@ public class TradeHistoryTest {
     @Test
     void test1() {
         List<TradeHistory> tradeHistories2 =
-                tradeHistoryRepository.findByCompleteTrueAndCompleteDateNull();
+                tradeHistoryRepository.findByStatusAndCompleteDateNull(Status.COMPLETE);
 
         tradeHistories2.forEach(System.out::println);
     }
@@ -38,7 +35,7 @@ public class TradeHistoryTest {
     @Test
     void test3() {
         List<TradeHistory> tradeHistories =
-                tradeHistoryRepository.findByUsernameAndCompleteFalse("test");
+                tradeHistoryRepository.findByUsernameAndStatusActive("test");
     }
     @Test
     void test5() {

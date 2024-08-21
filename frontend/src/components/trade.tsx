@@ -1,6 +1,7 @@
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useState, useEffect } from "react";
 import { cancelTrade, getTradeHistory } from "../api/trade";
+import { status } from "../data/constant";
 import { toKR } from "../lib/api";
 import userStore from "../store/userStore";
 import { tradeHistoryType } from "../type/interface";
@@ -45,9 +46,10 @@ const Trade = () => {
                                     <TableCell>거래수량</TableCell>
                                     <TableCell>거래단가</TableCell>
                                     <TableCell>거래금액</TableCell>
-                                    <TableCell>주문시간</TableCell>
-                                    <TableCell>체결시간</TableCell>
-                                    <TableCell align="center">미체결</TableCell>
+                                    <TableCell align="center">주문시간</TableCell>
+                                    <TableCell align="center">체결시간</TableCell>
+                                    <TableCell align="center">체결상태</TableCell>
+                                    <TableCell align="center">취소가능</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -60,9 +62,10 @@ const Trade = () => {
                                         <TableCell>{toKR(v.tradePrice) + " KRW"}</TableCell>
                                         <TableCell>{v.orderDate.replace(/T/, ' ')}</TableCell>
                                         <TableCell>{v.completeDate?.replace(/T/, ' ')}</TableCell>
+                                        <TableCell align="center">{status[v.status]}</TableCell>
                                         <TableCell>
                                             {
-                                                v.complete
+                                                v.status == "COMPLETE" || v.status == "CANCEL"
                                                     ? <Button size="small" disabled>취소</Button>
                                                     : <Button
                                                         size="large"

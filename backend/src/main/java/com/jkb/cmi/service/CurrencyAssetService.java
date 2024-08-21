@@ -2,6 +2,7 @@ package com.jkb.cmi.service;
 
 import com.jkb.cmi.entity.*;
 import com.jkb.cmi.entity.type.Orders;
+import com.jkb.cmi.entity.type.Status;
 import com.jkb.cmi.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class CurrencyAssetService {
     private final NotificationRepository notificationRepository;
 
     public void updateCurrencyAsset() {
-        List<TradeHistory> tradeHistories = tradeHistoryRepository.findByCompleteTrueAndCompleteDateNull();
+        List<TradeHistory> tradeHistories = tradeHistoryRepository.findByStatusAndCompleteDateNull(Status.COMPLETE);
         for(TradeHistory tradeHistory: tradeHistories) {
             Long userId = tradeHistory.getUser().getId();
             Long currencyId = tradeHistory.getCurrency().getId();

@@ -1,6 +1,7 @@
 package com.jkb.cmi.entity;
 
 import com.jkb.cmi.entity.type.Orders;
+import com.jkb.cmi.entity.type.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,7 +35,8 @@ public class TradeHistory extends BaseEntity {
 
     private LocalDateTime completeDate;
 
-    private boolean complete;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Builder
     public TradeHistory(
@@ -43,18 +45,22 @@ public class TradeHistory extends BaseEntity {
             Orders orders,
             Double amount,
             Double price,
-            boolean complete
+            Status status
     ) {
         this.user = user;
         this.currency = currency;
         this.orders = orders;
         this.amount = amount;
         this.price = price;
-        this.complete = complete;
+        this.status = status;
     }
 
     public void complete() {
         this.completeDate = LocalDateTime.now();
+    }
+
+    public void updateStatus(Status status) {
+        this.status = status;
     }
 
 }

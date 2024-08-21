@@ -33,7 +33,7 @@ public class AssetService {
     @Transactional(readOnly = true)
     public CashAndCurrencyResponse getCashAndCurrencyByUser(String username, String market) {
         List<TradeHistory> tradeHistories =
-                tradeHistoryRepository.findByUsernameAndCompleteFalse(username);
+                tradeHistoryRepository.findByUsernameAndStatusActive(username);
         Double amountByNotComplete = totalAmountByNotComplete(tradeHistories, market);
         Long priceByNotComplete = totalPriceByNotComplete(tradeHistories);
 

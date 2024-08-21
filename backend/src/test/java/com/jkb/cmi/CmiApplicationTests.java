@@ -2,6 +2,7 @@ package com.jkb.cmi;
 
 import com.jkb.cmi.entity.*;
 import com.jkb.cmi.entity.type.Orders;
+import com.jkb.cmi.entity.type.Status;
 import com.jkb.cmi.repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -43,17 +44,17 @@ class CmiApplicationTests {
 				.user(user).currency(currency)
 				.orders(Orders.BUY)
 				.amount(3.312).price(1508d)
-				.complete(true).build();
+				.status(Status.ACTIVE).build();
 		TradeHistory tradeHistory2 = TradeHistory.builder()
 				.user(user).currency(currency)
 				.orders(Orders.BUY)
 				.amount(5d).price(50d)
-				.complete(true).build();
+				.status(Status.ACTIVE).build();
 		TradeHistory tradeHistory3 = TradeHistory.builder()
 				.user(user).currency(currency)
 				.orders(Orders.BUY)
 				.amount(250.56203d).price(1500d)
-				.complete(true).build();
+				.status(Status.ACTIVE).build();
 		tradeHistoryRepository.saveAll(List.of(tradeHistory1, tradeHistory2, tradeHistory3));
 
 		CurrencyAsset currencyAsset = CurrencyAsset.builder()

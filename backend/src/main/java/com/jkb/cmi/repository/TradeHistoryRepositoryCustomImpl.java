@@ -2,6 +2,7 @@ package com.jkb.cmi.repository;
 
 import com.jkb.cmi.dto.response.APIResponse;
 import com.jkb.cmi.entity.type.Orders;
+import com.jkb.cmi.entity.type.Status;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -40,10 +41,10 @@ public class TradeHistoryRepositoryCustomImpl implements TradeHistoryRepositoryC
         }
 
         queryFactory.update(tradeHistory)
-                .set(tradeHistory.complete, true)
+                .set(tradeHistory.status, Status.COMPLETE)
                 .where(builder,
                         eqOrders(orders),
-                        eqComplete(false))
+                        eqStatus(Status.ACTIVE))
                 .execute();
 
         em.flush();
@@ -66,7 +67,7 @@ public class TradeHistoryRepositoryCustomImpl implements TradeHistoryRepositoryC
         return tradeHistory.orders.eq(orders);
     }
 
-    private BooleanExpression eqComplete(boolean complete) {
-        return tradeHistory.complete.eq(complete);
+    private BooleanExpression eqStatus(Status status) {
+        return tradeHistory.status.eq(status);
     }
 }

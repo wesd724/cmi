@@ -7,6 +7,7 @@ import com.jkb.cmi.entity.Currency;
 import com.jkb.cmi.entity.TradeHistory;
 import com.jkb.cmi.entity.User;
 import com.jkb.cmi.entity.type.Orders;
+import com.jkb.cmi.entity.type.Status;
 import com.jkb.cmi.repository.CurrencyRepository;
 import com.jkb.cmi.repository.TradeHistoryRepository;
 import com.jkb.cmi.repository.UserRepository;
@@ -34,10 +35,7 @@ public class TradeHistoryService {
         User user = userRepository.getByUsername(orderRequest.getUsername());
         Currency currency = currencyRepository.getReferenceById(orderRequest.getCurrencyId());
 
-        TradeHistory tradeHistory = TradeHistory.builder()
-                .user(user).currency(currency).orders(orders)
-                .amount(orderRequest.getAmount()).price(orderRequest.getPrice())
-                .complete(false).build();
+        TradeHistory tradeHistory = orderRequest.toTradeHistoryEntity(user, currency, orders);
 
         tradeHistoryRepository.save(tradeHistory);
     }
@@ -49,9 +47,10 @@ public class TradeHistoryService {
 
     public Boolean cancel(Long id) {
         TradeHistory tradeHistory = tradeHistoryRepository.getReferenceById(id);
-        if(tradeHistory.isComplete())
+        if(tradeHistory.getStatus() == Status.COMPLETE)
             return false;
-        tradeHistoryRepository.deleteById(id);
+        tradeHistory.updateStatus(Status.CANCEL);
+        //tradeHistoryRepository.deleteById(id);
         return true;
     }
 }
