@@ -20,11 +20,11 @@ const getCashAndCurrency = async (data: info) => {
 }
 
 const buy = async (data: order) => {
-    await client.post("/trade/buy", data);
+    await client.post("/order/buy", data);
 }
 
 const sell = async (data: order) => {
-    await client.post("/trade/sell", data);
+    await client.post("/order/sell", data);
 }
 
 export { buy, sell, getCashAndCurrency };

@@ -31,12 +31,6 @@ public class TradeHistoryTest {
         System.out.println(tradeHistories);
     }
 
-
-    @Test
-    void test3() {
-        List<TradeHistory> tradeHistories =
-                tradeHistoryRepository.findByUsernameAndStatusActive("test");
-    }
     @Test
     void test5() {
     }

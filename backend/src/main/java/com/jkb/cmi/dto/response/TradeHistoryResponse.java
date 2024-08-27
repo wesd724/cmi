@@ -35,7 +35,7 @@ public class TradeHistoryResponse {
                 tradeHistory.getAmount(),
                 tradeHistory.getPrice(),
                 tradePrice,
-                tradeHistory.getCreatedDate(),
+                tradeHistory.getOrderDate(),
                 tradeHistory.getCompleteDate(),
                 tradeHistory.getStatus()
         );

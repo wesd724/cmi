@@ -44,17 +44,17 @@ class CmiApplicationTests {
 				.user(user).currency(currency)
 				.orders(Orders.BUY)
 				.amount(3.312).price(1508d)
-				.status(Status.ACTIVE).build();
+				.status(Status.COMPLETE).build();
 		TradeHistory tradeHistory2 = TradeHistory.builder()
 				.user(user).currency(currency)
 				.orders(Orders.BUY)
 				.amount(5d).price(50d)
-				.status(Status.ACTIVE).build();
+				.status(Status.COMPLETE).build();
 		TradeHistory tradeHistory3 = TradeHistory.builder()
 				.user(user).currency(currency)
 				.orders(Orders.BUY)
 				.amount(250.56203d).price(1500d)
-				.status(Status.ACTIVE).build();
+				.status(Status.COMPLETE).build();
 		tradeHistoryRepository.saveAll(List.of(tradeHistory1, tradeHistory2, tradeHistory3));
 
 		CurrencyAsset currencyAsset = CurrencyAsset.builder()

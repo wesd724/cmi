@@ -22,12 +22,12 @@ public class OrderRequest {
         return TradeHistory.builder()
                 .user(user).currency(currency).orders(orders)
                 .amount(amount).price(price)
-                .status(Status.ACTIVE).build();
+                .status(Status.COMPLETE).build();
     }
 
-    public OrderBook toOrderBookEntity(User user, Currency currency, Orders orders) {
+    public OrderBook toEntity(User user, Currency currency, Orders orders) {
         return OrderBook.builder()
                 .user(user).currency(currency).orders(orders)
-                .amount(amount).price(price).build();
+                .originalAmount(amount).price(price).build();
     }
 }
