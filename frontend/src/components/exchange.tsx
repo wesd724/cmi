@@ -10,6 +10,7 @@ import { errorResponse, exchangeStatus } from "../type/interface";
 import { toKR } from "../lib/api";
 import userStore from "../store/userStore";
 import axios from "axios";
+import OrderBook from "./orderBook";
 
 
 const Exchange = () => {
@@ -161,6 +162,7 @@ const Exchange = () => {
                                 <span>{market} 현재가</span>
                                 <span>{toKR(price)}</span>
                             </p>
+                            <OrderBook id={Number(id)} />
                             <Chart width="100%" height="450px" time="minutes/1" marketName={market} />
                         </>
                     ) : <Navigate to="/" replace />

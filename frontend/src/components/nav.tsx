@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,11 +12,12 @@ import Notification from './notification';
 import { notificationType } from '../type/interface';
 import PersonIcon from '@mui/icons-material/Person';
 import userStore from '../store/userStore';
+import useSSE from '../store/useSSE';
 
 const Nav = () => {
     const navigate = useNavigate();
     const { username, deleteName } = userStore();
-    const eventSource = useRef<EventSource | null>(null);
+    const { setEventSource, closeEventSource, addEventListener } = useSSE();
 
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [notification, setNotification] = useState<notificationType[]>([]);
@@ -24,41 +25,40 @@ const Nav = () => {
     useEffect(() => {
         if (username) {
             setAnchorEl(null);
-            eventSource.current = new EventSource(import.meta.env.VITE_SSE_URL + username);
+            setEventSource(import.meta.env.VITE_SSE_URL + username);
 
-            eventSource.current.addEventListener('connect', e => {
+            addEventListener('connect', e => {
                 const data = e.data;
                 console.log(data);
             });
 
-            eventSource.current.addEventListener('message', e => {
+            addEventListener('message', e => {
                 const data: notificationType[] = JSON.parse(e.data);
                 console.log(data);
                 setNotification(data);
             });
 
-            eventSource.current.addEventListener('error', e => {
+            addEventListener('error', e => {
                 closeSSE(username);
                 console.log(e);
             });
 
             window.addEventListener("beforeunload", e => {
-                closeSSE(username);
                 e.preventDefault();
             })
         }
 
         return () => {
-            eventSource.current?.close();
+            closeEventSource();
         }
-    }, [username])
+    }, [username, setEventSource, closeEventSource, addEventListener])
 
     const logout = () => {
         closeSSE(username);
         deleteName();
         navigate("/", { replace: true });
         setNotification([]);
-        eventSource.current?.close();
+        closeEventSource();
     }
 
     const openNotification = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -119,4 +119,4 @@ const Nav = () => {
     );
 }
 
-export default memo(Nav);
+export default Nav;
