@@ -21,7 +21,7 @@ import java.util.Map;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class NotificationService {
+public class SseService {
     private static final Long timeout = 30L * 1000 * 60;
 
     private final SseRepository sseRepository;
@@ -62,7 +62,7 @@ public class NotificationService {
         }
     }
 
-    public void sendAll() {
+    public void sendNotificationToAll() {
         Map<String, List<SseEmitter>> emitters = sseRepository.findAll();
 
         emitters.forEach((username, emitterList) -> {
@@ -70,6 +70,18 @@ public class NotificationService {
                     System.out.println(username + ": " + emitterList.size());
                     emitterList.forEach(emitter -> {
                         sendEvent(emitter, username, "message", userData);
+                    });
+                }
+        );
+    }
+
+    public void sendEventToAll(String eventName, Object data) {
+        Map<String, List<SseEmitter>> emitters = sseRepository.findAll();
+
+        emitters.forEach((username, emitterList) -> {
+                    System.out.println(username + ": " + emitterList.size());
+                    emitterList.forEach(emitter -> {
+                        sendEvent(emitter, username, eventName, data);
                     });
                 }
         );

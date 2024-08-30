@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
@@ -24,6 +25,20 @@ public class OrderBookResponse {
     static class Tuple {
         private Double price;
         private Orders orders;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Tuple tuple = (Tuple) o;
+            return Objects.equals(price, tuple.price) &&
+                    orders == tuple.orders;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(price, orders);
+        }
     }
 
     public static List<OrderBookResponse> tolist(List<OrderBook> orderBookList) {

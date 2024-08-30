@@ -28,6 +28,7 @@ public class OrderBookService {
     private final CurrencyRepository currencyRepository;
     private final TradeHistoryRepository tradeHistoryRepository;
     private final OrderBookRepository orderBookRepository;
+    private final SseService sseService;
 
     public List<OrderBookResponse> getOrders(Long currencyId) {
         List<OrderBook> orderBookList = orderBookRepository.getByCurrency_Id(currencyId);
@@ -46,6 +47,13 @@ public class OrderBookService {
 
         OrderBook orderBook = orderRequest.toEntity(user, currency, orders);
         orderBookRepository.save(orderBook);
+
+        sendOrderBook(orderRequest.getCurrencyId());
+    }
+
+    public void sendOrderBook(Long currencyId) {
+        List<OrderBookResponse> orderBook = getOrders(currencyId);
+        sseService.sendEventToAll("orderBook " + currencyId, orderBook);
     }
 
     public void matchOrder(List<OrderBook> buyOrders, List<OrderBook> sellOrders) {
@@ -55,23 +63,28 @@ public class OrderBookService {
 
             if (highestBuy.getActiveAmount() >= lowestSell.getActiveAmount()) {
                 highestBuy.changeActiveAmount(lowestSell.getActiveAmount());
+
                 if (highestBuy.getActiveAmount() == 0) {
                     orderBookRepository.delete(highestBuy);
-
                     saveTradeHistory(highestBuy, highestBuy.getOriginalAmount(), Status.COMPLETE);
+
+                    buyOrders.remove(highestBuy);
                 } else {
                     saveTradeHistory(highestBuy, lowestSell.getActiveAmount(), Status.PARTIAL);
                 }
 
                 orderBookRepository.delete(lowestSell);
-
                 saveTradeHistory(lowestSell, lowestSell.getOriginalAmount(), Status.COMPLETE);
+
+                sellOrders.remove(lowestSell);
             } else {
                 lowestSell.changeActiveAmount(highestBuy.getActiveAmount());
-                orderBookRepository.delete(highestBuy);
 
+                orderBookRepository.delete(highestBuy);
                 saveTradeHistory(lowestSell, highestBuy.getActiveAmount(), Status.PARTIAL);
                 saveTradeHistory(highestBuy, highestBuy.getOriginalAmount(), Status.COMPLETE);
+
+                buyOrders.remove(highestBuy);
             }
         }
     }

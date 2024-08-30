@@ -3,7 +3,7 @@ package com.jkb.cmi.common;
 import com.jkb.cmi.dto.response.APIResponse;
 import com.jkb.cmi.dto.response.RecommendationResponse;
 import com.jkb.cmi.service.CurrencyAssetService;
-import com.jkb.cmi.service.NotificationService;
+import com.jkb.cmi.service.SseService;
 import com.jkb.cmi.service.RecommendationService;
 import com.jkb.cmi.service.TradeHistoryService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class Scheduler {
-    private final NotificationService notificationService;
+    private final SseService sseService;
     private final CurrencyAssetService currencyAssetService;
     private final TradeHistoryService tradeHistoryService;
     private final RecommendationService recommendationService;
@@ -37,7 +37,7 @@ public class Scheduler {
     public void notification() {
         tradeHistoryService.completeProcess(getData());
         currencyAssetService.updateCurrencyAsset();
-        notificationService.sendAll();
+        sseService.sendNotificationToAll();
     }
 
     @Transactional
