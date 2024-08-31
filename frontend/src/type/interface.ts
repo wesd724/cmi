@@ -71,3 +71,9 @@ export interface recommendationType {
     market: string;
     comparedPreviousDay: number;
 }
+
+export interface orderBookType {
+    price: number;
+    orders: string;
+    activeAmount: number;
+}

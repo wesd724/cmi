@@ -27,7 +27,7 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<List<OrderBookResponse>> getOrderBook(Long currencyId) {
         List<OrderBookResponse> orderBookResponseList = orderBookService.getOrders(currencyId);
         return ResponseEntity.ok(orderBookResponseList);
