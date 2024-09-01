@@ -10,14 +10,14 @@
 
 |코인 주문|  
 |:-:|
-|<image src="https://github.com/wesd724/cmi/assets/50701493/27d660af-80bb-4820-b926-53628497505c">|
-|<b>원하는 코인을 매수/매도 할 수 있습니다.</b>|
+|<image src="https://github.com/user-attachments/assets/9ec9b970-c0f5-4546-8ede-9440632ad71b">|
+|<b>호가창을 보며 코인을 매수/매도 주문을 할 수 있습니다.</b>|
 <br>
 
 |투자 정보|
 |:-:|
-|<image src="https://github.com/wesd724/cmi/assets/50701493/b8441a95-6bd9-4175-8bd2-5ea29abfc221">|
-|<b>보유자산과 거래내역을 확인할 수 있습니다.</b>|
+|<image src="https://github.com/user-attachments/assets/58b94d8c-7f08-4aeb-beb8-b8772dbd3fb3">|
+|<b>보유자산, 거래내역, 미체결을 확인할 수 있습니다.</b>|
 <br>
 
 |알림|
@@ -26,7 +26,7 @@
 |<b>주문 체결 알림을 받을 수 있습니다.</b>|
 
 ## ERD
-<image src="https://github.com/wesd724/cmi/assets/50701493/21044040-6446-4f86-8bd2-08d20bd5f3f5">
+<image src="https://github.com/user-attachments/assets/5ad71697-2905-4669-a497-a33a399dd03c">
 
 ## 기술 스택
 - 프론트엔드
