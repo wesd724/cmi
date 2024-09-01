@@ -4,11 +4,11 @@ import com.jkb.cmi.dto.response.CashAndCurrencyResponse;
 import com.jkb.cmi.dto.response.UserAssetResponse;
 import com.jkb.cmi.entity.CashAsset;
 import com.jkb.cmi.entity.CurrencyAsset;
-import com.jkb.cmi.entity.TradeHistory;
+import com.jkb.cmi.entity.OrderBook;
 import com.jkb.cmi.entity.type.Orders;
 import com.jkb.cmi.repository.CashAssetRepository;
 import com.jkb.cmi.repository.CurrencyAssetRepository;
-import com.jkb.cmi.repository.TradeHistoryRepository;
+import com.jkb.cmi.repository.OrderBookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +21,7 @@ import java.util.List;
 public class AssetService {
     private final CashAssetRepository cashAssetRepository;
     private final CurrencyAssetRepository currencyAssetRepository;
-    private final TradeHistoryRepository tradeHistoryRepository;
+    private final OrderBookRepository orderBookRepository;
 
     @Transactional(readOnly = true)
     public UserAssetResponse getUserAsset(String username) {
@@ -32,10 +32,9 @@ public class AssetService {
 
     @Transactional(readOnly = true)
     public CashAndCurrencyResponse getCashAndCurrencyByUser(String username, String market) {
-        List<TradeHistory> tradeHistories =
-                tradeHistoryRepository.findByUsernameAndStatusActive(username);
-        Double amountByNotComplete = totalAmountByNotComplete(tradeHistories, market);
-        Long priceByNotComplete = totalPriceByNotComplete(tradeHistories);
+        List<OrderBook> orderBookList = orderBookRepository.getActiveOrderByUsername(username);
+        Double amountByNotComplete = totalAmountByNotComplete(orderBookList, market);
+        Long priceByNotComplete = totalPriceByNotComplete(orderBookList);
 
         CashAsset cashAsset = cashAssetRepository.getByUser_Username(username);
 
@@ -48,17 +47,17 @@ public class AssetService {
         return cashAndCurrencyResponse;
     }
 
-    private Double totalAmountByNotComplete(List<TradeHistory> tradeHistories, String market) {
-        return tradeHistories.stream()
-                .filter(tradeHistory -> tradeHistory.getOrders() == Orders.SELL && tradeHistory.getCurrency().getMarket().equals(market))
-                .map(tradeHistory -> tradeHistory.getAmount())
+    private Double totalAmountByNotComplete(List<OrderBook> orderBookList, String market) {
+        return orderBookList.stream()
+                .filter(orderBook -> orderBook.getOrders() == Orders.SELL && orderBook.getCurrency().getMarket().equals(market))
+                .map(orderBook -> orderBook.getActiveAmount())
                 .reduce(0D, Double::sum);
     }
 
-    private Long totalPriceByNotComplete(List<TradeHistory> tradeHistories) {
-        return tradeHistories.stream()
-                .filter(tradeHistory -> tradeHistory.getOrders() == Orders.BUY)
-                .map(tradeHistory -> Math.round(tradeHistory.getAmount() * tradeHistory.getPrice()))
+    private Long totalPriceByNotComplete(List<OrderBook> orderBookList) {
+        return orderBookList.stream()
+                .filter(orderBook -> orderBook.getOrders() == Orders.BUY)
+                .map(orderBook -> Math.round(orderBook.getActiveAmount() * orderBook.getPrice()))
                 .reduce(0L, Long::sum);
     }
 

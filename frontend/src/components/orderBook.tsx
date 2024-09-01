@@ -73,7 +73,7 @@ const OrderBook = ({ id, setTrade }: orderBookProps) => {
                         </TableRow>
                     </TableHead>
                 </Table>
-                <TableContainer ref={element} className="orderBook-body" sx={{ height: 250 }}>
+                <TableContainer ref={element} className="orderBook-body" sx={{ height: 290 }}>
                     <Table className="orderBook">
                         <TableBody>
                             {orderList.map((v, i) => {

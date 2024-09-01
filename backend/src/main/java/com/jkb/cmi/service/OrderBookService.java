@@ -1,6 +1,7 @@
 package com.jkb.cmi.service;
 
 import com.jkb.cmi.dto.request.OrderRequest;
+import com.jkb.cmi.dto.response.ActiveOrderResponse;
 import com.jkb.cmi.dto.response.OrderBookResponse;
 import com.jkb.cmi.entity.Currency;
 import com.jkb.cmi.entity.OrderBook;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,16 +31,25 @@ public class OrderBookService {
     private final TradeHistoryRepository tradeHistoryRepository;
     private final OrderBookRepository orderBookRepository;
     private final SseService sseService;
+    private final CurrencyAssetService currencyAssetService;
 
     public List<OrderBookResponse> getOrders(Long currencyId) {
         List<OrderBook> orderBookList = orderBookRepository.getByCurrency_Id(currencyId);
         List<OrderBook> buyOrders = OrderFilter(orderBookList, Orders.BUY);
         List<OrderBook> sellOrders = OrderFilter(orderBookList, Orders.SELL);
         if (!buyOrders.isEmpty() && !sellOrders.isEmpty()) {
-            //matchOrder(buyOrders, sellOrders);
+            matchOrder(buyOrders, sellOrders);
         }
         sellOrders.addAll(buyOrders);
         return OrderBookResponse.tolist(sellOrders);
+    }
+
+    public List<ActiveOrderResponse> getActiveOrder(String username) {
+        List<OrderBook> orderBookList = orderBookRepository.getActiveOrderByUsername(username)
+                .stream().sorted(
+                        Comparator.comparingLong(OrderBook::getId)
+                ).toList();
+        return ActiveOrderResponse.tolist(orderBookList);
     }
 
     public void addOrder(OrderRequest orderRequest, Orders orders) {
@@ -66,7 +77,7 @@ public class OrderBookService {
 
                 if (highestBuy.getActiveAmount() == 0) {
                     orderBookRepository.delete(highestBuy);
-                    saveTradeHistory(highestBuy, highestBuy.getOriginalAmount(), Status.COMPLETE);
+                    saveTradeHistory(highestBuy, lowestSell.getActiveAmount(), Status.COMPLETE);
 
                     buyOrders.remove(highestBuy);
                 } else {
@@ -74,7 +85,7 @@ public class OrderBookService {
                 }
 
                 orderBookRepository.delete(lowestSell);
-                saveTradeHistory(lowestSell, lowestSell.getOriginalAmount(), Status.COMPLETE);
+                saveTradeHistory(lowestSell, lowestSell.getActiveAmount(), Status.COMPLETE);
 
                 sellOrders.remove(lowestSell);
             } else {
@@ -82,11 +93,17 @@ public class OrderBookService {
 
                 orderBookRepository.delete(highestBuy);
                 saveTradeHistory(lowestSell, highestBuy.getActiveAmount(), Status.PARTIAL);
-                saveTradeHistory(highestBuy, highestBuy.getOriginalAmount(), Status.COMPLETE);
+                saveTradeHistory(highestBuy, highestBuy.getActiveAmount(), Status.COMPLETE);
 
                 buyOrders.remove(highestBuy);
             }
         }
+    }
+
+    public void cancelOrder(Long id) {
+        int count = orderBookRepository.customDeleteById(id);
+        if(count == 0)
+            throw new IllegalArgumentException("이미 체결된 주문입니다");
     }
 
     private List<OrderBook> OrderFilter(List<OrderBook> orderBookList, Orders order) {
@@ -96,7 +113,9 @@ public class OrderBookService {
                         (o1, o2) -> {
                             int compare = Double.compare(o2.getPrice(), o1.getPrice());
                             return compare == 0 ?
-                                    o1.getCreatedDate().compareTo(o2.getCreatedDate()) :
+                                    (order == Orders.BUY ?
+                                            o1.getCreatedDate().compareTo(o2.getCreatedDate()) :
+                                            o2.getCreatedDate().compareTo(o1.getCreatedDate())) :
                                     compare;
                         }
                 )
@@ -113,5 +132,6 @@ public class OrderBookService {
                 .build();
 
         tradeHistoryRepository.save(tradeHistory);
+        currencyAssetService.updateCurrencyAsset(tradeHistory);
     }
 }

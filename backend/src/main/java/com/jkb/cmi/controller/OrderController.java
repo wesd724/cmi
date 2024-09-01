@@ -1,6 +1,7 @@
 package com.jkb.cmi.controller;
 
 import com.jkb.cmi.dto.request.OrderRequest;
+import com.jkb.cmi.dto.response.ActiveOrderResponse;
 import com.jkb.cmi.dto.response.OrderBookResponse;
 import com.jkb.cmi.entity.type.Orders;
 import com.jkb.cmi.service.OrderBookService;
@@ -31,5 +32,17 @@ public class OrderController {
     public ResponseEntity<List<OrderBookResponse>> getOrderBook(Long currencyId) {
         List<OrderBookResponse> orderBookResponseList = orderBookService.getOrders(currencyId);
         return ResponseEntity.ok(orderBookResponseList);
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<ActiveOrderResponse>> getActiveOrder(String username) {
+        List<ActiveOrderResponse> activeOrderResponseList = orderBookService.getActiveOrder(username);
+        return ResponseEntity.ok(activeOrderResponseList);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> cancelOrder(Long id) {
+        orderBookService.cancelOrder(id);
+        return ResponseEntity.ok().build();
     }
 }

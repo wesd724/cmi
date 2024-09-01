@@ -6,6 +6,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Trade from './trade';
 import UserAsset from './userAsset';
+import ActiveOrder from './activeOrder';
 
 const InvestmentTabs = () => {
 	const [value, setValue] = useState<string>('1');
@@ -24,10 +25,12 @@ const InvestmentTabs = () => {
 				}} onChange={handleChange} centered>
 					<Tab label="보유자산" value="1" />
 					<Tab label="거래내역" value="2" />
+					<Tab label="미체결" value="3" />
 				</TabList>
 			</Box>
 			<TabPanel sx={{ padding: 0 }} value="1"><UserAsset /></TabPanel>
 			<TabPanel sx={{ padding: 0 }} value="2"><Trade /></TabPanel>
+			<TabPanel sx={{ padding: 0 }} value="3"><ActiveOrder /></TabPanel>
 		</TabContext>
 	);
 }

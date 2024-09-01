@@ -1,6 +1,6 @@
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useState, useEffect } from "react";
-import { cancelTrade, getTradeHistory } from "../api/trade";
+import { getTradeHistory } from "../api/trade";
 import { status } from "../data/constant";
 import { toKR } from "../lib/api";
 import userStore from "../store/userStore";
@@ -22,16 +22,6 @@ const Trade = () => {
         })();
     }, [username])
 
-    const cancel = async (id: number) => {
-        if (window.confirm("주문 취소하시겠습니까?")) {
-            const res = await cancelTrade(id);
-            if (res) {
-                setTrades(trades => trades.filter(v => v.id !== id))
-                return;
-            }
-            alert("이미 처리된 주문입니다.");
-        }
-    }
     return (
         <>
             {
@@ -49,7 +39,6 @@ const Trade = () => {
                                     <TableCell align="center">주문시간</TableCell>
                                     <TableCell align="center">체결시간</TableCell>
                                     <TableCell align="center">체결상태</TableCell>
-                                    <TableCell align="center">취소가능</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -63,17 +52,6 @@ const Trade = () => {
                                         <TableCell>{v.orderDate.replace(/T/, ' ')}</TableCell>
                                         <TableCell>{v.completeDate?.replace(/T/, ' ')}</TableCell>
                                         <TableCell align="center">{status[v.status]}</TableCell>
-                                        <TableCell>
-                                            {
-                                                v.status == "COMPLETE" || v.status == "CANCEL"
-                                                    ? <Button size="small" disabled>취소</Button>
-                                                    : <Button
-                                                        size="large"
-                                                        sx={{ color: "red" }}
-                                                        onClick={() => cancel(v.id)}
-                                                    >취소</Button>
-                                            }
-                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

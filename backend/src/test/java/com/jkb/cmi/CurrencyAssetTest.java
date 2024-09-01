@@ -15,7 +15,6 @@ public class CurrencyAssetTest {
 
     @Test
     void test1() {
-        currencyAssetService.updateCurrencyAsset();
     }
 
     @Test

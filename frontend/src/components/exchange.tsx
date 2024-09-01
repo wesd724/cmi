@@ -163,7 +163,7 @@ const Exchange = () => {
                                 <span>{market} 현재가</span>
                                 <span>{toKR(price)}</span>
                             </p>
-                            <Chart width="100%" height="450px" time="minutes/1" marketName={market} />
+                            <Chart width="100%" height="400px" time="minutes/1" marketName={market} />
                         </>
                     ) : <Navigate to="/" replace />
             }

@@ -35,8 +35,6 @@ public class Scheduler {
     @Transactional
     //@Scheduled(cron = "*/10 * * * * *")
     public void notification() {
-        tradeHistoryService.completeProcess(getData());
-        currencyAssetService.updateCurrencyAsset();
         sseService.sendNotificationToAll();
     }
 

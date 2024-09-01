@@ -1,12 +1,12 @@
 package com.jkb.cmi.controller;
 
-import com.jkb.cmi.dto.request.OrderRequest;
 import com.jkb.cmi.dto.response.TradeHistoryResponse;
-import com.jkb.cmi.entity.type.Orders;
 import com.jkb.cmi.service.TradeHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -20,20 +20,5 @@ public class TradeHistoryController {
     public ResponseEntity<List<TradeHistoryResponse>> getTradeHistory(String username) {
         List<TradeHistoryResponse> tradeHistoryResponses = tradeHistoryService.getTradeHistory(username);
         return ResponseEntity.ok(tradeHistoryResponses);
-    }
-    @PostMapping("/buy")
-    public ResponseEntity<Void> buy(@RequestBody OrderRequest orderRequest) {
-        tradeHistoryService.order(orderRequest, Orders.BUY);
-        return ResponseEntity.ok().build();
-    }
-    @PostMapping("/sell")
-    public ResponseEntity<Void> sell(@RequestBody OrderRequest orderRequest) {
-        tradeHistoryService.order(orderRequest, Orders.SELL);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/cancel")
-    public ResponseEntity<Boolean> cancel(Long id) {
-        return ResponseEntity.ok(tradeHistoryService.cancel(id));
     }
 }

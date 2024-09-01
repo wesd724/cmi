@@ -77,3 +77,14 @@ export interface orderBookType {
     orders: string;
     activeAmount: number;
 }
+
+export interface activeOrderType {
+    id: number;
+    market: string;
+    currencyName: string;
+    orders: string;
+    originalAmount: number;
+    activeAmount: number;
+    price: number;
+    createdDate: string;
+}
