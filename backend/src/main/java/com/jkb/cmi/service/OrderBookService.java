@@ -33,8 +33,20 @@ public class OrderBookService {
     private final SseService sseService;
     private final CurrencyAssetService currencyAssetService;
 
-    public List<OrderBookResponse> getOrders(Long currencyId) {
+    public List<OrderBookResponse> entryOrderBook(Long currencyId) {
         List<OrderBook> orderBookList = orderBookRepository.getByCurrency_Id(currencyId);
+
+        List<OrderBook> buyOrders = OrderFilter(orderBookList, Orders.BUY);
+        List<OrderBook> sellOrders = OrderFilter(orderBookList, Orders.SELL);
+        sellOrders.addAll(buyOrders);
+        return OrderBookResponse.tolist(sellOrders);
+    }
+
+    public List<OrderBookResponse> orderProcessing(Long currencyId, OrderBook orderBook) {
+        List<OrderBook> orderBookList = orderBookRepository.getByCurrency_Id(currencyId);
+        orderBookRepository.save(orderBook);
+        orderBookList.add(orderBook);
+
         List<OrderBook> buyOrders = OrderFilter(orderBookList, Orders.BUY);
         List<OrderBook> sellOrders = OrderFilter(orderBookList, Orders.SELL);
         if (!buyOrders.isEmpty() && !sellOrders.isEmpty()) {
@@ -56,21 +68,17 @@ public class OrderBookService {
         User user = userRepository.getByUsername(orderRequest.getUsername());
         Currency currency = currencyRepository.getReferenceById(orderRequest.getCurrencyId());
 
-        OrderBook orderBook = orderRequest.toEntity(user, currency, orders);
-        orderBookRepository.save(orderBook);
+        OrderBook newOrderBook = orderRequest.toEntity(user, currency, orders);
 
-        sendOrderBook(orderRequest.getCurrencyId());
-    }
-
-    public void sendOrderBook(Long currencyId) {
-        List<OrderBookResponse> orderBook = getOrders(currencyId);
-        sseService.sendEventToAll("orderBook " + currencyId, orderBook);
+        List<OrderBookResponse> newOrderList = orderProcessing(orderRequest.getCurrencyId(), newOrderBook);
+        sseService.sendEventToAll("orderBook " + orderRequest.getCurrencyId(), newOrderList);
     }
 
     public void matchOrder(List<OrderBook> buyOrders, List<OrderBook> sellOrders) {
-        OrderBook highestBuy = buyOrders.get(0);
-        OrderBook lowestSell = sellOrders.get(sellOrders.size() - 1);
-        if (highestBuy.getPrice() >= lowestSell.getPrice()) {
+        while (!buyOrders.isEmpty() && !sellOrders.isEmpty() &&
+                buyOrders.get(0).getPrice() >= sellOrders.get(sellOrders.size() - 1).getPrice()) {
+            OrderBook highestBuy = buyOrders.get(0);
+            OrderBook lowestSell = sellOrders.get(sellOrders.size() - 1);
 
             if (highestBuy.getActiveAmount() >= lowestSell.getActiveAmount()) {
                 highestBuy.changeActiveAmount(lowestSell.getActiveAmount());
@@ -102,7 +110,7 @@ public class OrderBookService {
 
     public void cancelOrder(Long id) {
         int count = orderBookRepository.customDeleteById(id);
-        if(count == 0)
+        if (count == 0)
             throw new IllegalArgumentException("이미 체결된 주문입니다");
     }
 

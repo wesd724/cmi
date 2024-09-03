@@ -7,11 +7,13 @@ import com.jkb.cmi.entity.User;
 import com.jkb.cmi.entity.type.Orders;
 import com.jkb.cmi.entity.type.Status;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class OrderRequest {
     private String username;
     private Long currencyId;

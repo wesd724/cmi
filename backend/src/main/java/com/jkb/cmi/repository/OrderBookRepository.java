@@ -12,9 +12,10 @@ import java.util.List;
 
 public interface OrderBookRepository extends JpaRepository<OrderBook, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    List<OrderBook> getByCurrency_Id(Long Currency_id);
+    @Query("select o from OrderBook o where o.currency.id = :id")
+    List<OrderBook> getByCurrency_Id(@Param("id") Long CurrencyId);
 
-    @Query("select o from OrderBook o join fetch o.currency where o.user.username = :username")
+    @Query("select o from OrderBook o join fetch o.currency where o.user.username = :username order by o.id")
     List<OrderBook> getActiveOrderByUsername(@Param("username") String username);
 
     @Modifying(clearAutomatically = true)

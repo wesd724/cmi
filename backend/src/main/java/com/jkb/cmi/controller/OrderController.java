@@ -30,7 +30,7 @@ public class OrderController {
 
     @GetMapping("/list")
     public ResponseEntity<List<OrderBookResponse>> getOrderBook(Long currencyId) {
-        List<OrderBookResponse> orderBookResponseList = orderBookService.getOrders(currencyId);
+        List<OrderBookResponse> orderBookResponseList = orderBookService.entryOrderBook(currencyId);
         return ResponseEntity.ok(orderBookResponseList);
     }
 
