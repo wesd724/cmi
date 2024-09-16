@@ -1,5 +1,6 @@
 package com.jkb.cmi.controller;
 
+import com.jkb.cmi.service.NotificationService;
 import com.jkb.cmi.service.SseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/notification")
 public class NotificationController {
     private final SseService sseService;
+    private final NotificationService notificationService;
 
     @PostMapping("/all")
     public void sendAll() {
@@ -21,13 +23,13 @@ public class NotificationController {
 
     @DeleteMapping("/check")
     public ResponseEntity<Void> check(Long id) {
-        sseService.checkNotification(id);
+        notificationService.checkNotification(id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/check-all")
     public ResponseEntity<Void> checkAll(String username) {
-        sseService.checkAllNotification(username);
+        notificationService.checkAllNotification(username);
         return ResponseEntity.ok().build();
     }
 

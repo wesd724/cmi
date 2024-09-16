@@ -5,19 +5,16 @@ import com.jkb.cmi.dto.response.ActiveOrderResponse;
 import com.jkb.cmi.dto.response.OrderBookResponse;
 import com.jkb.cmi.entity.Currency;
 import com.jkb.cmi.entity.OrderBook;
-import com.jkb.cmi.entity.TradeHistory;
 import com.jkb.cmi.entity.User;
 import com.jkb.cmi.entity.type.Orders;
 import com.jkb.cmi.entity.type.Status;
 import com.jkb.cmi.repository.CurrencyRepository;
 import com.jkb.cmi.repository.OrderBookRepository;
-import com.jkb.cmi.repository.TradeHistoryRepository;
 import com.jkb.cmi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,10 +25,9 @@ import java.util.stream.Collectors;
 public class OrderBookService {
     private final UserRepository userRepository;
     private final CurrencyRepository currencyRepository;
-    private final TradeHistoryRepository tradeHistoryRepository;
     private final OrderBookRepository orderBookRepository;
+    private final TradeHistoryService tradeHistoryService;
     private final SseService sseService;
-    private final CurrencyAssetService currencyAssetService;
 
     public List<OrderBookResponse> entryOrderBook(Long currencyId) {
         List<OrderBook> orderBookList = orderBookRepository.getByCurrency_Id(currencyId);
@@ -80,30 +76,24 @@ public class OrderBookService {
             OrderBook highestBuy = buyOrders.get(0);
             OrderBook lowestSell = sellOrders.get(sellOrders.size() - 1);
 
-            if (highestBuy.getActiveAmount() >= lowestSell.getActiveAmount()) {
-                highestBuy.changeActiveAmount(lowestSell.getActiveAmount());
+            double tradeAmount = Math.min(highestBuy.getActiveAmount(), lowestSell.getActiveAmount());
 
-                if (highestBuy.getActiveAmount() == 0) {
-                    orderBookRepository.delete(highestBuy);
-                    saveTradeHistory(highestBuy, lowestSell.getActiveAmount(), Status.COMPLETE);
+            highestBuy.changeActiveAmount(tradeAmount);
+            lowestSell.changeActiveAmount(tradeAmount);
 
-                    buyOrders.remove(highestBuy);
-                } else {
-                    saveTradeHistory(highestBuy, lowestSell.getActiveAmount(), Status.PARTIAL);
-                }
+            tradeHistoryService.saveTradeHistory(highestBuy, tradeAmount,
+                    highestBuy.getActiveAmount() == 0 ? Status.COMPLETE : Status.PARTIAL);
+            tradeHistoryService.saveTradeHistory(lowestSell, tradeAmount,
+                    lowestSell.getActiveAmount() == 0 ? Status.COMPLETE : Status.PARTIAL);
 
-                orderBookRepository.delete(lowestSell);
-                saveTradeHistory(lowestSell, lowestSell.getActiveAmount(), Status.COMPLETE);
-
-                sellOrders.remove(lowestSell);
-            } else {
-                lowestSell.changeActiveAmount(highestBuy.getActiveAmount());
-
+            if(highestBuy.getActiveAmount() == 0) {
                 orderBookRepository.delete(highestBuy);
-                saveTradeHistory(lowestSell, highestBuy.getActiveAmount(), Status.PARTIAL);
-                saveTradeHistory(highestBuy, highestBuy.getActiveAmount(), Status.COMPLETE);
-
                 buyOrders.remove(highestBuy);
+            }
+
+            if(lowestSell.getActiveAmount() == 0) {
+                orderBookRepository.delete(lowestSell);
+                sellOrders.remove(lowestSell);
             }
         }
     }
@@ -128,18 +118,5 @@ public class OrderBookService {
                         }
                 )
                 .collect(Collectors.toList());
-    }
-
-    private void saveTradeHistory(OrderBook orderBook, double amount, Status status) {
-        TradeHistory tradeHistory = TradeHistory.builder()
-                .user(orderBook.getUser()).currency(orderBook.getCurrency())
-                .orders(orderBook.getOrders()).amount(amount)
-                .price(orderBook.getPrice())
-                .orderDate(orderBook.getCreatedDate()).completeDate(LocalDateTime.now())
-                .status(status)
-                .build();
-
-        tradeHistoryRepository.save(tradeHistory);
-        currencyAssetService.updateCurrencyAsset(tradeHistory);
     }
 }

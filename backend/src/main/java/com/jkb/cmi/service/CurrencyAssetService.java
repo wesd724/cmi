@@ -2,12 +2,13 @@ package com.jkb.cmi.service;
 
 import com.jkb.cmi.entity.*;
 import com.jkb.cmi.entity.type.Orders;
-import com.jkb.cmi.repository.*;
+import com.jkb.cmi.repository.CashAssetRepository;
+import com.jkb.cmi.repository.CurrencyAssetRepository;
+import com.jkb.cmi.repository.CurrencyRepository;
+import com.jkb.cmi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -17,9 +18,10 @@ public class CurrencyAssetService {
     private final CurrencyRepository currencyRepository;
     private final CashAssetRepository cashAssetRepository;
     private final CurrencyAssetRepository currencyAssetRepository;
-    private final NotificationRepository notificationRepository;
+    private final NotificationService notificationService;
 
     public void updateCurrencyAsset(TradeHistory tradeHistory) {
+        //System.out.println("updateCurrencyAsset의 트랜잭션 이름:" + TransactionSynchronizationManager.getCurrentTransactionName());
         Long userId = tradeHistory.getUser().getId();
         Long currencyId = tradeHistory.getCurrency().getId();
         Double amount = tradeHistory.getAmount();
@@ -37,7 +39,7 @@ public class CurrencyAssetService {
 
             currencyAsset.changeAmount(buyAmount);
             currencyAsset.changeBuyPrice(buyPrice);
-            if (currencyAsset.getAmount() != 0D) {
+            if (currencyAsset.getAmount() != 0) {
                 currencyAsset.setAverageCurrencyBuyPrice();
             } else {
                 currencyAssetRepository.deleteByCurrency(userId, currencyId);
@@ -52,6 +54,6 @@ public class CurrencyAssetService {
                     .buyPrice(buyPrice).averageCurrencyBuyPrice(price).amount(amount).build();
             currencyAssetRepository.save(currencyAsset);
         }
-        notificationRepository.saveAllNotification(List.of(tradeHistory));
+        notificationService.saveNotification(tradeHistory); // this tradeHistory fk => s-lock
     }
 }
