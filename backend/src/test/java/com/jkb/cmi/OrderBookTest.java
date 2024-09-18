@@ -32,7 +32,7 @@ public class OrderBookTest {
     @Transactional
     @Rollback(false)
     void concurrentlyOrderTest() throws InterruptedException {
-        OrderRequest orderRequest = new OrderRequest("test2", 4L, 17, 777.1);
+        OrderRequest orderRequest = new OrderRequest("test2", 4L, 17, 769.6);
         int count = 123;
         ExecutorService executorService = Executors.newFixedThreadPool(32);
         CountDownLatch countDownLatch = new CountDownLatch(count);

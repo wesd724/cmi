@@ -38,18 +38,16 @@ public class OrderBookService {
         return OrderBookResponse.tolist(sellOrders);
     }
 
-    public List<OrderBookResponse> orderProcessing(Long currencyId, OrderBook orderBook) {
-        List<OrderBook> orderBookList = orderBookRepository.getByCurrency_Id(currencyId);
-        orderBookRepository.save(orderBook);
-        orderBookList.add(orderBook);
+    public List<OrderBookResponse> orderProcessing(OrderRequest orderRequest, Orders orders, OrderBook newOrder) {
+        List<OrderBook> orderBookList = orderBookRepository.findByPriceForUpdate(
+                orderRequest.getCurrencyId(), orderRequest.getPrice(), orders);
+        orderBookRepository.save(newOrder);
 
-        List<OrderBook> buyOrders = OrderFilter(orderBookList, Orders.BUY);
-        List<OrderBook> sellOrders = OrderFilter(orderBookList, Orders.SELL);
-        if (!buyOrders.isEmpty() && !sellOrders.isEmpty()) {
-            matchOrder(buyOrders, sellOrders);
-        }
-        sellOrders.addAll(buyOrders);
-        return OrderBookResponse.tolist(sellOrders);
+        List<OrderBook> orderList = orderProcessFilter(orderBookList, orders);
+
+        matchOrder(newOrder, orderList, orders);
+
+        return entryOrderBook(orderRequest.getCurrencyId());
     }
 
     public List<ActiveOrderResponse> getActiveOrder(String username) {
@@ -66,34 +64,40 @@ public class OrderBookService {
 
         OrderBook newOrderBook = orderRequest.toEntity(user, currency, orders);
 
-        List<OrderBookResponse> newOrderList = orderProcessing(orderRequest.getCurrencyId(), newOrderBook);
+        List<OrderBookResponse> newOrderList = orderProcessing(orderRequest, orders, newOrderBook);
         sseService.sendEventToAll("orderBook " + orderRequest.getCurrencyId(), newOrderList);
     }
 
-    public void matchOrder(List<OrderBook> buyOrders, List<OrderBook> sellOrders) {
-        while (!buyOrders.isEmpty() && !sellOrders.isEmpty() &&
-                buyOrders.get(0).getPrice() >= sellOrders.get(sellOrders.size() - 1).getPrice()) {
-            OrderBook highestBuy = buyOrders.get(0);
-            OrderBook lowestSell = sellOrders.get(sellOrders.size() - 1);
+    public void matchOrder(OrderBook newOrder, List<OrderBook> orderList, Orders orders) {
+        while (!orderList.isEmpty() &&
+                (orders == Orders.BUY && newOrder.getPrice() >= orderList.get(0).getPrice() ||
+                        orders == Orders.SELL && newOrder.getPrice() <= orderList.get(0).getPrice())) {
 
-            double tradeAmount = Math.min(highestBuy.getActiveAmount(), lowestSell.getActiveAmount());
+            OrderBook activeOrder = orderList.get(0);
 
-            highestBuy.changeActiveAmount(tradeAmount);
-            lowestSell.changeActiveAmount(tradeAmount);
+            double tradeAmount = Math.min(newOrder.getActiveAmount(), activeOrder.getActiveAmount());
 
-            tradeHistoryService.saveTradeHistory(highestBuy, tradeAmount,
-                    highestBuy.getActiveAmount() == 0 ? Status.COMPLETE : Status.PARTIAL);
-            tradeHistoryService.saveTradeHistory(lowestSell, tradeAmount,
-                    lowestSell.getActiveAmount() == 0 ? Status.COMPLETE : Status.PARTIAL);
+            double newOrderAmount = newOrder.getActiveAmount() - tradeAmount;
+            double activeOrderAmount = activeOrder.getActiveAmount() - tradeAmount;
 
-            if(highestBuy.getActiveAmount() == 0) {
-                orderBookRepository.delete(highestBuy);
-                buyOrders.remove(highestBuy);
+            tradeHistoryService.saveTradeHistory(newOrder, tradeAmount,
+                    newOrderAmount == 0 ? Status.COMPLETE : Status.PARTIAL);
+            tradeHistoryService.saveTradeHistory(activeOrder, tradeAmount,
+                    activeOrderAmount == 0 ? Status.COMPLETE : Status.PARTIAL);
+
+
+            if (activeOrderAmount == 0) {
+                orderBookRepository.delete(activeOrder);
+                orderList.remove(activeOrder);
+            } else {
+                activeOrder.changeActiveAmount(tradeAmount);
             }
 
-            if(lowestSell.getActiveAmount() == 0) {
-                orderBookRepository.delete(lowestSell);
-                sellOrders.remove(lowestSell);
+            if (newOrderAmount == 0) {
+                orderBookRepository.delete(newOrder);
+                break;
+            } else {
+                newOrder.changeActiveAmount(tradeAmount);
             }
         }
     }
@@ -114,6 +118,21 @@ public class OrderBookService {
                                     (order == Orders.BUY ?
                                             o1.getCreatedDate().compareTo(o2.getCreatedDate()) :
                                             o2.getCreatedDate().compareTo(o1.getCreatedDate())) :
+                                    compare;
+                        }
+                )
+                .collect(Collectors.toList());
+    }
+
+    private List<OrderBook> orderProcessFilter(List<OrderBook> orderBookList, Orders order) {
+        return orderBookList.stream()
+                .sorted(
+                        (o1, o2) -> {
+                            int compare = order == Orders.BUY ?
+                                    Double.compare(o1.getPrice(), o2.getPrice()) :
+                                    Double.compare(o2.getPrice(), o1.getPrice());
+                            return compare == 0 ?
+                                    o1.getCreatedDate().compareTo(o2.getCreatedDate()) :
                                     compare;
                         }
                 )
