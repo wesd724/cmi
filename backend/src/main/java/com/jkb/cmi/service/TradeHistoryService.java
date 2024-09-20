@@ -25,12 +25,12 @@ public class TradeHistoryService {
         return TradeHistoryResponse.tolist(tradeHistories);
     }
 
-    public void saveTradeHistory(OrderBook orderBook, double amount, Status status) {
+    public void saveTradeHistory(OrderBook orderBook, double price, double amount, Status status) {
         //System.out.println("saveTradeHistory의 트랜잭션 이름:" + TransactionSynchronizationManager.getCurrentTransactionName());
         TradeHistory tradeHistory = TradeHistory.builder()
                 .user(orderBook.getUser()).currency(orderBook.getCurrency())
                 .orders(orderBook.getOrders()).amount(amount)
-                .price(orderBook.getPrice())
+                .price(price)
                 .orderDate(orderBook.getCreatedDate()).completeDate(LocalDateTime.now())
                 .status(status)
                 .build();

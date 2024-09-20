@@ -76,13 +76,14 @@ public class OrderBookService {
             OrderBook activeOrder = orderList.get(0);
 
             double tradeAmount = Math.min(newOrder.getActiveAmount(), activeOrder.getActiveAmount());
+            double tradePrice = Math.min(newOrder.getPrice(), activeOrder.getPrice());
 
             double newOrderAmount = newOrder.getActiveAmount() - tradeAmount;
             double activeOrderAmount = activeOrder.getActiveAmount() - tradeAmount;
 
-            tradeHistoryService.saveTradeHistory(newOrder, tradeAmount,
+            tradeHistoryService.saveTradeHistory(newOrder, tradePrice, tradeAmount,
                     newOrderAmount == 0 ? Status.COMPLETE : Status.PARTIAL);
-            tradeHistoryService.saveTradeHistory(activeOrder, tradeAmount,
+            tradeHistoryService.saveTradeHistory(activeOrder, tradePrice, tradeAmount,
                     activeOrderAmount == 0 ? Status.COMPLETE : Status.PARTIAL);
 
 
