@@ -36,8 +36,8 @@ const Trade = () => {
                                     <TableCell>거래수량</TableCell>
                                     <TableCell>거래단가</TableCell>
                                     <TableCell>거래금액</TableCell>
-                                    <TableCell align="center">주문시간</TableCell>
-                                    <TableCell align="center">체결시간</TableCell>
+                                    <TableCell>주문시간</TableCell>
+                                    <TableCell>체결시간</TableCell>
                                     <TableCell align="center">체결상태</TableCell>
                                 </TableRow>
                             </TableHead>

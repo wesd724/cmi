@@ -15,7 +15,7 @@ const ActivityTabs = () => {
 
 	return (
 		<TabContext value={value}>
-			<Box sx={{ width: "70vw", borderBottom: 1, borderColor: 'divider' }}>
+			<Box sx={{ width: "70vw", ml: "15%" }}>
 				<TabList
 					textColor="inherit" TabIndicatorProps={{
 						style: {
@@ -23,11 +23,9 @@ const ActivityTabs = () => {
 						}
 					}} onChange={handleChange} centered>
 					<Tab label="코인별 의견" value="1" />
-					<Tab label="인증" value="2" />
 				</TabList>
 			</Box>
-			<TabPanel sx={{ width: "70vw", padding: 0 }} value="1"><CommentTabs /></TabPanel>
-			<TabPanel value="2">인증</TabPanel>
+			<TabPanel sx={{ width: "70vw", ml: "15%", border: 1, borderColor: 'divider', padding: 0 }} value="1"><CommentTabs /></TabPanel>
 		</TabContext>
 	);
 }

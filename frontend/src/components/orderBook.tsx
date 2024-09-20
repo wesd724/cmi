@@ -17,7 +17,7 @@ interface orderBookProps {
 }
 
 const OrderBook = ({ id, setTrade }: orderBookProps) => {
-    const { closeEventSource, addEventListener, removeEventListener } = useSSE();
+    const { addEventListener, removeEventListener } = useSSE();
     const [orderList, setOrderList] = useState<orderBookType[]>([]);
     const [maxAmount, setMaxAmount] = useState<number>(0);
     const element = useRef<HTMLTableElement>(null);
@@ -43,7 +43,7 @@ const OrderBook = ({ id, setTrade }: orderBookProps) => {
         return () => {
             removeEventListener(eventName, callback);
         }
-    }, [id, closeEventSource, addEventListener, removeEventListener])
+    }, [id, addEventListener, removeEventListener])
 
     useEffect(() => {
         console.log("MOVE");

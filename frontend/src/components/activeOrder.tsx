@@ -20,7 +20,7 @@ const ActiveOrder = () => {
             setLoading(false);
             setOrderList(data);
         })();
-    }, [])
+    }, [username]);
 
     const cancel = async (id: number) => {
         if (window.confirm("주문 취소하시겠습니까?")) {
