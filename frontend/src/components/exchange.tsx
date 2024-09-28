@@ -1,12 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Navigate, useLocation, useParams } from "react-router-dom";
-import { webSocketRequest } from "../upbit/api";
+import { getRealOrderBookUnit, webSocketRequest } from "../upbit/api";
 import { MARKET } from "../data/constant";
 import { Button } from "@mui/material";
 import Chart from "./chart";
 import { buy, getCashAndCurrency, sell } from "../api/exchange";
 import "./css/exchange.css";
-import { errorResponse, exchangeStatus } from "../type/interface";
+import { errorResponse, exchangeStatus, realOrderBookUnitType } from "../type/interface";
 import { toKR } from "../lib/api";
 import userStore from "../store/userStore";
 import axios from "axios";
@@ -25,6 +25,8 @@ const Exchange = () => {
     const [status, setStatus] = useState<exchangeStatus>({
         balance: 0, currencyAmount: 0
     });
+    const [orderUnit, setOrderUnit] = useState<Pick<realOrderBookUnitType, "ask_price" | "bid_price">[]>([]);
+    const interval = useRef<ReturnType<typeof setInterval> | null>(null);
 
     const delta = (price < 1000) ? 1 : (price < 10000) ? 10 : (price < 100000) ? 100 : 1000
 
@@ -32,6 +34,17 @@ const Exchange = () => {
     const market = MARKET[Number(id) - 1];
 
     //const market = qs.get('market') as string;
+
+    const realOrderUnit = useCallback(async (market: string) => {
+        const res = await getRealOrderBookUnit([market]);
+        const data = res.data[0].orderbook_units.map((v: realOrderBookUnitType) => (
+            {
+                ask_price: v.ask_price,
+                bid_price: v.bid_price
+            }
+        ))
+        setOrderUnit(data);
+    }, []);
 
     useEffect(() => {
         webSocket.current = new WebSocket(import.meta.env.VITE_WS_UPBIT_URL as string);
@@ -55,6 +68,20 @@ const Exchange = () => {
             webSocket.current?.close();
         }
     }, [market])
+
+    useEffect(() => {
+        realOrderUnit(market);
+        interval.current = setInterval(() => {
+            realOrderUnit(market);
+        }, 5000);
+
+        return () => {
+            if (interval.current) {
+                clearInterval(interval.current);
+                interval.current = null;
+            }
+        }
+    }, [market, realOrderUnit]);
 
     useEffect(() => {
         (async () => {
@@ -87,9 +114,15 @@ const Exchange = () => {
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         let isOrder = false;
-        
-        if(trade * amount === 0) {
+
+        if (trade * amount === 0) {
             alert("수량과 총액을 입력하세요.");
+            return;
+        }
+
+        const unit = orderUnit.at(-1)!
+        if (trade > unit.ask_price || trade < unit.bid_price) {
+            alert("주문 가능 가격 범위 초과");
             return;
         }
 
@@ -99,7 +132,7 @@ const Exchange = () => {
                     alert("주문 가능 금액 초과");
                     return;
                 }
-    
+
                 if (window.confirm("매수하겠습니까?")) {
                     await buy({ username, currencyId: Number(id), amount, price: trade });
                     alert("주문 완료");
@@ -110,18 +143,18 @@ const Exchange = () => {
                     alert("주문 가능 수량 초과");
                     return;
                 }
-    
+
                 if (window.confirm("매도하겠습니까?")) {
                     await sell({ username, currencyId: Number(id), amount, price: trade });
                     alert("주문 완료");
                     isOrder = true;
                 }
             }
-        } catch(error) {
-            if(axios.isAxiosError<errorResponse>(error))
+        } catch (error) {
+            if (axios.isAxiosError<errorResponse>(error))
                 alert(error.response?.data.message);
         }
-        
+
 
         if (isOrder) {
             const data = await getCashAndCurrency({ username, market });
@@ -145,9 +178,10 @@ const Exchange = () => {
 
                                     주문가능 &nbsp;&nbsp;&nbsp; {order === "BUY" ? `${toKR(status.balance)} KRW` : `${toKR(status.currencyAmount)} ${market.slice(4)}`} <br />
                                     {order === "BUY" ? "매수" : "매도"} 가격 <input value={toKR(trade)} onChange={ChangeTrade} /><br />
-
+                                    <div className="limit">주문 가능 범위 <span>{toKR(orderUnit.at(-1)?.ask_price)}~{toKR(orderUnit.at(-1)?.bid_price)}</span></div>
                                     <Button sx={{ left: 290, height: 25, color: "red", borderColor: "red" }} onClick={(e) => onClick(e, delta)}>+{delta}</Button>
                                     <Button sx={{ left: 290, height: 25, }} onClick={(e) => onClick(e, -delta)}>-{delta}</Button><br />
+
                                     주문 수량 <input value={amount} onChange={ChangeAmount} /><br />
                                     주문 총액 <input value={toKR(Math.round(trade * amount))} onChange={ChangeTotal} /><br />
                                     {
@@ -157,6 +191,13 @@ const Exchange = () => {
 
                                     }
                                 </form>
+                                <div className="range">
+                                    <div className="real-orderbook-unit">
+                                        <span>{toKR(orderUnit.at(-1)?.ask_price)} ~ {toKR(orderUnit.at(0)?.ask_price)}</span>
+                                        <span>{toKR(orderUnit.at(0)?.bid_price)} ~ {toKR(orderUnit.at(-1)?.bid_price)}</span>
+                                    </div>
+                                    <div>실제 호가</div>
+                                </div>
                             </div>
                             <OrderBook id={Number(id)} setTrade={setTrade} />
                             <p className="price">

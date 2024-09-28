@@ -78,6 +78,13 @@ export interface orderBookType {
     activeAmount: number;
 }
 
+export interface realOrderBookUnitType {
+    ask_price: number;
+    bid_price: number;
+    ask_size: number;
+    bid_size: number;
+}
+
 export interface activeOrderType {
     id: number;
     market: string;

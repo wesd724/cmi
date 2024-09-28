@@ -4,7 +4,7 @@ export const getTickers = (markets: string[]) => {
     const str = markets.join(",")
     return axios.get(import.meta.env.VITE_UPBIT_URL + "/ticker", {
         params: {
-            markets : str
+            markets: str
         }
     })
 }
@@ -13,6 +13,15 @@ export const getCandles = (market: string, time: string, count: number) => {
     return axios.get(import.meta.env.VITE_UPBIT_URL + `/candles/${time}`, {
         params: {
             market, count
+        }
+    })
+}
+
+export const getRealOrderBookUnit = (markets: string[]) => {
+    const str = markets.join(",")
+    return axios.get(import.meta.env.VITE_UPBIT_URL + "/orderbook", {
+        params: {
+            markets: str
         }
     })
 }
