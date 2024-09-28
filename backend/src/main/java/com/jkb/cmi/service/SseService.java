@@ -17,7 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class SseService {
-    private static final Long timeout = 30L * 1000 * 60;
+    private static final Long timeout = 12L * 1000 * 60 * 60;
 
     private final SseRepository sseRepository;
     private final NotificationService notificationService;
@@ -31,7 +31,7 @@ public class SseService {
         });
         emitter.onTimeout(() -> {
             log.info("timeout");
-            sseRepository.deleteByUsername(username);
+            emitter.complete();
         });
 
         sendEvent(emitter, username, "connect", "connection complete.");

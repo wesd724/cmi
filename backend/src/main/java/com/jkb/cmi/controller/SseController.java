@@ -2,6 +2,7 @@ package com.jkb.cmi.controller;
 
 import com.jkb.cmi.service.SseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +19,9 @@ public class SseController {
 
     @GetMapping(value = "/connection", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> connect(String username) {
-        return ResponseEntity.ok(sseService.subscribe(username));
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Accel-Buffering", "no");
+        return ResponseEntity.ok().headers(headers).body(sseService.subscribe(username));
     }
 
     @DeleteMapping("/close")
