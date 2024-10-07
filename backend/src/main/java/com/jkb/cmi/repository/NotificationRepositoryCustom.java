@@ -1,6 +1,6 @@
 package com.jkb.cmi.repository;
 
-import com.jkb.cmi.entity.Notification;
+import com.jkb.cmi.dto.response.NotificationResponse;
 import com.jkb.cmi.entity.TradeHistory;
 
 import java.util.List;
@@ -8,5 +8,5 @@ import java.util.List;
 public interface NotificationRepositoryCustom {
 
     void saveAllNotification(List<TradeHistory> tradeHistories);
-    List<Notification> findNotificationByUsername(String username);
+    List<NotificationResponse> findNotificationByUsername(String username);
 }

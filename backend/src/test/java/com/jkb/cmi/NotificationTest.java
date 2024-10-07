@@ -1,7 +1,6 @@
 package com.jkb.cmi;
 
 import com.jkb.cmi.dto.response.NotificationResponse;
-import com.jkb.cmi.entity.Notification;
 import com.jkb.cmi.repository.NotificationRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,8 @@ public class NotificationTest {
     @Test
     @Transactional(readOnly = true)
     void test1() {
-        List<Notification> notifications = notificationRepository.findNotificationByUsername("test");
-        NotificationResponse.tolist(notifications).forEach(System.out::println);
+        List<NotificationResponse> notificationResponses = notificationRepository.findNotificationByUsername("test");
+        notificationResponses.forEach(System.out::println);
     }
 
     @Test

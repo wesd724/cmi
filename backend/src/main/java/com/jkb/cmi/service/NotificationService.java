@@ -32,8 +32,8 @@ public class NotificationService {
 
     @Transactional(readOnly = true)
     public List<NotificationResponse> findNotificationByUsername(String username) {
-        List<Notification> notifications = notificationRepository.findNotificationByUsername(username);
-        return NotificationResponse.tolist(notifications);
+        List<NotificationResponse> notificationResponses = notificationRepository.findNotificationByUsername(username);
+        return notificationResponses;
     }
 
     public void checkNotification(Long id) {

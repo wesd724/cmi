@@ -1,7 +1,8 @@
 package com.jkb.cmi.repository;
 
-import com.jkb.cmi.entity.Notification;
+import com.jkb.cmi.dto.response.NotificationResponse;
 import com.jkb.cmi.entity.TradeHistory;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,9 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.jkb.cmi.entity.QCurrency.currency;
 import static com.jkb.cmi.entity.QNotification.notification;
 import static com.jkb.cmi.entity.QTradeHistory.tradeHistory;
-import static com.jkb.cmi.entity.QCurrency.currency;
 
 @Repository
 @RequiredArgsConstructor
@@ -34,12 +35,21 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
     }
 
     @Override
-    public List<Notification> findNotificationByUsername(String username) {
-        return queryFactory.selectFrom(notification)
+    public List<NotificationResponse> findNotificationByUsername(String username) {
+        return queryFactory.select(
+                        Projections.fields(
+                                NotificationResponse.class,
+                                notification.id,
+                                currency.name.as("currencyName"),
+                                tradeHistory.orders,
+                                tradeHistory.amount,
+                                tradeHistory.price,
+                                tradeHistory.completeDate
+                        )
+                )
+                .from(notification)
                 .join(notification.tradeHistory, tradeHistory)
-                .fetchJoin()
                 .join(tradeHistory.currency, currency)
-                .fetchJoin()
                 .where(notification.user.username.eq(username))
                 .orderBy(notification.id.asc())
                 .fetch();
