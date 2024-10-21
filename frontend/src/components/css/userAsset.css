@@ -5,20 +5,20 @@
 }
 
 .userAsset {
-    width: 1100px;
+    width: 1250px;
     margin: 0 auto;
 }
 
 .tradeState {
     float: left;
-    width: 550px;
+    width: 700px;
     padding: 40px 45px;
 }
 
 .tradeState dl {
     display: table;
     float: left;
-    width: 240px;
+    width: 320px;
 }
 
 .tradeState dl:nth-child(-n + 2) {
@@ -45,7 +45,7 @@
 }
 
 .tradeState dl:nth-child(n + 4) > dd {
-    color: #0152b7; 
+    color: #0152b7;
 }
 
 .tradeState dt {

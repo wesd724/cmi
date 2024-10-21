@@ -109,6 +109,7 @@ const UserAsset = () => {
         (async () => {
             const data: userAssetType = await getUserAsset(username);
             setAsset(data);
+            if (!data.currencyAssetResponseList.length) setLoading(false);
             setTotalPrice(data.currencyAssetResponseList.reduce((a, b) => a + b.buyPrice, 0));
         })();
     }, [username]);
@@ -147,13 +148,13 @@ const UserAsset = () => {
                                 </dl>
                             </div>
                             <div className="chart">
-                                <div style={{ marginLeft: 20 }}>보유 비중(%)</div>
+                                <div style={{ marginLeft: 20, marginBottom: 10 }}>보유 비중(%)</div>
                                 <PieChart
                                     series={[
                                         {
                                             data: pieChartData,
                                             innerRadius: 36,
-                                            cx: 170,
+                                            cx: pieChartData.length > 6 ? 110 : 170,
                                         },
                                     ]}
                                     width={400}
@@ -175,7 +176,7 @@ const UserAsset = () => {
                                 </TableHead>
                                 <TableBody>
                                     {asset.currencyAssetResponseList.map((v, i) => (
-                                        <TableRow key={v.amount * v.averageCurrencyBuyPrice}>
+                                        <TableRow key={i + 1}>
                                             <TableCell>{v.currencyName}</TableCell>
                                             <TableCell>{toKR(v.amount)}<span>{v.market.replace("KRW-", "")}</span></TableCell>
                                             <TableCell>{toKR(v.averageCurrencyBuyPrice)}<span>KRW</span></TableCell>

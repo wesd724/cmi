@@ -46,7 +46,6 @@ const OrderBook = ({ id, setTrade }: orderBookProps) => {
     }, [id, addEventListener, removeEventListener])
 
     useEffect(() => {
-        console.log("MOVE");
         if (element.current) {
             let index;
             index = orderList.findLastIndex(v => v.orders === "SELL")

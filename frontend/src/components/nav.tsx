@@ -34,7 +34,6 @@ const Nav = () => {
 
             addEventListener('message', e => {
                 const data: notificationType[] = JSON.parse(e.data);
-                console.log(data);
                 setNotification(data);
             });
 

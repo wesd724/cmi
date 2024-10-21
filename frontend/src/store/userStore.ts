@@ -7,13 +7,13 @@ interface userStoreState {
 }
 
 const userStore = create<userStoreState>((set) => ({
-    username: localStorage.getItem("username") ?? "",
+    username: sessionStorage.getItem("username") ?? "",
     setName: (name: string) => {
-        localStorage.setItem("username", name);
+        sessionStorage.setItem("username", name);
         set({ username: name });
     },
     deleteName: () => {
-        localStorage.clear();
+        sessionStorage.clear();
         set({ username: "" });
     }
 }))

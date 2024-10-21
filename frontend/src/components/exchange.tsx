@@ -70,7 +70,13 @@ const Exchange = () => {
     }, [market])
 
     useEffect(() => {
+        (async () => {
+            const data = await getCashAndCurrency({ username, market });
+            setStatus(data);
+        })();
+
         realOrderUnit(market);
+
         interval.current = setInterval(() => {
             realOrderUnit(market);
         }, 5000);
@@ -81,14 +87,7 @@ const Exchange = () => {
                 interval.current = null;
             }
         }
-    }, [market, realOrderUnit]);
-
-    useEffect(() => {
-        (async () => {
-            const data = await getCashAndCurrency({ username, market });
-            setStatus(data);
-        })();
-    }, [username, market])
+    }, [username, market, realOrderUnit])
 
     const orders = (type: string) => {
         setOrder(type);
