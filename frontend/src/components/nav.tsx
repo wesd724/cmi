@@ -53,11 +53,11 @@ const Nav = () => {
     }, [username, setEventSource, closeEventSource, addEventListener])
 
     const logout = () => {
-        closeSSE(username);
+        closeEventSource();
         deleteName();
         navigate("/", { replace: true });
         setNotification([]);
-        closeEventSource();
+        closeSSE(username);
     }
 
     const openNotification = (e: React.MouseEvent<HTMLButtonElement>) => {

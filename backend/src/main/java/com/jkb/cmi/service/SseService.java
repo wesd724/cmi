@@ -27,24 +27,28 @@ public class SseService {
 
         emitter.onCompletion(() -> {
             log.info("completion");
-            sseRepository.deleteByUsername(username);
+            sseRepository.deleteByUsername(emitter, username);
         });
         emitter.onTimeout(() -> {
             log.info("timeout");
-            emitter.complete();
+            sseRepository.deleteByUsername(emitter, username);;
+        });
+        emitter.onError((e) -> {
+            log.info("error");
+            sseRepository.deleteByUsername(emitter, username);;
         });
 
-        sendEvent(emitter, username, "connect", "connection complete.");
+        sendEvent(emitter, "connect", "connection complete.");
         return emitter;
     }
 
     public void close(String username) {
         List<SseEmitter> emitters = sseRepository.findByUsername(username);
 
-        emitters.forEach(emitter -> emitter.complete());
+        emitters.forEach(emitter -> sendEvent(emitter, "connect", ""));
     }
 
-    private void sendEvent(SseEmitter emitter, String username, String eventName, Object data) {
+    private void sendEvent(SseEmitter emitter, String eventName, Object data) {
         try {
             emitter.send(SseEmitter.event()
                     .name(eventName)
@@ -52,7 +56,7 @@ public class SseService {
             );
         } catch (IOException e) {
             log.error(e.getMessage());
-            sseRepository.deleteByUsername(username);
+            emitter.complete();
         }
     }
 
@@ -63,7 +67,7 @@ public class SseService {
                     List<NotificationResponse> userData = notificationService.findNotificationByUsername(username);
                     System.out.println(username + ": " + emitterList.size());
                     emitterList.forEach(emitter -> {
-                        sendEvent(emitter, username, "message", userData);
+                        sendEvent(emitter, "message", userData);
                     });
                 }
         );
@@ -75,7 +79,7 @@ public class SseService {
         emitters.forEach((username, emitterList) -> {
                     System.out.println(username + ": " + emitterList.size());
                     emitterList.forEach(emitter -> {
-                        sendEvent(emitter, username, eventName, data);
+                        sendEvent(emitter, eventName, data);
                     });
                 }
         );
@@ -85,7 +89,7 @@ public class SseService {
         List<SseEmitter> emitters = sseRepository.findByUsername(username);
 
         emitters.forEach(emitter -> {
-            sendEvent(emitter, username, "message", data);
+            sendEvent(emitter, "message", data);
         });
     }
 }

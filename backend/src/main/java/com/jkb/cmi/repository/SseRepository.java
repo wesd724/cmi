@@ -18,8 +18,14 @@ public class SseRepository {
         return sseEmitter;
     }
 
-    public void deleteByUsername(String username) {
-        emitters.remove(username);
+    public void deleteByUsername(SseEmitter emitter, String username) {
+        List<SseEmitter> userEmitters = emitters.get(username);
+        if (userEmitters != null) {
+            userEmitters.remove(emitter);
+            if (userEmitters.isEmpty()) {
+                emitters.remove(username);
+            }
+        }
     }
 
     public List<SseEmitter> findByUsername(String username) {
