@@ -73,7 +73,7 @@ const Nav = () => {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" color="info">
+            <AppBar position="static">
                 <Toolbar>
                     <Button color="inherit" onClick={() => navigate("/")}>메인</Button>
                     <Button color="inherit" onClick={() => navigate("/activity")}>활동</Button>
@@ -90,7 +90,7 @@ const Nav = () => {
                         username
                             ? (
                                 <>
-                                    <PersonIcon sx={{ marginBottom: "4px", color: "#130f86" }} />
+                                    <PersonIcon sx={{ marginBottom: "4px", color: "#A1EEBD" }} />
                                     <div style={{
                                         fontSize: 18,
                                         fontWeight: "bold",

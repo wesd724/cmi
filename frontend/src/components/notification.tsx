@@ -11,6 +11,7 @@ import Popover from '@mui/material/Popover';
 import ListItemButton from '@mui/material/ListItemButton';
 import { checkAllNotification, checkNotification } from '../api/notification';
 import userStore from '../store/userStore';
+import { status } from '../data/constant';
 
 interface popperProps {
     id: string | undefined;
@@ -53,11 +54,11 @@ const Notification = ({ id, open, anchorEl, notification, setNotification, onClo
                                 <ListItem>
                                     <ListItemButton onClick={() => deleteOneNotification(v.id)}>
                                         <ListItemIcon>
-                                            <CurrencyExchangeIcon color={v.orders === "BUY" ? "primary" : "success"} />
+                                            <CurrencyExchangeIcon color={v.orders === "BUY" ? "error" : "info"} />
                                         </ListItemIcon>
                                         <ListItemText
                                             primary={`${v.orders} | ${v.currencyName} ${v.amount}개`}
-                                            secondary={<span>{v.completeDate.replace(/T/, ' ')}<br />체결 완료</span>}
+                                            secondary={<span>{v.completeDate.replace(/T/, ' ')}<br />{status[v.status]}</span>}
                                         />
                                     </ListItemButton>
                                 </ListItem>

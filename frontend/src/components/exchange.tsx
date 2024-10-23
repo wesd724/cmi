@@ -185,8 +185,8 @@ const Exchange = () => {
                                     주문 총액 <input value={toKR(Math.round(trade * amount))} onChange={ChangeTotal} /><br />
                                     {
                                         order === "BUY"
-                                            ? <Button sx={{ width: 420, right: 20, margin: 2, fontSize: 15 }} size="small" type="submit" variant="contained">매수</Button>
-                                            : <Button sx={{ width: 420, right: 20, margin: 2, fontSize: 15, backgroundColor: "green", "&:hover": { backgroundColor: "#5a8251" } }} size="small" type="submit" variant="contained">매도</Button>
+                                            ? <Button sx={{ width: 420, right: 20, margin: 2, fontSize: 15, backgroundColor: "#C62E2E", "&:hover": { backgroundColor: "#D91656" } }} size="small" type="submit" variant="contained">매수</Button>
+                                            : <Button sx={{ width: 420, right: 20, margin: 2, fontSize: 15, backgroundColor: "#0D0CB5", "&:hover": { backgroundColor: "#4C3BCF" } }} size="small" type="submit" variant="contained">매도</Button>
 
                                     }
                                 </form>
@@ -203,7 +203,7 @@ const Exchange = () => {
                                 <span>{market} 현재가</span>
                                 <span>{toKR(price)}</span>
                             </p>
-                            <Chart width="100%" height="400px" time="minutes/1" marketName={market} />
+                            <Chart width="95%" height="400px" time="minutes/1" marketName={market} />
                         </>
                     ) : <Navigate to="/" replace />
             }

@@ -44,6 +44,7 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
                                 tradeHistory.orders,
                                 tradeHistory.amount,
                                 tradeHistory.price,
+                                tradeHistory.status,
                                 tradeHistory.completeDate
                         )
                 )

@@ -62,7 +62,7 @@ const ActiveOrder = () => {
                                         <TableCell>{toKR(v.price) + " KRW"}</TableCell>
                                         <TableCell>{`${toKR(v.originalAmount)} ${v.market.replace("KRW-", "")}`}</TableCell>
                                         <TableCell>{`${toKR(v.activeAmount)} ${v.market.replace("KRW-", "")}`}</TableCell>
-                                        <TableCell> <Button
+                                        <TableCell align="center"> <Button
                                             size="large"
                                             sx={{ color: "red" }}
                                             onClick={() => cancel(v.id)}

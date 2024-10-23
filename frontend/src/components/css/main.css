@@ -1,4 +1,5 @@
 .ticker td:nth-child(1) {
+    border-right: 1px solid rgb(226, 226, 226);
     width: 180px;
 }
 

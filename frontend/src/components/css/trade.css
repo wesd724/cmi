@@ -1,3 +1,15 @@
+.trade td:first-child {
+    border-right: 1px solid rgb(226, 226, 226);
+}
+
+.trade td:nth-child(2) {
+    border-right: 1px solid rgb(226, 226, 226);
+}
+
+.trade td:last-child {
+    border-left: 1px solid rgb(226, 226, 226);
+}
+
 .trade td:nth-child(6), .trade td:nth-child(7) {
     width: 200px;
 }
@@ -7,6 +19,9 @@
 }
 
 .trade th {
+    position: sticky;
+    z-index: 1;
+    top: 0px;
     background-color: #f3f3f3;
     font-weight: bold;
 }

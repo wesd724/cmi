@@ -31,6 +31,9 @@
 }
 
 .active th {
+    position: sticky;
+    z-index: 1;
+    top: 0px;
     background-color: #e6e8f0;
     font-weight: bold;
 }

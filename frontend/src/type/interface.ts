@@ -64,6 +64,7 @@ export interface notificationType {
     orders: string;
     amount: number;
     price: number;
+    status: statusType;
     completeDate: string
 }
 
