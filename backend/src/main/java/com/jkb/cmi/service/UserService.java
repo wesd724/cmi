@@ -1,20 +1,15 @@
 package com.jkb.cmi.service;
 
 import com.jkb.cmi.dto.request.UserRequest;
-import com.jkb.cmi.dto.response.CashAndCurrencyResponse;
-import com.jkb.cmi.dto.response.UserAssetResponse;
 import com.jkb.cmi.entity.CashAsset;
-import com.jkb.cmi.entity.CurrencyAsset;
-import com.jkb.cmi.entity.TradeHistory;
 import com.jkb.cmi.entity.User;
+import com.jkb.cmi.event.UserSignUpEvent;
 import com.jkb.cmi.repository.CashAssetRepository;
-import com.jkb.cmi.repository.CurrencyAssetRepository;
 import com.jkb.cmi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +17,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final CashAssetRepository cashAssetRepository;
-    private final CurrencyAssetRepository currencyAssetRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public Boolean signUp(UserRequest userRequest) {
         if(userRepository.existsByUsername(userRequest.getUsername()))
@@ -38,6 +33,8 @@ public class UserService {
                 .balance(100000000L).user(user)
                 .build();
         cashAssetRepository.save(cashAsset);
+
+        eventPublisher.publishEvent(new UserSignUpEvent(user.getId()));
         return true;
     }
 

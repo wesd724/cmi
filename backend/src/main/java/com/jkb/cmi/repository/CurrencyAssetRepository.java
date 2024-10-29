@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface CurrencyAssetRepository extends JpaRepository<CurrencyAsset, Long> {
+public interface CurrencyAssetRepository extends JpaRepository<CurrencyAsset, Long>, CurrencyAssetRepositoryCustom {
     @Query("select c from CurrencyAsset c join fetch c.currency where c.user.username = :username order by c.amount desc")
     List<CurrencyAsset> getByUser_Username(@Param("username") String username);
     Optional<CurrencyAsset> getByUser_IdAndCurrency_Id(Long userId, Long currencyId);

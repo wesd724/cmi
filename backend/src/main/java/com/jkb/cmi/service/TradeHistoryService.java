@@ -4,8 +4,10 @@ import com.jkb.cmi.dto.response.TradeHistoryResponse;
 import com.jkb.cmi.entity.OrderBook;
 import com.jkb.cmi.entity.TradeHistory;
 import com.jkb.cmi.entity.type.Status;
+import com.jkb.cmi.event.TradeHistoryEvent;
 import com.jkb.cmi.repository.TradeHistoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +19,7 @@ import java.util.List;
 @Transactional
 public class TradeHistoryService {
     private final TradeHistoryRepository tradeHistoryRepository;
-    private final CurrencyAssetService currencyAssetService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(readOnly = true)
     public List<TradeHistoryResponse> getTradeHistory(String username) {
@@ -36,6 +38,6 @@ public class TradeHistoryService {
                 .build();
 
         tradeHistoryRepository.save(tradeHistory); // this tradeHistory insert => x-lock
-        currencyAssetService.updateCurrencyAsset(tradeHistory);
+        eventPublisher.publishEvent(new TradeHistoryEvent(tradeHistory));
     }
 }

@@ -4,12 +4,16 @@ import com.jkb.cmi.dto.response.NotificationResponse;
 import com.jkb.cmi.entity.Notification;
 import com.jkb.cmi.entity.TradeHistory;
 import com.jkb.cmi.entity.User;
+import com.jkb.cmi.event.TradeHistoryEvent;
 import com.jkb.cmi.repository.NotificationRepository;
 import com.jkb.cmi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.List;
 
@@ -21,13 +25,16 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
 
-    public void saveNotification(TradeHistory tradeHistory) {
+    @Transactional(propagation =  Propagation.REQUIRES_NEW)
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void saveNotification(TradeHistoryEvent event) {
+        TradeHistory tradeHistory = event.getTradeHistory();
         Notification notification = Notification.builder()
                 .user(tradeHistory.getUser())
                 .tradeHistory(tradeHistory)
                 .build();
 
-        notificationRepository.save(notification);
+        notificationRepository.save(notification); // this tradeHistory fk => s-lock
     }
 
     @Transactional(readOnly = true)
