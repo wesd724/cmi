@@ -2,7 +2,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from
 import { PieChart } from '@mui/x-charts';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { getUserAsset } from '../api/userAsset';
-import { ASSET_UPDATE_COLOR } from '../data/constant';
+import { ASSET_UPDATE_COLOR, pieChartColor } from '../data/constant';
 import { toKR } from '../lib/api';
 import userStore from '../store/userStore';
 import { currencyAssetType, pieChartType, response, userAssetType, valuationType } from '../type/interface';
@@ -16,12 +16,15 @@ const UserAsset = () => {
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [totalValuation, setTotalValuation] = useState<number>(0);
     const [pieChartData, setPieChartData] = useState<pieChartType[]>([]);
+    const [count, setCount] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(true);
     const { username } = userStore();
     const webSocket = useRef<WebSocket | null>(null);
 
     const ticker = useCallback(async (markets: string[], currencyAssets: currencyAssetType[]) => {
         const res = await getTickers(markets);
+        setCount(Math.floor(currencyAssets.length / 2));
+        
         const data: valuationType[] = currencyAssets.map((v, i) => (
             {
                 market: v.market,
@@ -41,7 +44,7 @@ const UserAsset = () => {
                 value: v.price / updateTotalValuation * 100,
                 label: `${v.market.replace("KRW-", "")}`
             }
-        )));
+        )).slice(0, Math.floor(currencyAssets.length / 2)));
 
     }, []);
 
@@ -61,7 +64,7 @@ const UserAsset = () => {
 
     useEffect(() => {
         const market = asset.currencyAssetResponseList.map(v => v.market) as string[];
-
+        
         if (market.length) {
             ticker(market, asset.currencyAssetResponseList);
             setLoading(false);
@@ -92,7 +95,7 @@ const UserAsset = () => {
                             value: v.price / updateTotalValuation * 100,
                             label: `${v.market.replace("KRW-", "")}`
                         }
-                    )));
+                    )).slice(0, count));
 
                     return updateValuation;
                 });
@@ -102,7 +105,7 @@ const UserAsset = () => {
         return () => {
             webSocket.current?.close();
         }
-    }, [asset, ticker]);
+    }, [asset, ticker, count]);
 
 
     useEffect(() => {
@@ -148,8 +151,9 @@ const UserAsset = () => {
                                 </dl>
                             </div>
                             <div className="chart">
-                                <div style={{ marginLeft: 20, marginBottom: 10 }}>보유 비중(%)</div>
+                                <div style={{ marginLeft: 20, marginBottom: 10 }}>보유 비중 상위 {count}개(%)</div>
                                 <PieChart
+                                    colors={pieChartColor}
                                     series={[
                                         {
                                             data: pieChartData,

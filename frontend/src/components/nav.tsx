@@ -25,7 +25,7 @@ const Nav = () => {
     useEffect(() => {
         if (username) {
             setAnchorEl(null);
-            setEventSource(import.meta.env.VITE_SSE_URL + username);
+            setEventSource(import.meta.env.VITE_SSE_CONNECT_URL + username);
 
             addEventListener('connect', e => {
                 const data = e.data;

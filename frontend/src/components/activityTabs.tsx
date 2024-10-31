@@ -22,7 +22,7 @@ const ActivityTabs = () => {
 							backgroundColor: "rgb(86, 81, 92)"
 						}
 					}} onChange={handleChange} centered>
-					<Tab label="코인별 의견" value="1" />
+					<Tab label="코인별 리뷰" value="1" />
 				</TabList>
 			</Box>
 			<TabPanel sx={{ width: "70vw", ml: "15%", border: 1, borderColor: 'divider', padding: 0 }} value="1"><CommentTabs /></TabPanel>

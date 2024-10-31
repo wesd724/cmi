@@ -204,7 +204,7 @@ const Comment = ({ market }: marketProps) => {
                     value={content}
                     onChange={changeContent}
                     disabled={username ? false : true}
-                    label={username ? "의견" : "로그인 하세요"} size="small" variant="filled" />
+                    label={username ? "리뷰 작성" : "로그인 하세요"} size="small" variant="filled" />
             </form>
 
         </div>
