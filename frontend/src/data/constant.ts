@@ -9,6 +9,16 @@ export const MARKET = [
     "KRW-NEO",
     "KRW-XLM",
     "KRW-STX",
+    "KRW-DOGE",
+    "KRW-BTG",
+    "KRW-ARK",
+    "KRW-LINK",
+    "KRW-AVAX",
+    "KRW-QTUM",
+    "KRW-ZETA",
+    "KRW-SUI",
+    "KRW-MASK",
+    "KRW-NEAR",
 ]
 export const MARKET_NAME = [
     "비트코인",
@@ -21,6 +31,16 @@ export const MARKET_NAME = [
     "네오",
     "스텔라루멘",
     "스택스",
+    "도지코인",
+    "비트코인골드",
+    "아크",
+    "체인링크",
+    "아발란체",
+    "퀀텀",
+    "제타체인",
+    "수이",
+    "마스크네트워크",
+    "니어프로토콜",
 ]
 
 export const MARKET_MAPPER = Object.fromEntries(
