@@ -31,11 +31,11 @@ public class SseService {
         });
         emitter.onTimeout(() -> {
             log.info("timeout");
-            sseRepository.deleteByUsername(emitter, username);;
+            sseRepository.deleteByUsername(emitter, username);
         });
         emitter.onError((e) -> {
             log.info("error");
-            sseRepository.deleteByUsername(emitter, username);;
+            sseRepository.deleteByUsername(emitter, username);
         });
 
         sendEvent(emitter, "connect", "connection complete.");
@@ -55,7 +55,6 @@ public class SseService {
                     .data(data)
             );
         } catch (IOException e) {
-            log.error(e.getMessage());
             emitter.complete();
         }
     }

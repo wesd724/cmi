@@ -47,7 +47,7 @@ const Exchange = () => {
     }, []);
 
     useEffect(() => {
-        webSocket.current = new WebSocket(import.meta.env.VITE_WS_UPBIT_URL as string);
+        webSocket.current = new WebSocket(`ws://${window.location.host}/websocket/v1`);
         webSocket.current.onopen = () => {
             console.log('WebSocket 연결');
             webSocket.current?.send(webSocketRequest("ticker", [market]));

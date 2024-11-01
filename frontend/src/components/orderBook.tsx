@@ -35,7 +35,6 @@ const OrderBook = ({ id, setTrade }: orderBookProps) => {
             const data: orderBookType[] = JSON.parse(e.data);
             setMaxAmount(Math.max(1, ...data.map(v => v.activeAmount)))
             setOrderList(data);
-            console.log("GET");
         }
 
         addEventListener(eventName, callback);
