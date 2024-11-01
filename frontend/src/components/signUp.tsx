@@ -28,6 +28,7 @@ const Signup = () => {
         const data = await signUp({ username, password });
 
         if (data) {
+            alert("초기 자산 지급\n현금 2억원 + 코인별 1억원");
             setName(username);
             navigate("/");
             return;

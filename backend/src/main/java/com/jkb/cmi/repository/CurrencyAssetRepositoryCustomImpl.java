@@ -23,8 +23,8 @@ public class CurrencyAssetRepositoryCustomImpl implements CurrencyAssetRepositor
                 (ps, apiResponse) -> {
                     ps.setLong(1, userId);
                     ps.setLong(2, apiResponses.indexOf(apiResponse) + 1);
-                    ps.setDouble(3, 100d);
-                    ps.setDouble(4, apiResponse.getTrade_price() * 100);
+                    ps.setDouble(3, 100000000 / apiResponse.getTrade_price());
+                    ps.setDouble(4, 100000000);
                     ps.setDouble(5, apiResponse.getTrade_price());
                 }
         );

@@ -30,7 +30,7 @@ public class UserService {
         userRepository.save(user);
 
         CashAsset cashAsset = CashAsset.builder()
-                .balance(100000000L).user(user)
+                .balance(200000000L).user(user)
                 .build();
         cashAssetRepository.save(cashAsset);
 
