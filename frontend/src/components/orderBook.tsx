@@ -13,7 +13,7 @@ import { toKR } from "../lib/api";
 
 interface orderBookProps {
     id: number;
-    setTrade: React.Dispatch<React.SetStateAction<number>>;
+    setTrade: React.Dispatch<React.SetStateAction<string | number>>;
 }
 
 const OrderBook = ({ id, setTrade }: orderBookProps) => {
@@ -46,12 +46,18 @@ const OrderBook = ({ id, setTrade }: orderBookProps) => {
 
     useEffect(() => {
         if (element.current) {
-            let index;
-            index = orderList.findLastIndex(v => v.orders === "SELL")
+            let index = -1;
+            for (let i = orderList.length - 1; i >= 0; i--) {
+                if (orderList[i].orders === "SELL") {
+                    index = i;
+                    break;
+                }
+            }
+            //index = orderList.findLastIndex(v => v.orders === "SELL")
             if (index === -1) {
                 index = orderList.findIndex(v => v.orders === "BUY")
             }
-            element.current.scrollTop = (27 * (index - 2));
+            element.current.scrollTop = (26 * (index - 2));
         }
     }, [orderList]);
 
@@ -83,7 +89,7 @@ const OrderBook = ({ id, setTrade }: orderBookProps) => {
                                 return (
                                     <TableRow key={i + 1}>
                                         <TableCell sx={{ backgroundColor }}
-                                            onClick={() => setTrade(v.price)}
+                                            onClick={() => setTrade(toKR(v.price))}
                                             align="center">
                                             {toKR(v.price)}
                                         </TableCell>

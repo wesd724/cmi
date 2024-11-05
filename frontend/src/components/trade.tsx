@@ -13,7 +13,7 @@ const Trade = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
     const username = userStore(state => state.username);
-    
+
     useEffect(() => {
         (async () => {
             const data = await getTradeHistory(username);
@@ -45,7 +45,7 @@ const Trade = () => {
                                 {trades.map(v => (
                                     <TableRow key={v.id}>
                                         <TableCell>{v.currencyName}</TableCell>
-                                        <TableCell>{v.order}</TableCell>
+                                        <TableCell sx={{ color: v.order == "SELL" ? "#0D0CB5" : "#C62E2E" }}>{v.order}</TableCell>
                                         <TableCell>{v.amount}</TableCell>
                                         <TableCell>{toKR(v.price) + " KRW"}</TableCell>
                                         <TableCell>{toKR(v.tradePrice) + " KRW"}</TableCell>

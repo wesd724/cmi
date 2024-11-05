@@ -1,7 +1,7 @@
 .orderBook-container {
     position: absolute;
     border: 1px solid rgb(185, 185, 185);
-    left: 18vw;
+    left: 20vw;
     top: 85px;
 }
 
@@ -23,7 +23,7 @@
     background-color: #ececec;
 }
 
-.orderBook-body { 
+.orderBook-body {
     overflow-x: hidden;
 }
 

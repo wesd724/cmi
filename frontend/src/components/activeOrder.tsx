@@ -58,7 +58,7 @@ const ActiveOrder = () => {
                                     <TableRow key={v.id}>
                                         <TableCell>{v.createdDate.replace(/T/, ' ')}</TableCell>
                                         <TableCell>{v.currencyName}</TableCell>
-                                        <TableCell>{v.orders}</TableCell>
+                                        <TableCell sx={{ color: v.orders == "SELL" ? "#0D0CB5" : "#C62E2E" }}>{v.orders}</TableCell>
                                         <TableCell>{toKR(v.price) + " KRW"}</TableCell>
                                         <TableCell>{`${toKR(v.originalAmount)} ${v.market.replace("KRW-", "")}`}</TableCell>
                                         <TableCell>{`${toKR(v.activeAmount)} ${v.market.replace("KRW-", "")}`}</TableCell>

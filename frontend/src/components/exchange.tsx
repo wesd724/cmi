@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { Navigate, useLocation, useParams } from "react-router-dom";
 import { getRealOrderBookUnit, webSocketRequest } from "../upbit/api";
 import { MARKET } from "../data/constant";
@@ -6,29 +6,34 @@ import { Button } from "@mui/material";
 import Chart from "./chart";
 import { buy, getCashAndCurrency, sell } from "../api/exchange";
 import "./css/exchange.css";
-import { errorResponse, exchangeStatus, realOrderBookUnitType } from "../type/interface";
-import { toKR } from "../lib/api";
+import { errorResponse, exchangeStatus, InputFocusType, realOrderBookUnitType } from "../type/interface";
+import { checkNaN, toKR } from "../lib/api";
 import userStore from "../store/userStore";
 import axios from "axios";
 import OrderBook from "./orderBook";
 
-
 const Exchange = () => {
     const { username } = userStore();
     const location = useLocation();
+
+    type ExplicitAny = typeof location.state; // no-explicit-any 오류를 우회하기 위한 타입
     //const [qs] = useSearchParams();
     const { id } = useParams() as { id: string };
-    const [price, setPrice] = useState<number>(location.state);
-    const [trade, setTrade] = useState(location.state);
-    const [amount, setAmount] = useState<number>(0);
+    const [price, setPrice] = useState(location.state);
+    const [trade, setTrade] = useState(toKR(location.state));
+    const [amount, setAmount] = useState<ExplicitAny>(0);
     const [order, setOrder] = useState<string>("BUY");
     const [status, setStatus] = useState<exchangeStatus>({
         balance: 0, currencyAmount: 0
     });
     const [orderUnit, setOrderUnit] = useState<Pick<realOrderBookUnitType, "ask_price" | "bid_price">[]>([]);
     const interval = useRef<ReturnType<typeof setInterval> | null>(null);
-
-    const delta = (price < 1000) ? 1 : (price < 10000) ? 10 : (price < 100000) ? 100 : 1000
+    const [selectRatio, setSelectRatio] = useState<number>(0);
+    const [inputFocus, setInputFocus] = useState<InputFocusType>({
+        trade: false,
+        amount: false,
+        total: false,
+    });
 
     const webSocket = useRef<WebSocket | null>(null);
     const market = MARKET[Number(id) - 1];
@@ -92,59 +97,90 @@ const Exchange = () => {
     const orders = (type: string) => {
         setOrder(type);
         setAmount(0);
-        setTrade(price);
+        setTrade(toKR(price));
+        setSelectRatio(0);
     }
 
     const ChangeTrade = (e: React.ChangeEvent<HTMLInputElement>) => {
-        e.target.value = e.target.value.replace(/,/g, '');
-        setTrade(e.target.value ? parseFloat(e.target.value) : 0);
+        setTrade(e.target.value);
     }
 
     const ChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setAmount(e.target.value ? parseFloat(e.target.value) : 0);
+        setAmount(e.target.value);
+        setSelectRatio(0);
     }
 
     const ChangeTotal = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = checkNaN(parseInt(e.target.value.replace(/,/g, '')));
+        const tradePrice = checkNaN(parseFloat(trade.toString().replace(/,/g, '')));
+
+        setAmount(checkNaN(parseFloat((value / tradePrice).toFixed(8))));
+    }
+
+    const onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+        setInputFocus({ ...inputFocus, [e.target.name]: true });
         e.target.value = e.target.value.replace(/,/g, '');
-        const value = e.target.value ? parseInt(e.target.value) : 0;
-        setAmount(parseFloat((value / trade).toFixed(8)));
+        if (e.target.name == "trade")
+            setTrade(e.target.value);
+        else if (e.target.name == "amount")
+            setAmount(e.target.value);
+    };
+
+    const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        setInputFocus({ ...inputFocus, [e.target.name]: false });
+        const value = checkNaN(parseFloat(e.target.value));
+        if (e.target.name == "trade")
+            setTrade(toKR(value));
+        else if (e.target.name == "amount")
+            setAmount(toKR(value));
+    };
+
+    const total = () => {
+        const t = trade.toString().replace(/,/g, '');
+        const a = amount.toString().replace(/,/g, '');
+        const result = Math.round(checkNaN(parseFloat(t)) * checkNaN(parseFloat(a)));
+        return inputFocus.total == false ? toKR(result) : result;
     }
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         let isOrder = false;
 
-        if (trade * amount === 0) {
+        const tempTrade = parseFloat(trade.toString().replace(/,/g, ''));
+        const tempAmount = parseFloat(amount.toString().replace(/,/g, ''));
+        //console.log(tempTrade, tempAmount, status)
+
+        if (tempTrade * tempAmount === 0) {
             alert("수량과 총액을 입력하세요.");
             return;
         }
 
         const unit = orderUnit.at(-1)!
-        if (trade > unit.ask_price || trade < unit.bid_price) {
+        if (tempTrade > unit.ask_price || tempTrade < unit.bid_price) {
             alert("주문 가능 가격 범위 초과");
             return;
         }
 
         try {
             if (order === "BUY") {
-                if (status.balance < Math.round(trade * amount)) {
+                if (status.balance < Math.round(tempTrade * tempAmount)) {
                     alert("주문 가능 금액 초과");
                     return;
                 }
 
                 if (window.confirm("매수하겠습니까?")) {
-                    await buy({ username, currencyId: Number(id), amount, price: trade });
+                    await buy({ username, currencyId: Number(id), amount: tempAmount, price: tempTrade });
                     alert("주문 완료");
                     isOrder = true;
                 }
             } else {
-                if (status.currencyAmount < amount) {
+                if (status.currencyAmount < tempAmount) {
                     alert("주문 가능 수량 초과");
                     return;
                 }
 
                 if (window.confirm("매도하겠습니까?")) {
-                    await sell({ username, currencyId: Number(id), amount, price: trade });
+                    await sell({ username, currencyId: Number(id), amount: tempAmount, price: tempTrade });
                     alert("주문 완료");
                     isOrder = true;
                 }
@@ -161,9 +197,19 @@ const Exchange = () => {
         }
     }
 
-    const onClick = (e: React.MouseEvent<HTMLButtonElement>, delta: number) => {
-        setTrade((v: number) => v + delta);
+    const onClick = (e: React.MouseEvent<HTMLButtonElement>, ratio: number) => {
+        if (order == "BUY") {
+            const tempTrade = parseFloat(trade.toString().replace(/,/g, ''));
+            const orderStatus = status.balance * (ratio / 100);
+            setAmount(toKR(orderStatus / tempTrade));
+
+        } else {
+            setAmount(toKR(status.currencyAmount * (ratio / 100)));
+        }
+
+        setSelectRatio(ratio);
     }
+
     return (
         <div>
             {
@@ -176,13 +222,28 @@ const Exchange = () => {
                                 <form onSubmit={onSubmit}>
 
                                     주문가능 &nbsp;&nbsp;&nbsp; {order === "BUY" ? `${toKR(status.balance)} KRW` : `${toKR(status.currencyAmount)} ${market.slice(4)}`} <br />
-                                    {order === "BUY" ? "매수" : "매도"} 가격 <input value={toKR(trade)} onChange={ChangeTrade} /><br />
+                                    {order === "BUY" ? "매수" : "매도"} 가격 <input name="trade" onFocus={onFocus} onBlur={onBlur} value={trade} onChange={ChangeTrade} /><br />
                                     <div className="limit">주문 가능 범위 <span>{toKR(orderUnit.at(-1)?.ask_price)}~{toKR(orderUnit.at(-1)?.bid_price)}</span></div>
-                                    <Button sx={{ left: 290, height: 25, color: "red", borderColor: "red" }} onClick={(e) => onClick(e, delta)}>+{delta}</Button>
-                                    <Button sx={{ left: 290, height: 25, }} onClick={(e) => onClick(e, -delta)}>-{delta}</Button><br />
 
-                                    주문 수량 <input value={amount} onChange={ChangeAmount} /><br />
-                                    주문 총액 <input value={toKR(Math.round(trade * amount))} onChange={ChangeTotal} /><br />
+                                    주문 수량 <input name="amount" onFocus={onFocus} onBlur={onBlur} value={amount} onChange={ChangeAmount} /><br />
+                                    {[10, 25, 50, 100].map((v, i) => (
+                                        <Fragment key={i + 1}>
+                                            <Button
+                                                variant={selectRatio == v ? "contained" : "outlined"}
+                                                onClick={(e) => onClick(e, v)}
+                                                color="secondary"
+                                                sx={{
+                                                    left: 80,
+                                                    height: 25,
+                                                    ml: "10px",
+                                                    width: 70,
+                                                    color: "black",
+                                                    borderColor: "rgb(184, 176, 176)",
+                                                    fontSize: "12px",
+                                                }}>{v}%</Button>
+                                        </Fragment>
+                                    ))}<br />
+                                    주문 총액 <input name="total" onFocus={onFocus} onBlur={onBlur} value={total()} onChange={ChangeTotal} /><br />
                                     {
                                         order === "BUY"
                                             ? <Button sx={{ width: 420, right: 20, margin: 2, fontSize: 15, backgroundColor: "#C62E2E", "&:hover": { backgroundColor: "#D91656" } }} size="small" type="submit" variant="contained">매수</Button>

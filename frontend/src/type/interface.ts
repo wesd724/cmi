@@ -22,6 +22,12 @@ export interface exchangeStatus {
     currencyAmount: number;
 }
 
+export interface InputFocusType {
+    trade: boolean;
+    amount: boolean;
+    total: boolean;
+}
+
 export interface tradeHistoryType {
     id: number;
     currencyName: string;

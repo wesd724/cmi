@@ -1,5 +1,5 @@
 import ApexChart from 'react-apexcharts';
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { response } from '../type/interface';
 import { getCandles } from '../upbit/api';
 
@@ -14,7 +14,7 @@ const intervalTime = (time: string) => time === "days" ? 1000 * 60 * 60 : 1000 *
 
 const formatBytime = (time: string, timestamp: string) => {
     const d = new Date(timestamp);
-    if(time === "days") {
+    if (time === "days") {
         const month = d.getMonth() + 1;
         const date = d.getDate();
         return `${d.getFullYear()}/${month < 10 ? "0" + month : month}/${date < 10 ? "0" + date : date}`
@@ -110,4 +110,4 @@ const Chart = ({ width, height, time, marketName }: candleProps) => {
     )
 }
 
-export default React.memo(Chart);
+export default Chart;
