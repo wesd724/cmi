@@ -23,10 +23,10 @@ public class CurrencyAsset {
     @JoinColumn(name="currency_id")
     private Currency currency;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "decimal(25, 8)", nullable = false)
     private Double amount;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "decimal(25, 8)", nullable = false)
     private Double averageCurrencyBuyPrice;
 
     @Column(nullable = false)

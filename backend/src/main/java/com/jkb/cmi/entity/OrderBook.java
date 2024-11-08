@@ -27,13 +27,13 @@ public class OrderBook extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Orders orders;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "decimal(25, 8)", nullable = false)
     private Double originalAmount;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "decimal(25, 8)", nullable = false)
     private Double activeAmount;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "decimal(25, 8)", nullable = false)
     private Double price;
 
     @Builder

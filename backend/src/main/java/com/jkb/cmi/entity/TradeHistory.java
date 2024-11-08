@@ -30,14 +30,16 @@ public class TradeHistory {
     @Enumerated(EnumType.STRING)
     private Orders orders;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "decimal(25, 8)", nullable = false)
     private Double amount;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "decimal(25, 8)", nullable = false)
     private Double price;
 
+    @Column(columnDefinition = "datetime(3)")
     private LocalDateTime orderDate;
 
+    @Column(columnDefinition = "datetime")
     private LocalDateTime completeDate;
 
     @Enumerated(EnumType.STRING)
