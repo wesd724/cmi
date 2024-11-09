@@ -1,6 +1,6 @@
 package com.jkb.cmi.repository;
 
-import com.jkb.cmi.dto.response.APIResponse;
+import com.jkb.cmi.dto.response.TickerAPIResponse;
 import com.jkb.cmi.entity.type.Orders;
 import com.jkb.cmi.entity.type.Status;
 import com.querydsl.core.BooleanBuilder;
@@ -22,7 +22,7 @@ public class TradeHistoryRepositoryCustomImpl implements TradeHistoryRepositoryC
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public void tradeCompleteProcessing(List<APIResponse> dtoList, Orders orders) {
+    public void tradeCompleteProcessing(List<TickerAPIResponse> dtoList, Orders orders) {
         AtomicLong index = new AtomicLong(1);
         BooleanBuilder builder = new BooleanBuilder();
 

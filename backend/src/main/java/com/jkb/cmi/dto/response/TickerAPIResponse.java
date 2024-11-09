@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class APIResponse {
+public class TickerAPIResponse {
     String market;
     Double trade_price;
 }

@@ -39,3 +39,5 @@ INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (17
 INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (18, 'KRW-SUI', 0);
 INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (19, 'KRW-MASK', 0);
 INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (20, 'KRW-NEAR', 0);
+
+INSERT IGNORE INTO user (id, username, password) VALUES (2, 'virtual', 'virtual123!');

@@ -29,25 +29,24 @@ public class OrderBookService {
     private final TradeHistoryService tradeHistoryService;
     private final SseService sseService;
 
-    public List<OrderBookResponse> entryOrderBook(Long currencyId) {
+    public List<OrderBookResponse> getOrderBook(Long currencyId) {
         List<OrderBook> orderBookList = orderBookRepository.getByCurrency_Id(currencyId);
 
-        List<OrderBook> buyOrders = OrderFilter(orderBookList, Orders.BUY);
-        List<OrderBook> sellOrders = OrderFilter(orderBookList, Orders.SELL);
+        List<OrderBook> buyOrders = orderFilter(orderBookList, Orders.BUY);
+        List<OrderBook> sellOrders = orderFilter(orderBookList, Orders.SELL);
         sellOrders.addAll(buyOrders);
         return OrderBookResponse.tolist(sellOrders);
     }
 
-    public List<OrderBookResponse> orderProcessing(OrderRequest orderRequest, Orders orders, OrderBook newOrder) {
+    public void orderProcessing(Long CurrencyId, Double price, Orders orders, OrderBook newOrder) {
         List<OrderBook> orderBookList = orderBookRepository.findByPriceForUpdate(
-                orderRequest.getCurrencyId(), orderRequest.getPrice(), orders);
+                CurrencyId, price, orders);
+
         orderBookRepository.save(newOrder);
 
         List<OrderBook> orderList = orderProcessFilter(orderBookList, orders);
 
         matchOrder(newOrder, orderList, orders);
-
-        return entryOrderBook(orderRequest.getCurrencyId());
     }
 
     public List<ActiveOrderResponse> getActiveOrder(String username) {
@@ -59,13 +58,33 @@ public class OrderBookService {
     }
 
     public void addOrder(OrderRequest orderRequest, Orders orders) {
+        OrderBook newOrderBook = makeOrderBook(orderRequest, orders);
+
+        orderProcessing(orderRequest.getCurrencyId(), orderRequest.getPrice(), orders, newOrderBook);
+
+        sendOrderBook(orderRequest.getCurrencyId());
+    }
+
+    public OrderBook makeOrderBook(OrderRequest orderRequest, Orders orders) {
         User user = userRepository.getByUsername(orderRequest.getUsername());
         Currency currency = currencyRepository.getReferenceById(orderRequest.getCurrencyId());
 
-        OrderBook newOrderBook = orderRequest.toEntity(user, currency, orders);
+        return orderRequest.toEntity(user, currency, orders);
+    }
 
-        List<OrderBookResponse> newOrderList = orderProcessing(orderRequest, orders, newOrderBook);
-        sseService.sendEventToAll("orderBook " + orderRequest.getCurrencyId(), newOrderList);
+    public void sendOrderBook(Long currencyId) {
+        List<OrderBookResponse> newOrderList = getOrderBook(currencyId);
+        sseService.sendEventToAll("orderBook " + currencyId, newOrderList);
+    }
+
+    public void addVirtualOrder(Long userId, Long currencyId, Double amount, Double price, Orders orders) {
+        User user = userRepository.getReferenceById(userId);
+        Currency currency = currencyRepository.getReferenceById(currencyId);
+        OrderBook newOrderBook = OrderBook.builder()
+                .user(user).currency(currency).orders(orders)
+                .originalAmount(amount).price(price).build();
+
+        orderProcessing(currencyId, price, orders, newOrderBook);
     }
 
     public void matchOrder(OrderBook newOrder, List<OrderBook> orderList, Orders orders) {
@@ -81,10 +100,15 @@ public class OrderBookService {
             double newOrderAmount = newOrder.getActiveAmount() - tradeAmount;
             double activeOrderAmount = activeOrder.getActiveAmount() - tradeAmount;
 
-            tradeHistoryService.saveTradeHistory(newOrder, activeOrder.getPrice(), tradeAmount,
-                    newOrderAmount == 0 ? Status.COMPLETE : Status.PARTIAL);
-            tradeHistoryService.saveTradeHistory(activeOrder, activeOrder.getPrice(), tradeAmount,
-                    activeOrderAmount == 0 ? Status.COMPLETE : Status.PARTIAL);
+            if (newOrder.getUser().getId() != 2L) {
+                tradeHistoryService.saveTradeHistory(newOrder, activeOrder.getPrice(), tradeAmount,
+                        newOrderAmount == 0 ? Status.COMPLETE : Status.PARTIAL);
+            }
+
+            if (activeOrder.getUser().getId() != 2L) {
+                tradeHistoryService.saveTradeHistory(activeOrder, activeOrder.getPrice(), tradeAmount,
+                        activeOrderAmount == 0 ? Status.COMPLETE : Status.PARTIAL);
+            }
 
 
             if (activeOrderAmount == 0) {
@@ -109,7 +133,7 @@ public class OrderBookService {
             throw new IllegalArgumentException("이미 체결된 주문입니다");
     }
 
-    private List<OrderBook> OrderFilter(List<OrderBook> orderBookList, Orders order) {
+    private List<OrderBook> orderFilter(List<OrderBook> orderBookList, Orders order) {
         return orderBookList.stream()
                 .filter(OrderBook -> OrderBook.getOrders() == order)
                 .sorted(

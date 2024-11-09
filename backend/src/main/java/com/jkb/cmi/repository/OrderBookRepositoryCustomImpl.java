@@ -21,8 +21,8 @@ public class OrderBookRepositoryCustomImpl implements OrderBookRepositoryCustom 
     public List<OrderBook> findByPriceForUpdate(Long currencyId, Double price, Orders orders) {
         return queryFactory.selectFrom(orderBook)
                 .where(orderBook.currency.id.eq(currencyId),
-                        rangePrice(price, orders),
-                        eqOrders(orders))
+                        eqOrders(orders),
+                        rangePrice(price, orders))
                 .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .fetch();
     }

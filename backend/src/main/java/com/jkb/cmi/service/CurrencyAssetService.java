@@ -1,6 +1,6 @@
 package com.jkb.cmi.service;
 
-import com.jkb.cmi.dto.response.APIResponse;
+import com.jkb.cmi.dto.response.TickerAPIResponse;
 import com.jkb.cmi.entity.CashAsset;
 import com.jkb.cmi.entity.CurrencyAsset;
 import com.jkb.cmi.entity.TradeHistory;
@@ -36,8 +36,8 @@ public class CurrencyAssetService {
     public void initialCurrencyAsset(UserSignUpEvent event) {
         //System.out.println("트랜잭션 상태:" + TransactionSynchronizationManager.isActualTransactionActive());
         //System.out.println("initialCurrencyAsset의 트랜잭션 이름:" + TransactionSynchronizationManager.getCurrentTransactionName());
-        List<APIResponse> apiResponses = marketDataService.getCurrentPrice();
-        currencyAssetRepository.saveInitialCurrencyAsset(apiResponses, event.getUserId());
+        List<TickerAPIResponse> tickerApiRespons = marketDataService.getCurrentPrice();
+        currencyAssetRepository.saveInitialCurrencyAsset(tickerApiRespons, event.getUserId());
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

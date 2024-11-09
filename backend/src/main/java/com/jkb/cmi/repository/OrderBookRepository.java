@@ -11,7 +11,9 @@ import java.util.List;
 public interface OrderBookRepository extends JpaRepository<OrderBook, Long>, OrderBookRepositoryCustom {
     //@Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select o from OrderBook o where o.currency.id = :id")
-    List<OrderBook> getByCurrency_Id(@Param("id") Long CurrencyId);
+    List<OrderBook> getByCurrency_Id(@Param("id") Long currencyId);
+
+    List<OrderBook> getByUser_Id(Long userId);
 
     @Query("select o from OrderBook o join fetch o.currency where o.user.username = :username order by o.id")
     List<OrderBook> getActiveOrderByUsername(@Param("username") String username);
@@ -19,4 +21,10 @@ public interface OrderBookRepository extends JpaRepository<OrderBook, Long>, Ord
     @Modifying(clearAutomatically = true)
     @Query("delete from OrderBook o where o.id = :id")
     int customDeleteById(@Param("id") Long id);
+
+    @Modifying(clearAutomatically = true)
+    @Query(value = "delete from order_book" +
+            " where user_id = 2" +
+            " and TIMESTAMPDIFF(MINUTE, created_date, NOW()) >= :minute", nativeQuery = true)
+    void deleteExpiredVirtualOrder(@Param("minute") int minute);
 }

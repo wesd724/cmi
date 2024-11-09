@@ -10,11 +10,9 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 @EnableJpaAuditing
-@EnableScheduling
 @SpringBootApplication
 public class CmiApplication {
 

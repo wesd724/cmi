@@ -1,6 +1,7 @@
 package com.jkb.cmi.service;
 
-import com.jkb.cmi.dto.response.APIResponse;
+import com.jkb.cmi.dto.response.OrderBookAPIResponse;
+import com.jkb.cmi.dto.response.TickerAPIResponse;
 import com.jkb.cmi.dto.response.RecommendationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,20 +16,34 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class MarketDataService {
-    @Value("${upbit.url}")
-    private String URL;
+    @Value("${upbit.ticker.url}")
+    private String tickerURL;
+    @Value("${upbit.orderbook.url}")
+    private String orderBookURL;
     @Value("${upbit.markets}")
     private String markets;
     @Value("${predict.url}")
     private String predictURL;
 
-    public List<APIResponse> getCurrentPrice() {
+    public List<TickerAPIResponse> getCurrentPrice() {
         RestClient restClient = RestClient.create();
 
-        List<APIResponse> res = restClient.get()
-                .uri(URL + markets)
+        List<TickerAPIResponse> res = restClient.get()
+                .uri(tickerURL + markets)
                 .retrieve()
-                .body(new ParameterizedTypeReference<List<APIResponse>>() {
+                .body(new ParameterizedTypeReference<List<TickerAPIResponse>>() {
+                });
+
+        return res;
+    }
+
+    public List<OrderBookAPIResponse> getRealOrderBookUnit() {
+        RestClient restClient = RestClient.create();
+
+        List<OrderBookAPIResponse> res = restClient.get()
+                .uri(orderBookURL + markets)
+                .retrieve()
+                .body(new ParameterizedTypeReference<List<OrderBookAPIResponse>>() {
                 });
 
         return res;
