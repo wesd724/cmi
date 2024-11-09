@@ -1,5 +1,5 @@
-const toKR = (value: number | undefined) => {
-    return value?.toLocaleString('ko-KR', { maximumFractionDigits: 8 }) ?? 0;
+const toKR = (value: number | undefined, digits = 8) => {
+    return value?.toLocaleString('ko-KR', { maximumFractionDigits: digits }) ?? 0;
 }
 
 const checkNaN = (value: number) => {

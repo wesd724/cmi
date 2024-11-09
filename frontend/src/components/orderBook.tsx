@@ -98,7 +98,7 @@ const OrderBook = ({ id, setTrade }: orderBookProps) => {
                                                 <div
                                                     style={amountStyle}
                                                     className="amount"></div>
-                                                {toKR(v.activeAmount)}
+                                                {toKR(v.activeAmount, 4)}
                                             </div>
                                         </TableCell>
                                     </TableRow>

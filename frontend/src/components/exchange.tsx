@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { Navigate, useLocation, useParams } from "react-router-dom";
 import { getRealOrderBookUnit, webSocketRequest } from "../upbit/api";
-import { MARKET } from "../data/constant";
+import { MARKET, MARKET_MAPPER } from "../data/constant";
 import { Button } from "@mui/material";
 import Chart from "./chart";
 import { buy, getCashAndCurrency, sell } from "../api/exchange";
@@ -261,7 +261,7 @@ const Exchange = () => {
                             </div>
                             <OrderBook id={Number(id)} setTrade={setTrade} />
                             <p className="price">
-                                <span>{market} 현재가</span>
+                                <span>{MARKET_MAPPER[market]}({market}) 현재가</span>
                                 <span>{toKR(price)}</span>
                             </p>
                             <Chart width="95%" height="400px" time="minutes/1" marketName={market} />
