@@ -1,8 +1,9 @@
 .orderBook-container {
-    position: absolute;
+    display: inline-block;
+    margin-right: 10vw;
+    margin-left: 25vw;
+    margin-bottom: 15px;
     border: 1px solid rgb(185, 185, 185);
-    left: 20vw;
-    top: 85px;
 }
 
 .orderBook * {

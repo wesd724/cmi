@@ -1,6 +1,6 @@
 .exchange {
+    display: inline-block;
     width: 425px;
-    margin: 0 50vw;
     margin-top: 30px;
 }
 
@@ -63,10 +63,8 @@
 }
 
 .price {
-    float: right;
     font-weight: bold;
-    margin-bottom: 0px;
-    margin-right: 80px;
+    margin-left: 20px;
 }
 
 .price span:nth-child(1) {

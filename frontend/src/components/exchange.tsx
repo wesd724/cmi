@@ -216,6 +216,7 @@ const Exchange = () => {
                 username
                     ? (
                         <>
+                            <OrderBook id={Number(id)} setTrade={setTrade} />
                             <div className="exchange">
                                 <Button sx={{ width: 210, marginBottom: 1 }} onClick={() => orders("BUY")} variant="outlined">매수</Button>
                                 <Button sx={{ width: 210, marginBottom: 1 }} onClick={() => orders("SELL")} variant="outlined">매도</Button>
@@ -259,7 +260,6 @@ const Exchange = () => {
                                     <div>실제 호가</div>
                                 </div>
                             </div>
-                            <OrderBook id={Number(id)} setTrade={setTrade} />
                             <p className="price">
                                 <span>{MARKET_MAPPER[market]}({market}) 현재가</span>
                                 <span>{toKR(price)}</span>

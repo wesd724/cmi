@@ -48,8 +48,8 @@ const ActiveOrder = () => {
                                     <TableCell>코인</TableCell>
                                     <TableCell>주문</TableCell>
                                     <TableCell>주문가격</TableCell>
-                                    <TableCell align="center">주문수량</TableCell>
-                                    <TableCell align="center">미체결량</TableCell>
+                                    <TableCell>주문수량</TableCell>
+                                    <TableCell>미체결량</TableCell>
                                     <TableCell align="center">주문취소</TableCell>
                                 </TableRow>
                             </TableHead>
