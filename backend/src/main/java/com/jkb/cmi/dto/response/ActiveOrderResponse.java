@@ -20,13 +20,10 @@ public class ActiveOrderResponse {
     private Orders orders;
     private Double originalAmount;
     private Double activeAmount;
-    private Long price;
+    private Double price;
     private LocalDateTime createdDate;
 
     public static ActiveOrderResponse from(OrderBook orderBook) {
-        Double amount = orderBook.getOriginalAmount();
-        Double price = orderBook.getPrice();
-        long tradePrice = Math.round(amount * price);
         return new ActiveOrderResponse(
                 orderBook.getId(),
                 orderBook.getCurrency().getMarket(),
@@ -34,7 +31,7 @@ public class ActiveOrderResponse {
                 orderBook.getOrders(),
                 orderBook.getOriginalAmount(),
                 orderBook.getActiveAmount(),
-                tradePrice,
+                orderBook.getPrice(),
                 orderBook.getCreatedDate()
         );
     }

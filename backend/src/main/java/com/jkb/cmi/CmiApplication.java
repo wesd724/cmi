@@ -10,8 +10,10 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.retry.annotation.EnableRetry;
 
 
+@EnableRetry
 @EnableJpaAuditing
 @SpringBootApplication
 public class CmiApplication {

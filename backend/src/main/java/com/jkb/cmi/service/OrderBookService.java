@@ -88,9 +88,7 @@ public class OrderBookService {
     }
 
     public void matchOrder(OrderBook newOrder, List<OrderBook> orderList, Orders orders) {
-        while (!orderList.isEmpty() &&
-                (orders == Orders.BUY && newOrder.getPrice() >= orderList.get(0).getPrice() ||
-                        orders == Orders.SELL && newOrder.getPrice() <= orderList.get(0).getPrice())) {
+        while (!orderList.isEmpty()) {
 
             OrderBook activeOrder = orderList.get(0);
 

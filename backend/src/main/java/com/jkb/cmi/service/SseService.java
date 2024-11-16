@@ -64,7 +64,7 @@ public class SseService {
 
         emitters.forEach((username, emitterList) -> {
                     List<NotificationResponse> userData = notificationService.findNotificationByUsername(username);
-                    System.out.println(username + ": " + emitterList.size());
+                    //System.out.println(username + ": " + emitterList.size());
                     emitterList.forEach(emitter -> {
                         sendEvent(emitter, "message", userData);
                     });
@@ -76,7 +76,7 @@ public class SseService {
         Map<String, List<SseEmitter>> emitters = sseRepository.findAll();
 
         emitters.forEach((username, emitterList) -> {
-                    System.out.println(username + ": " + emitterList.size());
+                    //System.out.println(username + ": " + emitterList.size());
                     emitterList.forEach(emitter -> {
                         sendEvent(emitter, eventName, data);
                     });

@@ -1,11 +1,13 @@
 package com.jkb.cmi.service;
 
 import com.jkb.cmi.dto.response.OrderBookAPIResponse;
-import com.jkb.cmi.dto.response.TickerAPIResponse;
 import com.jkb.cmi.dto.response.RecommendationResponse;
+import com.jkb.cmi.dto.response.TickerAPIResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
@@ -25,6 +27,12 @@ public class MarketDataService {
     @Value("${predict.url}")
     private String predictURL;
 
+
+    @Retryable(
+            retryFor = Exception.class,
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 2000, multiplier = 2.0)
+    )
     public List<TickerAPIResponse> getCurrentPrice() {
         RestClient restClient = RestClient.create();
 
@@ -37,6 +45,11 @@ public class MarketDataService {
         return res;
     }
 
+    @Retryable(
+            retryFor = Exception.class,
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 2000, multiplier = 2.0)
+    )
     public List<OrderBookAPIResponse> getRealOrderBookUnit() {
         RestClient restClient = RestClient.create();
 
