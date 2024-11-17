@@ -1,11 +1,15 @@
 package com.jkb.cmi.service;
 
 import com.jkb.cmi.dto.response.NotificationResponse;
+import com.jkb.cmi.event.NotificationEvent;
 import com.jkb.cmi.repository.SseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -70,6 +74,18 @@ public class SseService {
                     });
                 }
         );
+    }
+
+    @Async("asyncEvent")
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void sendNotificationToUser(NotificationEvent event) {
+        List<SseEmitter> emitters = sseRepository.findByUsername(event.getUsername());
+        if (emitters != null) {
+            List<NotificationResponse> userData = notificationService.findNotificationByUsername(event.getUsername());
+            emitters.forEach(emitter -> {
+                sendEvent(emitter, "message", userData);
+            });
+        }
     }
 
     public void sendEventToAll(String eventName, Object data) {
