@@ -45,20 +45,17 @@ public class MarketDataService {
         return res;
     }
 
-    @Retryable(
-            retryFor = Exception.class,
-            maxAttempts = 5,
-            backoff = @Backoff(delay = 2000, multiplier = 2.0)
-    )
     public List<OrderBookAPIResponse> getRealOrderBookUnit() {
         RestClient restClient = RestClient.create();
-
+        System.out.println("RestClient.create() 이후 restClient 사용 시작");
+        long start = System.currentTimeMillis();
         List<OrderBookAPIResponse> res = restClient.get()
                 .uri(orderBookURL + markets)
                 .retrieve()
                 .body(new ParameterizedTypeReference<List<OrderBookAPIResponse>>() {
                 });
-
+        long end = System.currentTimeMillis();
+        System.out.println("외부 API 호출 이후 시간: " + (end - start) / 1000.0 + "ms");
         return res;
     }
 

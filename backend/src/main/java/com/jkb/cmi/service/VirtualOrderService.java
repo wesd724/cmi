@@ -5,6 +5,8 @@ import com.jkb.cmi.entity.OrderBook;
 import com.jkb.cmi.entity.type.Orders;
 import com.jkb.cmi.repository.OrderBookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,11 @@ public class VirtualOrderService {
     private final OrderBookService orderBookService;
     private final MarketDataService marketDataService;
 
+    @Retryable(
+            retryFor = Exception.class,
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 2000, multiplier = 2.0)
+    )
     public void generateOrder() {
         List<OrderBookAPIResponse> orderBookAPIResponseList =
                 marketDataService.getRealOrderBookUnit();

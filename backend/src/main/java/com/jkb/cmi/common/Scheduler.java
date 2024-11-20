@@ -8,7 +8,6 @@ import com.jkb.cmi.service.VirtualOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +28,7 @@ public class Scheduler {
         virtualOrderService.generateOrder();
     }
 
-    @Transactional
+
     @Scheduled(fixedDelay = 3 * 60 * 1000, initialDelay = 3 * 60 * 1000)
     public void cleanUpVirtualOrder() {
         orderBookRepository.deleteExpiredVirtualOrder(3);
