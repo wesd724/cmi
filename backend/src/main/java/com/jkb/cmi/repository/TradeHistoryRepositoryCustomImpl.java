@@ -44,7 +44,7 @@ public class TradeHistoryRepositoryCustomImpl implements TradeHistoryRepositoryC
                 .set(tradeHistory.status, Status.COMPLETE)
                 .where(builder,
                         eqOrders(orders),
-                        eqStatus(Status.ACTIVE))
+                        eqStatus(Status.PARTIAL))
                 .execute();
 
         em.flush();

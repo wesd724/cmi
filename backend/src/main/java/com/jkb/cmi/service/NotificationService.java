@@ -1,6 +1,6 @@
 package com.jkb.cmi.service;
 
-import com.jkb.cmi.dto.response.NotificationResponse;
+import com.jkb.cmi.dto.NotificationDto;
 import com.jkb.cmi.entity.Notification;
 import com.jkb.cmi.entity.TradeHistory;
 import com.jkb.cmi.entity.User;
@@ -42,9 +42,9 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = true)
-    public List<NotificationResponse> findNotificationByUsername(String username) {
-        List<NotificationResponse> notificationResponses = notificationRepository.findNotificationByUsername(username);
-        return notificationResponses;
+    public List<NotificationDto> findNotificationByUsername(String username) {
+        List<NotificationDto> notificationRespons = notificationRepository.findNotificationByUsername(username);
+        return notificationRespons;
     }
 
     public void checkNotification(Long id) {

@@ -1,4 +1,4 @@
-package com.jkb.cmi.dto.response;
+package com.jkb.cmi.dto;
 
 import com.jkb.cmi.entity.type.Orders;
 import com.jkb.cmi.entity.type.Status;
@@ -7,10 +7,8 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Getter
-@ToString
 @NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class NotificationResponse {
+public class NotificationDto {
     private Long id;
     private String currencyName;
     private Orders orders;

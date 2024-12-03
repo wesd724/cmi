@@ -1,6 +1,6 @@
 package com.jkb.cmi.service;
 
-import com.jkb.cmi.dto.response.NotificationResponse;
+import com.jkb.cmi.dto.NotificationDto;
 import com.jkb.cmi.event.NotificationEvent;
 import com.jkb.cmi.repository.SseRepository;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +67,7 @@ public class SseService {
         Map<String, List<SseEmitter>> emitters = sseRepository.findAll();
 
         emitters.forEach((username, emitterList) -> {
-                    List<NotificationResponse> userData = notificationService.findNotificationByUsername(username);
+                    List<NotificationDto> userData = notificationService.findNotificationByUsername(username);
                     //System.out.println(username + ": " + emitterList.size());
                     emitterList.forEach(emitter -> {
                         sendEvent(emitter, "message", userData);
@@ -81,7 +81,7 @@ public class SseService {
     public void sendNotificationToUser(NotificationEvent event) {
         List<SseEmitter> emitters = sseRepository.findByUsername(event.getUsername());
         if (emitters != null) {
-            List<NotificationResponse> userData = notificationService.findNotificationByUsername(event.getUsername());
+            List<NotificationDto> userData = notificationService.findNotificationByUsername(event.getUsername());
             emitters.forEach(emitter -> {
                 sendEvent(emitter, "message", userData);
             });

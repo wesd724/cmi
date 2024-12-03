@@ -62,7 +62,6 @@ export const ASSET_UPDATE_COLOR = "#0152b7";
 
 export const status = {
     ACTIVE: "미체결",
-    COMPLETE: "체결 완료",
     PARTIAL: "부분 체결"
 };
 

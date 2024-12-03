@@ -22,6 +22,6 @@ public interface TradeHistoryRepository extends JpaRepository<TradeHistory, Long
     @Query("select t from TradeHistory t join fetch t.currency where t.user.username = :username order by t.id asc")
     List<TradeHistory> findByUsername(@Param("username") String username);
     List<TradeHistory> findByStatusAndCompleteDateNull(Status status);
-    @Query("select t from TradeHistory t join fetch t.currency where t.user.username = :username and t.status = Status.ACTIVE")
-    List<TradeHistory> findByUsernameAndStatusActive(@Param("username") String username);
+    @Query("select t from TradeHistory t join fetch t.currency where t.user.username = :username and t.status = Status.PARTIAL")
+    List<TradeHistory> findByUsernameAndStatusPartial(@Param("username") String username);
 }

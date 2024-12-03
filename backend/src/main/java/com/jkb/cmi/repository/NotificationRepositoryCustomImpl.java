@@ -1,6 +1,6 @@
 package com.jkb.cmi.repository;
 
-import com.jkb.cmi.dto.response.NotificationResponse;
+import com.jkb.cmi.dto.NotificationDto;
 import com.jkb.cmi.entity.TradeHistory;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -35,10 +35,10 @@ public class NotificationRepositoryCustomImpl implements NotificationRepositoryC
     }
 
     @Override
-    public List<NotificationResponse> findNotificationByUsername(String username) {
+    public List<NotificationDto> findNotificationByUsername(String username) {
         return queryFactory.select(
                         Projections.fields(
-                                NotificationResponse.class,
+                                NotificationDto.class,
                                 notification.id,
                                 currency.name.as("currencyName"),
                                 tradeHistory.orders,
