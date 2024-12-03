@@ -1,7 +1,9 @@
 package com.jkb.cmi.repository;
 
+import com.jkb.cmi.dto.OrderBookDto;
 import com.jkb.cmi.entity.OrderBook;
 import com.jkb.cmi.entity.type.Orders;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.LockModeType;
@@ -37,5 +39,21 @@ public class OrderBookRepositoryCustomImpl implements OrderBookRepositoryCustom 
         return orders == Orders.BUY ?
                 orderBook.orders.eq(Orders.SELL) :
                 orderBook.orders.eq(Orders.BUY);
+    }
+
+    @Override
+    public List<OrderBookDto> getByCurrencyId(Long currencyId) {
+        return queryFactory.select(
+                Projections.fields(
+                        OrderBookDto.class,
+                        orderBook.orders,
+                        orderBook.activeAmount,
+                        orderBook.price,
+                        orderBook.createdDate
+                )
+        )
+                .from(orderBook)
+                .where(orderBook.currency.id.eq(currencyId))
+                .fetch();
     }
 }

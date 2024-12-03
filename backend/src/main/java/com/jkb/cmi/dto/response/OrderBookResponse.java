@@ -1,6 +1,6 @@
 package com.jkb.cmi.dto.response;
 
-import com.jkb.cmi.entity.OrderBook;
+import com.jkb.cmi.dto.OrderBookDto;
 import com.jkb.cmi.entity.type.Orders;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -41,12 +41,12 @@ public class OrderBookResponse {
         }
     }
 
-    public static List<OrderBookResponse> tolist(List<OrderBook> orderBookList) {
-        return orderBookList.stream()
+    public static List<OrderBookResponse> tolist(List<OrderBookDto> orderBookDtoList) {
+        return orderBookDtoList.stream()
                 .collect(Collectors.groupingBy(
-                        orderBook -> new Tuple(orderBook.getPrice(), orderBook.getOrders()),
+                        orderBookDto -> new Tuple(orderBookDto.getPrice(), orderBookDto.getOrders()),
                         LinkedHashMap::new,
-                        Collectors.summingDouble(OrderBook::getActiveAmount)
+                        Collectors.summingDouble(OrderBookDto::getActiveAmount)
                 )) // Map<Tuple, Double>
                 .entrySet().stream()
                 .map(entry -> new OrderBookResponse(

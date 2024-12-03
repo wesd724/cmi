@@ -1,5 +1,6 @@
 package com.jkb.cmi.service;
 
+import com.jkb.cmi.dto.OrderBookDto;
 import com.jkb.cmi.dto.request.OrderRequest;
 import com.jkb.cmi.dto.response.ActiveOrderResponse;
 import com.jkb.cmi.dto.response.OrderBookResponse;
@@ -30,10 +31,10 @@ public class OrderBookService {
     private final SseService sseService;
 
     public List<OrderBookResponse> getOrderBook(Long currencyId) {
-        List<OrderBook> orderBookList = orderBookRepository.getByCurrency_Id(currencyId);
+        List<OrderBookDto> OrderBookDtoList = orderBookRepository.getByCurrencyId(currencyId);
 
-        List<OrderBook> buyOrders = orderFilter(orderBookList, Orders.BUY);
-        List<OrderBook> sellOrders = orderFilter(orderBookList, Orders.SELL);
+        List<OrderBookDto> buyOrders = orderFilter(OrderBookDtoList, Orders.BUY);
+        List<OrderBookDto> sellOrders = orderFilter(OrderBookDtoList, Orders.SELL);
         sellOrders.addAll(buyOrders);
         return OrderBookResponse.tolist(sellOrders);
     }
@@ -131,9 +132,9 @@ public class OrderBookService {
             throw new IllegalArgumentException("이미 체결된 주문입니다");
     }
 
-    private List<OrderBook> orderFilter(List<OrderBook> orderBookList, Orders order) {
-        return orderBookList.stream()
-                .filter(OrderBook -> OrderBook.getOrders() == order)
+    private List<OrderBookDto> orderFilter(List<OrderBookDto> orderBookDtoList, Orders order) {
+        return orderBookDtoList.stream()
+                .filter(OrderBookDto -> OrderBookDto.getOrders() == order)
                 .sorted(
                         (o1, o2) -> {
                             int compare = Double.compare(o2.getPrice(), o1.getPrice());
