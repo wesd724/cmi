@@ -1,9 +1,9 @@
 package com.jkb.cmi;
 
-import com.jkb.cmi.entity.TradeHistory;
-import com.jkb.cmi.entity.type.Status;
-import com.jkb.cmi.repository.TradeHistoryRepository;
-import com.jkb.cmi.service.TradeHistoryService;
+import com.jkb.cmi.tradehistory.entity.TradeHistory;
+import com.jkb.cmi.tradehistory.entity.type.Status;
+import com.jkb.cmi.tradehistory.repository.TradeHistoryRepository;
+import com.jkb.cmi.tradehistory.service.TradeHistoryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

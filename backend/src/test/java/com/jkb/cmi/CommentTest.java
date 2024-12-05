@@ -1,6 +1,6 @@
 package com.jkb.cmi;
 
-import com.jkb.cmi.repository.CommentRepository;
+import com.jkb.cmi.comment.repository.CommentRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

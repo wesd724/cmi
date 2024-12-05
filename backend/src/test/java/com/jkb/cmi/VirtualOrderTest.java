@@ -1,8 +1,8 @@
 package com.jkb.cmi;
 
-import com.jkb.cmi.dto.response.OrderBookAPIResponse;
-import com.jkb.cmi.service.MarketDataService;
-import com.jkb.cmi.service.VirtualOrderService;
+import com.jkb.cmi.external.dto.OrderBookAPIResponse;
+import com.jkb.cmi.external.service.MarketDataService;
+import com.jkb.cmi.orderbook.service.VirtualOrderService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,7 +1,7 @@
 package com.jkb.cmi;
 
-import com.jkb.cmi.entity.User;
-import com.jkb.cmi.repository.UserRepository;
+import com.jkb.cmi.user.entity.User;
+import com.jkb.cmi.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,6 +1,6 @@
 package com.jkb.cmi.event;
 
-import com.jkb.cmi.entity.TradeHistory;
+import com.jkb.cmi.tradehistory.entity.TradeHistory;
 import lombok.Getter;
 
 @Getter

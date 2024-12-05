@@ -1,9 +1,17 @@
 package com.jkb.cmi;
 
-import com.jkb.cmi.entity.*;
-import com.jkb.cmi.entity.type.Orders;
-import com.jkb.cmi.entity.type.Status;
-import com.jkb.cmi.repository.*;
+import com.jkb.cmi.asset.entity.CashAsset;
+import com.jkb.cmi.asset.entity.CurrencyAsset;
+import com.jkb.cmi.asset.repository.CashAssetRepository;
+import com.jkb.cmi.asset.repository.CurrencyAssetRepository;
+import com.jkb.cmi.currency.entity.Currency;
+import com.jkb.cmi.common.enums.Orders;
+import com.jkb.cmi.currency.repository.CurrencyRepository;
+import com.jkb.cmi.tradehistory.entity.type.Status;
+import com.jkb.cmi.tradehistory.entity.TradeHistory;
+import com.jkb.cmi.tradehistory.repository.TradeHistoryRepository;
+import com.jkb.cmi.user.entity.User;
+import com.jkb.cmi.user.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;

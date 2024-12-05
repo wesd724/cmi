@@ -1,7 +1,7 @@
 package com.jkb.cmi;
 
-import com.jkb.cmi.dto.NotificationDto;
-import com.jkb.cmi.repository.NotificationRepository;
+import com.jkb.cmi.notification.dto.NotificationDto;
+import com.jkb.cmi.notification.repository.NotificationRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
