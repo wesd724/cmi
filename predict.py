@@ -54,7 +54,7 @@ def rankingComparePrevPrice():
         "KRW-XLM",
         "KRW-STX",
         "KRW-DOGE",
-        "KRW-BTG",
+        "KRW-EGLD",
         "KRW-ARK",
         "KRW-LINK",
         "KRW-AVAX",

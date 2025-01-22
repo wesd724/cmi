@@ -45,7 +45,7 @@ public class OrderBookResponse {
         return orderBookDtoList.stream()
                 .collect(Collectors.groupingBy(
                         orderBookDto -> new Tuple(orderBookDto.getPrice(), orderBookDto.getOrders()),
-                        LinkedHashMap::new,
+                        LinkedHashMap::new, // 순서 유지
                         Collectors.summingDouble(OrderBookDto::getActiveAmount)
                 )) // Map<Tuple, Double>
                 .entrySet().stream()

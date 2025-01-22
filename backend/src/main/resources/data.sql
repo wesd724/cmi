@@ -9,7 +9,7 @@ INSERT IGNORE INTO currency (id, market, name) VALUES (8, 'KRW-NEO', '네오');
 INSERT IGNORE INTO currency (id, market, name) VALUES (9, 'KRW-XLM', '스텔라루멘');
 INSERT IGNORE INTO currency (id, market, name) VALUES (10, 'KRW-STX', '스택스');
 INSERT IGNORE INTO currency (id, market, name) VALUES (11, 'KRW-DOGE', '도지코인');
-INSERT IGNORE INTO currency (id, market, name) VALUES (12, 'KRW-BTG', '비트코인골드');
+INSERT IGNORE INTO currency (id, market, name) VALUES (12, 'KRW-EGLD', '멀티버스엑스');
 INSERT IGNORE INTO currency (id, market, name) VALUES (13, 'KRW-ARK', '아크');
 INSERT IGNORE INTO currency (id, market, name) VALUES (14, 'KRW-LINK', '체인링크');
 INSERT IGNORE INTO currency (id, market, name) VALUES (15, 'KRW-AVAX', '아발란체');
@@ -30,7 +30,7 @@ INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (8,
 INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (9, 'KRW-XLM', 0);
 INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (10, 'KRW-STX', 0);
 INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (11, 'KRW-DOGE', 0);
-INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (12, 'KRW-BTG', 0);
+INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (12, 'KRW-EGLD', 0);
 INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (13, 'KRW-ARK', 0);
 INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (14, 'KRW-LINK', 0);
 INSERT IGNORE INTO recommendation (id, market, compared_previous_day) VALUES (15, 'KRW-AVAX', 0);
