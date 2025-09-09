@@ -117,6 +117,9 @@
 - 단일 트랜잭션으로 모든 주문 처리의 모든 과정을 진행하여 성능 저하 발생
   - 처리 과정:  
      **주문 접수** → **체결**(주문 업데이트 및 삭제, 거래내역 저장) → **자산 업데이트** → **알림 저장** → **호가창 및 알림 SSE 전송**
+<br>
+<image src="https://github.com/user-attachments/assets/c8d64efa-37a5-4979-933d-06fc4b537f92">
+
 - 단일 트랜잭션으로 모든 처리를 진행하여 성능 저하 발생
 - 주문 처리 과정이 길어 응답 시간 증가
 - 다수 사용자 동시 주문 시 성능 저하
@@ -173,7 +176,7 @@
    <summary>내용 확인</summary>
 <br>
 	
-<image src="https://github.com/user-attachments/assets/46f3cc40-cb54-489e-b4f5-448b3be4cb64">
+<image src="https://github.com/user-attachments/assets/b8ab3c4a-19d4-46c3-b612-9addfb7e09e4">
 
 </details>
 <br>
